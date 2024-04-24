@@ -2,28 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@font-face {
+  font-family: "OPPOSans-Medium";
+  src: url("../../public/fonts/otf/OPPOSans-Medium.otf") format('Opentype');
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+@font-face {
+  font-family: "OPPOSans-Regular";
+  src: url("../../public/fonts/otf/OPPOSans-Regular.otf") format('Opentype');
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
 }
 
 body {
+  margin: 0;
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-size: 14px;
+  font-family: "OPPOSans-Regular";
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+svg:not(:root) {
+  overflow: hidden;
 }
 
 @layer utilities {

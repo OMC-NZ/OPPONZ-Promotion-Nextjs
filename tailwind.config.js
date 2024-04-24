@@ -7,10 +7,18 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      fontFamily: {
+        "OPPOSans-Regular": ["OPPOSans-Regular"],
+        "OPPOSans-Medium": ["OPPOSans-Medium"],
+      },
+      spacing: {
+        '13': '3.25rem',
+        '15': '3.75rem',
+        '128': '32rem',
+        '144': '36rem',
+      },
+      transitionTimingFunction: {
+        'cubic-custom': 'cubic-bezier(0.48, 0.04, 0.52, 0.96)',
       },
     },
   },
