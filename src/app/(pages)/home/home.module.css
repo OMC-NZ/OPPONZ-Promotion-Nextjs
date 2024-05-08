@@ -1,0 +1,10 @@
+.oc_container {
+    width: 100%;
+    position: relative;
+}
+
+@media (max-width: 1024px) {
+    .oc_container {
+        min-height: auto;
+    }
+}

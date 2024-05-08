@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import ErrorPage from 'next/error';
+import style from "./home.module.css";
 
 
 export default function Home() {
@@ -13,6 +14,6 @@ export default function Home() {
     }
     
     return (
-        <div className="">Welcome to Home Page</div>
+        <div className={`${style.oc_container} h-screen`}>Welcome to Home Page</div>
     )
 }

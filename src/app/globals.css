@@ -28,6 +28,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+em, i, strong {
+  font-style: normal;
+}
+
 svg:not(:root) {
   overflow: hidden;
 }

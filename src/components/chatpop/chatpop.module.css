@@ -1,0 +1,79 @@
+.contact_pop {
+    bottom: 20px;
+    right: 64px;
+    position: fixed;
+    z-index: 100;
+}
+
+.contact_pop * {
+    box-sizing: border-box;
+}
+
+.contact_pop_icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: bottom .3s;
+    font-size: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.contact_pop_icon img {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+
+.chat_pop_box {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    opacity: 0;
+    transform: translateY(10px);
+    width: 284px;
+    background: white;
+    box-sizing: border-box;
+    padding: 20px 0 30px;
+    border: 1px solid #ededed;
+    /* right: 0;
+    transform 0.42s cubic-bezier(0.32, 0.94, 0.6, 1) 0s, opacity 0.32s cubic-bezier(0.32, 0.94, 0.6, 1) 0s; */
+}
+
+@media screen and (min-width: 651px) and (max-width: 1024px) {
+    .contact_pop {
+        right: 24px;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .contact_pop {
+        right: 16px;
+    }
+}
+
+@media (max-width: 768px), screen and (max-device-width: 1023.98px) and (orientation: landscape) {
+    .contact_pop_icon {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #f4f6ec;
+    }
+
+    .contact_pop_icon img {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+@media (max-width: 1023.98px) {
+    .contact_pop_icon {
+        width: 40px;
+        height: 40px;
+    }
+}
