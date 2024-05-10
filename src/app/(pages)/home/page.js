@@ -12,8 +12,11 @@ export default function Home() {
     if (pathname === '/home') {
         return (<ErrorPage statusCode={404} />);
     }
-    
+
     return (
-        <div className={`${style.oc_container} h-screen`}>Welcome to Home Page</div>
+        <div className={`${style.oc_container} h-screen`}>
+            Welcome to Home Page
+        </div>
+
     )
 }

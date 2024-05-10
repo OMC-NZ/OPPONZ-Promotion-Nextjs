@@ -41,3 +41,7 @@ svg:not(:root) {
     text-wrap: balance;
   }
 }
+
+#launcher {
+  display: none !important;
+}
