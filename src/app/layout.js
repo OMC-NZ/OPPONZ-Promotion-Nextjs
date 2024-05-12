@@ -15,16 +15,6 @@ export default function RootLayout({ children }) {
     script.src = 'https://static.zdassets.com/ekr/snippet.js?key=94340760-310d-4e66-b572-6afde91553dc';
     script.async = true; // 设置为异步加载
 
-    // 设置 window.zESettings
-    const textNode = document.createTextNode(`
-      window.zESettings = {
-        webWidget: {
-          offset: { horizontal: '1000px', vertical: '1500px' }
-        }
-      };`);
-    script.appendChild(textNode);
-
-
     // 将 <script> 元素添加到文档的 <body> 中
     document.body.appendChild(script);
 

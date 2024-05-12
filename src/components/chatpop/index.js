@@ -1,21 +1,11 @@
 "use client"
 
-import { React, useState, useEffect } from "react";
+import { React, useEffect } from "react";
 import style from "./chatpop.module.css";
 import Image from "next/image";
 import chatpopicon from "../../../public/imgs/chatpop_icon.png";
 
-export default function ChatPop() {
-    const [isShow, setIsShow] = useState(false);
-    const toggleWidget = () => {
-        setIsShow(!isShow);
-        if (isShow) {
-            zE('messenger', 'close');
-        } else {
-            zE('messenger', 'open');
-        }
-    };
-
+export default function ChatPop({ toggleWidget }) {
     useEffect(() => {
         // 在组件加载时，移除或隐藏 Zendesk Web Widget 的 DOM 元素
         const widgetLauncher = document.querySelector('.ze-snippet-launcher');
