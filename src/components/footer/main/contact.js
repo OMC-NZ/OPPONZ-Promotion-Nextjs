@@ -20,7 +20,8 @@ export default function FooterContact({ toggleWidget }) {
     };
 
     const handleSupportModal = (event) => {
-        event.stopPropagation()
+        event.stopPropagation();
+        setIsChatVisible(false);
     }
 
     const handleOutsideClick = (event) => {

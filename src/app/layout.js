@@ -4,9 +4,6 @@ import { useEffect } from 'react';
 import "./globals.css";
 
 export default function RootLayout({ children }) {
-  // const callUsButton = document.querySelector('#call-us-button')
-
-
   useEffect(() => {
     // 创建一个新的 <script> 元素
     const script = document.createElement('script');
@@ -18,9 +15,16 @@ export default function RootLayout({ children }) {
     // 将 <script> 元素添加到文档的 <body> 中
     document.body.appendChild(script);
 
+
+    const handleBeforeUnload = () => {
+      zE('messenger', 'close');
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     // 清理函数：在组件卸载时移除脚本
     return () => {
       document.body.removeChild(script);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []); // 空依赖数组表示只在组件挂载和卸载时执行一次
 
