@@ -29,7 +29,7 @@ export default function PageLayout({ children }) {
             {children}
 
             <footer className='block bg-black text-[rgba(255,255,255,0.55)]'>
-                <Main toggleWidget={toggleWidget} />
+                <Main isShow={isShow} toggleWidget={toggleWidget} />
                 <Bottom />
             </footer>
 

@@ -10,7 +10,7 @@ import Link from "next/link";
 import style from "./footer_main.module.css";
 import SupportModal from "./support_modal/index";
 
-export default function FooterContact({ toggleWidget }) {
+export default function FooterContact({ isShow, toggleWidget }) {
     const [isChatVisible, setIsChatVisible] = useState(false);
     const divGetSptRef = useRef(null);
     const divChatPopRef = useRef(null);
@@ -21,7 +21,6 @@ export default function FooterContact({ toggleWidget }) {
 
     const handleSupportModal = (event) => {
         event.stopPropagation();
-        setIsChatVisible(false);
     }
 
     const handleOutsideClick = (event) => {
@@ -53,7 +52,7 @@ export default function FooterContact({ toggleWidget }) {
                 </div>
                 {isChatVisible && (
                     <div ref={divChatPopRef} className={`${style.live_chat_pop}`} onClick={handleSupportClick}>
-                        <SupportModal toggleWidget={toggleWidget} handleSupportModal={handleSupportModal} />
+                        <SupportModal isShow={isShow} setIsChatVisible={setIsChatVisible} toggleWidget={toggleWidget} handleSupportModal={handleSupportModal} />
                     </div>
                 )}
 
