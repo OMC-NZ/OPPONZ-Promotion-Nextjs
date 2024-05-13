@@ -36,7 +36,7 @@ export default function Navbar() {
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="https://www.oppocare.co.nz/oppocare" target="_blank">OPPO Care</Link>
+                            <Link href="https://shop.oppomobile.nz/" target="_blank">Shop Now</Link>
                         </span>
                     </li>
                 </ul>

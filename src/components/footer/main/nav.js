@@ -19,7 +19,7 @@ export default function FooterNav() {
                   <Link href="/" className={`${style.ft_body_2_1}`}>Terms & Conditions</Link>
                 </li>
                 <li className="min-w-[169px] mb-[40px]">
-                  <Link href="https://www.oppocare.co.nz/oppocare" target="_blank" className={`${style.ft_body_2_1}`}>OPPO Care</Link>
+                  <Link href="https://shop.oppomobile.nz/" target="_blank" className={`${style.ft_body_2_1}`}>Shop Now</Link>
                 </li>
             </ul>
         </nav>

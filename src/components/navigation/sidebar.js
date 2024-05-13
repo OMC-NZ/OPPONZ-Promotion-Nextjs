@@ -66,8 +66,9 @@ export default function Sidebar() {
                         </li>
                         <li>
                             <p className={style.second_nav_title}>
-                                <Link href="https://www.oppocare.co.nz/oppocare" target="_blank" className="flex items-center justify-between">
-                                    <span>OPPO Care</span>
+                                <Link href="https://shop.oppomobile.nz/" target="_blank" className="flex items-center justify-between">
+                                    <span>
+Shop Now</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
                                 </Link>
                             </p>
