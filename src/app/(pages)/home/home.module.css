@@ -8,7 +8,7 @@
     background: url(/imgs/imagine-if_5120-1280.jpg);
     background-size: cover;
     width: 100%;
-    /* height:100%; */
+    height:100%;
     object-fit: cover;
 }
 
