@@ -1,22 +1,22 @@
 'use client';
 
-import { usePathname } from "next/navigation";
-import ErrorPage from 'next/error';
+import { usePathname, useRouter } from "next/navigation";
 import style from "./home.module.css";
-
 
 export default function Home() {
     const pathname = usePathname();
+    const router = useRouter();
 
     // Check if the current path is "/home"
     if (pathname === '/home') {
-        return (<ErrorPage statusCode={404} />);
+        router.push('/404');
     }
 
     return (
         <div className={`${style.oc_container} h-screen`}>
-            Welcome to Home Page
+            <div className={`${style.main_banner}`}>
+                welcome to OPPO Promotion
+            </div>
         </div>
-
     )
 }

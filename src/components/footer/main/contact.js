@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoYoutube } from "react-icons/io";
 import { ImInstagram } from "react-icons/im";
-import robot from "../../../../public/imgs/robot.png"
+import robot from "/public/imgs/robot.png";
 import Link from "next/link";
 import style from "./footer_main.module.css";
 import SupportModal from "./support_modal/index";

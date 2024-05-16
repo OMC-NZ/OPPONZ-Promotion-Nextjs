@@ -3,7 +3,7 @@
 import { React, useEffect } from "react";
 import style from "./chatpop.module.css";
 import Image from "next/image";
-import chatpopicon from "../../../public/imgs/chatpop_icon.png";
+import chatpopicon from "/public/imgs/chatpop_icon.png";
 
 export default function ChatPop({ toggleWidget }) {
     useEffect(() => {
