@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from "next/link";
-import style from '../layout.module.css';
+import style from './not-found.module.css';
 
 export const metadata = {
   title: '404 | OPPO NZ Promotions',

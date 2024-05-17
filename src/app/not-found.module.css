@@ -1,18 +1,3 @@
-.oc_wrapper {
-    margin-top: 0px;
-    box-sizing: border-box;
-    height: auto;
-    min-height: 100vh;
-    width: 100%;
-    margin: auto;
-    overflow: hidden;
-    transition: all .3s;
-}
-
-.fixed_header_v2 {
-    position: fixed;
-}
-
 .oppo_error_page_container {
     text-align: center;
 }

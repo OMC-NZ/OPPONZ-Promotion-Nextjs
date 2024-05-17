@@ -11,13 +11,13 @@ export default function Claim() {
     };
 
     return (
-        <div>
+        <>
             <Head>
                 <title>Claim | OPPO NZ Promotions</title>
             </Head>
             Hi Claim!
 
-
-            <button onClick={handleVerify}></button>
-        </div>)
+            <button onClick={handleVerify}>dfgdfgertegdfgdgdf</button>
+        </>
+    )
 }
