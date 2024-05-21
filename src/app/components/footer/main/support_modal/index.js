@@ -19,7 +19,7 @@ export default function SupportModal({ isShow, setIsChatVisible, toggleWidget, h
                 <li className={`${style.group_item}`}>
                     <div className={`${style.item_box}`}>
                         <Image src={chatIcon} alt="Livechat" className={`${style.chat_icon}`} />
-                        <span className={`${style.ft_body_2_1}`} onClick={() => { toggleWidget(); closeModal() }}>Livechat</span>
+                        <span className={`${style.ft_body_2_1} ${style.live_chat}`} onClick={() => { toggleWidget(); closeModal() }}>Livechat</span>
                     </div>
                     <div className={`${style.sub_list}`}>
                         <p className={`${style.subtitle}`}>9:00-17:00 Mon-Fri</p>
