@@ -141,6 +141,7 @@
 .conInput {
     padding-top: 14px;
     padding-bottom: 14px;
+    position: relative;
 }
 
 .conForm .search {
@@ -149,7 +150,14 @@
     border-radius: 32px;
     z-index: 40;
     background: #fafafa !important;
-    border: 1px solid #dcdcdc;
+}
+
+.search_normal {
+    border: 2px solid #dcdcdc;
+}
+
+.search_red {
+    border: 2px solid red;
 }
 
 .conForm .search .search_box {
@@ -219,7 +227,6 @@
     top: 2rem;
     left: 13rem;
     transform: translateX(-50%);
-    opacity: 0; /* 初始隐藏文字 */
     background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
     padding: 4px 8px;
@@ -227,11 +234,34 @@
     transition: opacity 0.3s ease;
     width: 28rem;
     letter-spacing: 1px;
+    visibility: hidden;
 }
 
 .tipText.visible {
-    opacity: 1; /* 悬停时显示文字 */
     visibility: visible;
+}
+
+.validateError {
+    color: red;
+    margin-left: 1rem;
+    margin-top: 5px;
+    letter-spacing: 1px;
+    position: absolute;
+}
+
+.validatetick {
+    color: #077307;
+}
+
+.modal_track {
+    height: 22rem;
+    max-width: 600px;
+}
+
+.conForm_track {
+    height: auto;
+    padding: 0;
+    margin: 1rem 0;
 }
 
 @media screen and (min-width: 1440px) {
@@ -297,7 +327,7 @@
     }
 
     .conForm {
-        height: 75%;
+        height: 80%;
     }
 
     .conForm label {
@@ -318,9 +348,15 @@
         transform: translate3d(0px, -200px, 0px) !important; /* 调整位置到输入框上方 */
         margin-bottom: 10px;
     }
+
+    .conForm_track {
+        height: auto;
+        padding: 0;
+        margin: 1rem 0;
+    }
 }
 
-@media (min-aspect-ratio: 1/1) {
+@media (max-width: 1024px) and (min-aspect-ratio: 1/1) {
     .modalOverlay {
         position: absolute;
     }
