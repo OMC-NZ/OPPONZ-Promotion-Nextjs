@@ -55,7 +55,7 @@ export default function Redeem({ isVisible, onClose }) {
         <>
             <div className={style.modalOverlay}>
                 <div className={style.modal}>
-                    <button className={style.closeButton} onClick={() => { onClose(); setIMEIInput(''); setSelectedDate(null); setIMEIError(false); setDateError(false); }}>
+                    <button className={style.closeButton} onClick={() => { onClose(); setIMEIInput(''); setSelectedDate(null); setIMEIError(false); setDateError(false); document.body.style.overflow = '';}}>
                         &times;
                     </button>
                     <p className={`${style.modalTitle}`}>Search a Promotion</p>
@@ -95,7 +95,7 @@ export default function Redeem({ isVisible, onClose }) {
                         </div>
                     </div>
                     <div className={`${style.conBtn}`}>
-                        <button onClick={() => { onClose(); setIMEIInput(''); setSelectedDate(null); setIMEIError(false); setDateError(false); }}>Close</button>
+                        <button onClick={() => { onClose(); setIMEIInput(''); setSelectedDate(null); setIMEIError(false); setDateError(false); document.body.style.overflow = '';}}>Close</button>
                         <button onClick={submitValidate}>Search</button>
                     </div>
                 </div>

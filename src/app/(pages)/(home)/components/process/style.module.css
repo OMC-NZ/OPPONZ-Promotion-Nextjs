@@ -1,12 +1,120 @@
-.ft_subtitle {
-    font-family: 'OPPOSans-Medium';
-    font-size: 24px;
-    line-height: 32px;
-    margin-top: 8px;
+.claim_process {
+    position: relative;
+    background-color: white;
+    z-index: 2;
+    margin-top: -8rem;
+    margin-bottom: 2rem;
 }
 
-@media screen and (max-width: 650px) {
+.pro_title {
+    font-family: 'OPPOSans-Medium';
+    font-size: 36px;
+    text-align: center;
+    padding: 30px 0;
+}
+
+.pro_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.pro_step {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+.feature_box {
+    position: relative;
+    background: #eee;
+    padding: 30px 30px 20px 80px;
+    height: 100%;
+    border-radius: 40px;
+}
+
+.feature_icon {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    color: #333;
+}
+
+.pro_h4 {
+    font-size: 20px;
+    line-height: 40px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.pro_words {
+    font-size: 15px;
+    line-height: 24px;
+    color: #999;
+}
+
+.showButtonSl {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1rem;
+    font-weight: 700;
+}
+
+.showButton {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+}
+
+.disabled {
+    color: #afafaf;
+}
+
+@media (max-width: 1280px) {
+    .pro_content {
+        row-gap: 3rem;
+    }
+
+    .pro_step {
+        flex: 0 0 50%;
+        max-width: 45%;
+    }
+
+    .feature_box {
+        padding-bottom: 15px;
+    }
+
+    .feature_icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .pro_h4 {
+        line-height: 30px;
+    }
+}
+
+@media (max-width: 1024px) {
     .claim_process {
-        width: 100%;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    .pro_content {
+        row-gap: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .pro_content {
+        flex-wrap: nowrap;
+        column-gap: 1rem;
+        overflow-y: auto;
+        height: 9rem;
+    }
+
+    .pro_step {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 }

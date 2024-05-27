@@ -1,7 +1,7 @@
 .main_banner {
     width: 100%;
     height: 100%;
-    position: relative;
+    position: absolute;
 }
 
 .main_banner, .main_banner img {
@@ -29,18 +29,14 @@
 .content_container {
     display: flex;
     flex-direction: column;
-    position: absolute;
     width: 100%;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
     height: 100%;
-    justify-content: space-evenly;
-    padding-top: 64px;
-    padding-bottom: 64px;
+    position: relative;
     align-items: center;
     text-align: center;
+    gap: 7rem;
+    padding: 4rem 0;
+    z-index: 2;
 }
 
 .top_layout, .claim_button {
@@ -53,11 +49,12 @@
     line-height: 80px;
     letter-spacing: 3px;
     overflow-wrap: break-word;
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .claim_button {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .btn {
@@ -91,11 +88,10 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color:black;
-    z-index: 2;
+    z-index: 3;
+    padding-top: 10rem;
+    overflow: auto;
 }
 
 .modal {
@@ -106,6 +102,7 @@
     max-width: 500px;
     width: 100%;
     height: 30rem;
+    margin: 0 auto;
 }
 
 .closeButton {
@@ -139,16 +136,14 @@
 }
 
 .conInput {
-    padding-top: 14px;
-    padding-bottom: 14px;
-    position: relative;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .conForm .search {
     position: relative;
     padding: 8px 12px;
     border-radius: 32px;
-    z-index: 40;
     background: #fafafa !important;
 }
 
@@ -235,6 +230,7 @@
     width: 28rem;
     letter-spacing: 1px;
     visibility: hidden;
+    z-index: 1;
 }
 
 .tipText.visible {
@@ -292,7 +288,14 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
+    .content_container {
+        gap: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        justify-content: space-evenly;
+    }
+
     .claim_button {
         justify-content: space-evenly;
     }
@@ -315,8 +318,8 @@
     }
 
     .responsive_layout {
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 
     .claim_button {
@@ -327,11 +330,18 @@
     }
 
     .conForm {
-        height: 80%;
+        height: auto;
+        padding: 0 1rem;
+        margin: 2rem 0;
+        row-gap: 3rem;
     }
 
     .conForm label {
         font-size: 18px;
+    }
+
+    .conInput {
+        padding: 0;
     }
 
     .conBtn {
@@ -341,7 +351,7 @@
     .tipText {
         width: 21rem;
         top: 2rem;
-        left: 8.3rem;
+        left: 10rem;
     }
 
     .react-datepicker-popper[data-placement^="bottom"] {
@@ -356,8 +366,22 @@
     }
 }
 
-@media (max-width: 1024px) and (min-aspect-ratio: 1/1) {
+@media (max-width: 1024px) and (max-height: 650px) and (min-aspect-ratio: 1/1) {
     .modalOverlay {
-        position: absolute;
+        padding-top: 5rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .modal {
+        height: 32rem;
+    }
+
+    .conForm label, .conForm .search .search_box input {
+        font-size: 16px;
+    }
+
+    .tipText {
+        left: 7rem;
     }
 }
