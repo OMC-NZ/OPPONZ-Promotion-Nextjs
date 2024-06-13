@@ -21,17 +21,12 @@ export default function Navbar() {
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="/">Current Promotions</Link>
+                            <Link href="/">Monthly Promotions</Link>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
                             <Link href="/">FAQ</Link>
-                        </span>
-                    </li>
-                    <li className="m-0 p-0 list-none font-normal">
-                        <span className={style.item_span}>
-                            <Link href="/">Terms & Conditions</Link>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">

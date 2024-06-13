@@ -1,7 +1,8 @@
 import style from "./home.module.css";
 import Noname from "./components/noname";
 import Process from "./components/process";
-import CurrentPromotions from "./components/current";
+import MonthlyPromotions from "./components/monthly";
+import FAQ from "./components/faq";
 
 export const metadata = {
     title: 'OPPO NZ Promotions'
@@ -13,7 +14,8 @@ export default function Home() {
             <Noname />
             <div className={style.oc_subcontents}>
                 <Process />
-                <CurrentPromotions />
+                <MonthlyPromotions />
+                <FAQ />
             </div>
         </div>
     )

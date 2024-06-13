@@ -10,13 +10,10 @@ export default function FooterNav() {
                   <Link href="/" className={`${style.ft_body_2_1}`}>Home</Link>
                 </li>
                 <li className="min-w-[169px] mb-[40px]">
-                  <Link href="/" className={`${style.ft_body_2_1}`}>Current Promotions</Link>
+                  <Link href="/" className={`${style.ft_body_2_1}`}>Monthly Promotions</Link>
                 </li>
                 <li className="min-w-[169px] mb-[40px]">
                   <Link href="/" className={`${style.ft_body_2_1}`}>FAQ</Link>
-                </li>
-                <li className="min-w-[169px] mb-[40px]">
-                  <Link href="/" className={`${style.ft_body_2_1}`}>Terms & Conditions</Link>
                 </li>
                 <li className="min-w-[169px] mb-[40px]">
                   <Link href="https://shop.oppomobile.nz/" target="_blank" className={`${style.ft_body_2_1}`}>Shop Now</Link>

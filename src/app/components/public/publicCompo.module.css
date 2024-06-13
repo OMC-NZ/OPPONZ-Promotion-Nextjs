@@ -1,0 +1,16 @@
+.showButtonSl {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.showButton{
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    cursor: pointer;
+}
+
+.disabled {
+    color: #afafaf;
+}
