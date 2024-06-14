@@ -1,26 +1,21 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import style from "./style.module.css";
+import style from "../monthly/style.module.css";
+import selfStyle from "./style.module.css";
 import globalStyle from "@/app/publicstyle.module.css";
-import { FaAsterisk } from "react-icons/fa6";
 import useWindowSize from "@/hooks/useWindowSize";
 import usePagination from "@/hooks/usePagination";
 import PaginationButtons from "@/app/components/public/paginationButtons";
 
 const imgs = [
-    { url: '/temporary/img/promo01.jpg' },
-    { url: '/temporary/img/promo02.jpg' },
-    { url: '/temporary/img/promo03.jpg' },
-    { url: '/temporary/img/promo04.jpg' },
-    { url: '/temporary/img/promo05.jpg' },
-    // { url: '/temporary/img/promo06.jpg' },
-    // { url: '/temporary/img/promo07.jpg' },
-    // { url: '/temporary/img/promo08.jpg' },
-    // { url: '/temporary/img/promo09.jpg' }
-];
+    { url: '/temporary/events/2ds/events01.jpg' },
+    { url: '/temporary/events/2ds/events02.jpg' },
+    // { url: '/temporary/events/2ds/events03.jpg' },
+    // { url: '/temporary/events/2ds/events04.jpg' },
+]
 
-export default function MonthlyPromotions() {
+export default function CurrentEvents() {
     const { width: windowWidth } = useWindowSize();
     const [windowWidthValid, setWindowWidthValid] = useState(false);
     const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length);
@@ -50,7 +45,7 @@ export default function MonthlyPromotions() {
     return (
         <div className={`${globalStyle.itemsBlock}`}>
             <div className={globalStyle.itemsTitle}>
-                <p>Monthly Promotion</p>
+                <p>Current Events</p>
             </div>
             <div className={style.mostthree}>
                 {currentImages.map((step, index) => (
@@ -61,14 +56,9 @@ export default function MonthlyPromotions() {
                         width={620}
                         height={420}
                         quality={100}
-                        className={imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o}
+                        className={`${imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o} ${selfStyle.imgBorder}`}
                     />
                 ))}
-            </div>
-            <div className={style.currentnote}>
-                <FaAsterisk style={{ color: 'red' }} />
-                <p style={{ color: 'grey' }}>This promotion is only available at selected stores, please check with your store for promotion availability</p>
-                <FaAsterisk style={{ color: 'red' }} />
             </div>
             {showPaginationButtons && (
                 <PaginationButtons
@@ -78,5 +68,5 @@ export default function MonthlyPromotions() {
                 />
             )}
         </div>
-    );
+    )
 }

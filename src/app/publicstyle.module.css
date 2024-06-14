@@ -1,0 +1,44 @@
+.itemsBlock {
+    margin-bottom: 10rem;
+    padding: 0 4rem;
+}
+
+.itemsTitle {
+    margin-bottom: 4rem;
+  }
+  
+.itemsTitle p {
+    font-family: 'OPPOSans-Medium';
+    font-size: 36px;
+    position: relative;
+    display: inline-block;
+}
+
+.itemsTitle p::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 60%;
+    border-bottom: 2px solid black;
+}
+
+@media (max-width: 1440px) {
+    .itemsBlock {
+        margin-bottom: 5rem;
+    }
+
+    .itemsTitle p {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .itemsBlock {
+        padding: 0;
+    }
+
+    .itemsTitle p {
+        font-size: 28px;
+    }
+}

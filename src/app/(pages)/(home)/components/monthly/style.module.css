@@ -1,28 +1,3 @@
-.currentPros {
-    margin-bottom: 10rem;
-    padding: 0 4rem;
-}
-
-.cptitle {
-    margin-bottom: 4rem;
-}
-
-.cptitle p {
-    font-family: 'OPPOSans-Medium';
-    font-size: 36px;
-    position: relative;
-    display: inline-block;
-}
-
-.cptitle p::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 60%;
-    border-bottom: 2px solid black;
-}
-
 .mostthree {
     display: flex;
     justify-content: space-around;
@@ -53,27 +28,15 @@
     align-items: center;
     column-gap: 5px;
     margin-top: 2rem;
-    margin-bottom: 2rem;
 }
 
 @media (max-width: 1440px) {
-    .currentPros {
-        margin-bottom: 5rem;
-    }
     .cpimg_th {
         max-width: 23vw;
-    }
-    
-    .cptitle p {
-        font-size: 32px;
     }
 }
 
 @media (max-width: 1024px) {
-    .currentPros {
-        padding: 0;
-    }
-
     .cpimg_th {
         max-width: 40vw;
     }
@@ -84,9 +47,6 @@
 }
 
 @media (max-width: 768px) {
-    .cptitle {
-        font-size: 28px;
-    }
 
     .cpimg_o {
         max-width: 80%;

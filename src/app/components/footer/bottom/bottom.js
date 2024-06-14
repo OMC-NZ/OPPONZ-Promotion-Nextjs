@@ -16,16 +16,19 @@ export default function Bottom() {
         <section className={`${style.bottom}`}>
             <ul className={`${style.links} ${style.ft_body_3}`}>
                 <li>
-                    <Link href="https://www.oppo.com/nz/privacy/">Privacy</Link>
+                    <Link href="https://www.oppo.com/nz/privacy/" target="_blank">Privacy</Link>
                 </li>
                 <li>
-                    <Link href="https://www.oppo.com/nz/terms/">Terms of Use</Link>
+                    <Link href="https://www.oppo.com/nz/terms/" target="_blank">Terms of Use</Link>
+                </li>                
+                <li>
+                    <Link href="/terms" target="_blank">Terms and Conditions of Promotions</Link>
                 </li>
                 <li>
-                    <Link href="https://www.oppo.com/nz/cookies/">Cookies</Link>
+                    <Link href="https://www.oppo.com/nz/cookies/" target="_blank">Cookies</Link>
                 </li>
                 <li>
-                    <Link href="https://www.oppo.com/en/legal/">Legal & Compliance</Link>
+                    <Link href="https://www.oppo.com/en/legal/" target="_blank">Legal & Compliance</Link>
                 </li>
                 <li>
                     Copyright © 2004-{currentYear} OPPO. All rights reserved.

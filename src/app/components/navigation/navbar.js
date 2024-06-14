@@ -26,6 +26,11 @@ export default function Navbar() {
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
+                            <Link href="/">Current Events</Link>
+                        </span>
+                    </li>
+                    <li className="m-0 p-0 list-none font-normal">
+                        <span className={style.item_span}>
                             <Link href="/">FAQ</Link>
                         </span>
                     </li>

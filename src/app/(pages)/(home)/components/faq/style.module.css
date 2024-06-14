@@ -1,36 +1,18 @@
 .faqlayout {
-    margin-bottom: 10rem;
-    padding: 0 4rem;
     display: flex;
     column-gap: 10rem;
 }
 
-.faqtitle p {
-    font-family: 'OPPOSans-Medium';
-    font-size: 36px;
-    position: relative;
-    display: inline-block;
-}
-
-.faqtitle p::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 60%;
-    border-bottom: 2px solid black;
-}
-
-.fqacontent {
+.faqcontent {
     width: 100%;
 }
 
-.fqa_listitem {
+.faq_listitem {
     color: rgba(0, 0, 0, 0.95);
     border-bottom: 1px solid #f0f0f0;
 }
 
-.fqa_listitem h2 {
+.faq_listitem h2 {
     font-family: 'OPPOSans-Medium';
     font-size: 26px;
     font-weight: 300;
@@ -38,7 +20,7 @@
     width: fit-content;
 }
 
-.fqa_listitem p {
+.faq_listitem p {
     font-family: 'OPPOSans-Regular';
     font-size: 16px;
     line-height: 24px;
@@ -48,11 +30,11 @@
     color: #383838
 }
 
-.fqaicon {
+.faqicon {
     transition: transform 0.2s ease-in-out;
 }
 
-.fqarotate {
+.faqrotate {
     transform: rotate(90deg);
 }
 
@@ -69,22 +51,16 @@
 
 @media (max-width: 1440px) {
     .faqlayout {
-        margin-bottom: 5rem;
         column-gap: 3rem;
     }
 
-    .faqtitle p {
-        font-size: 32px;
-    }
-
-    .fqa_listitem h2 {
+    .faq_listitem h2 {
         font-size: 18px;
     }
 }
 
 @media (max-width: 1024px) {
     .faqlayout {
-        padding: 0;
         flex-direction: column;   
     }    
 
@@ -92,13 +68,13 @@
         margin-bottom: 3rem;
     }
 
-    .fqa_listitem h2 {
+    .faq_listitem h2 {
         font-size: 24px;
     }
 }
 
 @media (max-width: 768px) {
-    .fqa_listitem h2 {
+    .faq_listitem h2 {
         font-size: 20px;
     }
 }
