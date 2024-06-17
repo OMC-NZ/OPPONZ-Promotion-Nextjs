@@ -14,16 +14,16 @@ const imgs = [
     { url: '/temporary/img/promo03.jpg' },
     { url: '/temporary/img/promo04.jpg' },
     { url: '/temporary/img/promo05.jpg' },
-    // { url: '/temporary/img/promo06.jpg' },
-    // { url: '/temporary/img/promo07.jpg' },
-    // { url: '/temporary/img/promo08.jpg' },
-    // { url: '/temporary/img/promo09.jpg' }
+    { url: '/temporary/img/promo06.jpg' },
+    { url: '/temporary/img/promo07.jpg' },
+    { url: '/temporary/img/promo08.jpg' },
+    { url: '/temporary/img/promo09.jpg' }
 ];
 
-export default function MonthlyPromotions() {
+export default function MonthlyPromotions({ id }) {
     const { width: windowWidth } = useWindowSize();
     const [windowWidthValid, setWindowWidthValid] = useState(false);
-    const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length);
+    const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length, 'MonthlyPromotions');
 
     useEffect(() => {
         if (!isNaN(windowWidth) && windowWidth > 0) {
@@ -48,7 +48,7 @@ export default function MonthlyPromotions() {
     const showPaginationButtons = (windowWidth <= 1024 && imgs.length > 2) || (windowWidth <= 768 && imgs.length === 2) || imgs.length > 3;
 
     return (
-        <div className={`${globalStyle.itemsBlock}`}>
+        <div id={id} className={`${globalStyle.itemsBlock}`}>
             <div className={globalStyle.itemsTitle}>
                 <p>Monthly Promotion</p>
             </div>

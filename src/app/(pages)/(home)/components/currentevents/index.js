@@ -11,14 +11,14 @@ import PaginationButtons from "@/app/components/public/paginationButtons";
 const imgs = [
     { url: '/temporary/events/2ds/events01.jpg' },
     { url: '/temporary/events/2ds/events02.jpg' },
-    // { url: '/temporary/events/2ds/events03.jpg' },
-    // { url: '/temporary/events/2ds/events04.jpg' },
+    { url: '/temporary/events/2ds/events03.jpg' },
+    { url: '/temporary/events/2ds/events04.jpg' },
 ]
 
-export default function CurrentEvents() {
+export default function CurrentEvents({ id }) {
     const { width: windowWidth } = useWindowSize();
     const [windowWidthValid, setWindowWidthValid] = useState(false);
-    const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length);
+    const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length, 'CurrentEvents');
 
     useEffect(() => {
         if (!isNaN(windowWidth) && windowWidth > 0) {
@@ -43,7 +43,7 @@ export default function CurrentEvents() {
     const showPaginationButtons = (windowWidth <= 1024 && imgs.length > 2) || (windowWidth <= 768 && imgs.length === 2) || imgs.length > 3;
 
     return (
-        <div className={`${globalStyle.itemsBlock}`}>
+        <div id={id} className={`${globalStyle.itemsBlock}`}>
             <div className={globalStyle.itemsTitle}>
                 <p>Current Events</p>
             </div>

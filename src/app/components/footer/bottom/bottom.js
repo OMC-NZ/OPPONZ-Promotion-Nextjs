@@ -9,7 +9,7 @@ export default function Bottom() {
     const currentYear = new Date().toLocaleString('en-NZ', { year: 'numeric', timeZone: 'Pacific/Auckland' });
 
     const handleBackToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth'});
     };
 
     return (
@@ -34,7 +34,7 @@ export default function Bottom() {
                     Copyright © 2004-{currentYear} OPPO. All rights reserved.
                 </li>
             </ul>
-            <Link href="#" className={`${style.back_top_btn} ${style.ft_body_3_1}`} onClick={handleBackToTop} passHref>
+            <Link href="/" className={`${style.back_top_btn} ${style.ft_body_3_1}`} onClick={handleBackToTop}>
                 Back to Top
                 <IoIosArrowUp className={`${style.arrow_icon}`} />
             </Link>

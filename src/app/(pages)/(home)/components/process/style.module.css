@@ -122,20 +122,40 @@
     }
 }
 
+@media (max-width: 768px) {  
+    .pro_title {
+        font-size: 36px;
+    }
+}
+
 @media (max-width: 575.98px) {
     .pro_content {
         flex-wrap: nowrap;
         column-gap: 1rem;
         overflow-y: auto;
-        height: 9rem;
-    }
-
-    .pro_title {
-        font-size: 36px;
+        height: 13rem;
     }
 
     .pro_step {
         flex: 0 0 100%;
-        max-width: 100%;
+        max-width: 80%;
+    }
+
+    .feature_box {
+        padding-top: 50px;
+    }
+
+    .feature_icon {
+        top: 50px
+    }
+}
+
+@media (max-width: 350px) {
+    .feature_box {
+        padding-top: 20px;
+    }
+
+    .feature_icon {
+        top: 20px
     }
 }

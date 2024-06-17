@@ -1,8 +1,14 @@
-import React from "react";
 import Link from "next/link";
 import style from "./navbar.module.css";
 
 export default function Navbar() {
+    const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="max-lg:hidden relative flex justify-between items-center box-border border-b-[1px] border-solid border-[#ececec] h-full px-[64px] py-0">
             <div id="logo" className="mr-[12px] flex items-center">
@@ -21,17 +27,17 @@ export default function Navbar() {
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="/">Monthly Promotions</Link>
+                            <Link href="#monthlyPromo">Monthly Promotions</Link>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="/">Current Events</Link>
+                            <Link href="#currentEvs">Current Events</Link>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="/">FAQ</Link>
+                            <Link href="#faQues">FAQ</Link>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">

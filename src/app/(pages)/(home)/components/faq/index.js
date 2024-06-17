@@ -4,7 +4,7 @@ import style from "./style.module.css";
 import globalStyle from "@/app/publicstyle.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
 
-export default function FAQ() {
+export default function FAQ({ id }) {
     const [openIndex, setOpenIndex] = useState(null);
     const contentRefs = useRef([]);
 
@@ -40,7 +40,7 @@ export default function FAQ() {
     ];
 
     return (
-        <div className={`${globalStyle.itemsBlock} ${style.faqlayout}`}>
+        <div id={id} className={`${globalStyle.itemsBlock} ${style.faqlayout}`}>
             <div className={`${globalStyle.itemsTitle} ${style.faqtitle}`}>
                 <p>Frequently Asked Questions</p>
             </div>
@@ -52,7 +52,7 @@ export default function FAQ() {
                                 <h2>{faq.question}</h2>
                                 <FaArrowRightLong className={`${style.faqicon} ${openIndex === index ? style.faqrotate : ''}`} />
                             </div>
-                            <div ref={el => contentRefs.current[index] = el} className={`${style.answer} ${openIndex === index ? style.show : ''}`} style={{maxHeight: openIndex === index ? `${contentRefs.current[index].scrollHeight}px` : '0'}}>
+                            <div ref={el => contentRefs.current[index] = el} className={`${style.answer} ${openIndex === index ? style.show : ''}`} style={{ maxHeight: openIndex === index ? `${contentRefs.current[index].scrollHeight}px` : '0' }}>
                                 <p>{faq.answer}</p>
                             </div>
                         </li>
