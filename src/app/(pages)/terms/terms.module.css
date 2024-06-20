@@ -17,7 +17,6 @@
 
 .termsTitle p {
     font-size: 5.75rem;
-    font-family: 'OPPOSans-Regular';
     font-weight: 600;
     line-height: 6.88rem;
 }
@@ -41,7 +40,6 @@
 .termsSectionContent li {
     position: relative;
     font-size: 1rem;
-    font-family: 'OPPOSans-Regular';
     font-variation-settings: 'wght' 550;
     line-height: 1.5rem;
     padding-left: 1.5rem;

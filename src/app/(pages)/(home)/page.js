@@ -1,6 +1,4 @@
 import style from "./home.module.css";
-import Navigation from '@/app/components/navigation/index';
-import Footer from "@/app/components/footer/index";
 import Noname from "./components/noname";
 import Process from "./components/process";
 import MonthlyPromotions from "./components/monthly";
@@ -14,7 +12,6 @@ export const metadata = {
 export default function Home() {
     return (
         <>
-            <Navigation />
             <div className={style.oc_container}>
                 <Noname />
                 <div className={style.oc_subcontents}>
@@ -24,7 +21,6 @@ export default function Home() {
                     <FAQ id="faQues" />
                 </div>
             </div>
-            <Footer />
         </>
     )
 }

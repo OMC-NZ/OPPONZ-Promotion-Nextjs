@@ -16,6 +16,10 @@
   --foreground-rgb: 0, 0, 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   color: rgb(var(--foreground-rgb));
@@ -26,7 +30,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
-  scroll-behavior: smooth;
 }
 
 em, i, strong {

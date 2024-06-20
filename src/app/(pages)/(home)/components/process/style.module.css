@@ -6,17 +6,12 @@
     margin-bottom: 6rem;
 }
 
-.curved_img {
-    z-index: 1;
-    object-fit: cover;
-    width: 100%;
-    display: inline;
+.top_radian {
     position: absolute;
-    top: -6.7%;
-    bottom: auto;
-    left: 0%;
-    right: 0%;    
-    background-color: black;
+    width: 100%;
+    height: 10rem;
+    bottom: 18rem;
+    z-index: -1;
 }
 
 .pro_title {

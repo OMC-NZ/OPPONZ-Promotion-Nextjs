@@ -9,7 +9,10 @@ export default function Process() {
 
     return (
         <div className={style.claim_process}>
-            <div className={style.pro_title}>Gift with Purchase Redemption Process</div>
+            <div className={style.pro_title}>Gift with Purchase Redemption Process</div>            
+            <svg viewBox="0 0 300 100" preserveAspectRatio="none" className={`${style.top_radian}`}>
+                <path d="M0,50 Q150,0 300,50 L300,100 L0,100 Z" fill="white" />
+            </svg>
             {windowSize.width < 575.98 ? (
                 <MobileSteps />
             ) : (
@@ -32,7 +35,6 @@ export default function Process() {
                     ))}
                 </div>
             )}
-            {/* <Image src="/svg/radian414.svg" alt="" className={style.curved_img} width={500} height={500} /> */}
         </div>
     )
 }
