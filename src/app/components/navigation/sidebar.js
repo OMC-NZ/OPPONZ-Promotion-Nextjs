@@ -1,10 +1,14 @@
 "use client"
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./sidebar.module.css";
 
 export default function Sidebar() {
+    const router = useRouter();
+    const pathname = usePathname();
+    const [scrollTo, setScrollTo] = useState(null);
     const [isRotate, setIsRotate] = useState(false);
     const [isMenu, setIsMenu] = useState(false);
 
@@ -12,6 +16,49 @@ export default function Sidebar() {
         setIsRotate(!isRotate);
         setIsMenu(!isRotate);
     }
+
+    const handleNavigation = (id) => {
+        if (pathname === '/') {
+            setScrollTo(id);
+        } else {
+            localStorage.setItem('scrollTo', id);
+            router.push('/');
+        }
+        setIsRotate(!isRotate);
+        setIsMenu(!isRotate);
+    };
+
+    useEffect(() => {
+        if (pathname === '/') {
+            const storedScrollTo = localStorage.getItem('scrollTo');
+            if (storedScrollTo) {
+                setScrollTo(storedScrollTo);
+                localStorage.removeItem('scrollTo');
+            }
+        }
+
+        if (scrollTo) {
+            const element = document.getElementById(scrollTo);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                setScrollTo(null);
+            }
+        }
+
+        // 在组件渲染后和每次更新后都会运行这里的代码
+        if (isRotate) {
+            // 当 isRotate 为 true 时，添加 overflow: hidden 到 body
+            document.body.style.overflow = 'hidden';
+        } else {
+            // 当 isRotate 为 false 时，移除 overflow: hidden
+            document.body.style.overflow = 'unset';
+        }
+
+        // 在组件卸载时清理 effect
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isRotate, pathname, scrollTo]);
 
     return (
         <div className="lg:hidden h-[50px] py-0">
@@ -34,7 +81,7 @@ export default function Sidebar() {
                     <ul>
                         <li>
                             <p className={style.second_nav_title}>
-                                <Link href="/" className="flex items-center justify-between">
+                                <Link href="/" className="flex items-center justify-between" onClick={handleClick}>
                                     <span>Home</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
                                 </Link>
@@ -42,31 +89,31 @@ export default function Sidebar() {
                         </li>
                         <li>
                             <p className={style.second_nav_title}>
-                                <Link href="#monthlyPromo" className="flex items-center justify-between">
+                                <span className="flex items-center justify-between" onClick={() => handleNavigation('monthlyPromo')}>
                                     <span>Monthly Promotions</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
-                                </Link>
+                                </span>
                             </p>
                         </li>
                         <li>
                             <p className={style.second_nav_title}>
-                                <Link href="#currentEvs" className="flex items-center justify-between">
+                                <span className="flex items-center justify-between" onClick={() => handleNavigation('currentEvs')}>
                                     <span>Current Events</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
-                                </Link>
+                                </span>
                             </p>
                         </li>
                         <li>
                             <p className={style.second_nav_title}>
-                                <Link href="#faQues" className="flex items-center justify-between">
+                                <span className="flex items-center justify-between" onClick={() => handleNavigation('faQues')}>
                                     <span>FAQ</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
-                                </Link>
+                                </span>
                             </p>
                         </li>
                         <li>
                             <p className={style.second_nav_title}>
-                                <Link href="https://shop.oppomobile.nz/" target="_blank" className="flex items-center justify-between">
+                                <Link href="https://shop.oppomobile.nz/" target="_blank" className="flex items-center justify-between" onClick={handleClick}>
                                     <span>Shop Now</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
                                 </Link>

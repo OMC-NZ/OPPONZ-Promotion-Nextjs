@@ -75,6 +75,10 @@
     column-gap: 8px;
 }
 
+.showButton p {
+    font-size: 16px;
+}
+
 .disabled {
     color: #afafaf;
 }

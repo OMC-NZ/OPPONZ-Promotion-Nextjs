@@ -20,7 +20,7 @@ const imgs = [
     { url: '/temporary/img/promo09.jpg' }
 ];
 
-export default function MonthlyPromotions({ id }) {
+export default function MonthlyPromotions() {
     const { width: windowWidth } = useWindowSize();
     const [windowWidthValid, setWindowWidthValid] = useState(false);
     const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length, 'MonthlyPromotions');
@@ -30,10 +30,6 @@ export default function MonthlyPromotions({ id }) {
             setWindowWidthValid(true);
         }
     }, [windowWidth]);
-
-    if (!windowWidthValid) {
-        return null;
-    }
 
     const handlePageChange = (page) => {
         if (page >= 0 && page < totalPages) {
@@ -48,35 +44,39 @@ export default function MonthlyPromotions({ id }) {
     const showPaginationButtons = (windowWidth <= 1024 && imgs.length > 2) || (windowWidth <= 768 && imgs.length === 2) || imgs.length > 3;
 
     return (
-        <div id={id} className={`${globalStyle.itemsBlock}`}>
+        <div className={`${globalStyle.itemsBlock}`}>
             <div className={globalStyle.itemsTitle}>
                 <p>Monthly Promotion</p>
             </div>
-            <div className={style.mostthree}>
-                {currentImages.map((step, index) => (
-                    <Image
-                        key={index}
-                        src={step.url}
-                        alt={`Promo ${index}`}
-                        width={620}
-                        height={420}
-                        quality={100}
-                        className={imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o}
-                    />
-                ))}
-            </div>
-            <div className={style.currentnote}>
-                <FaAsterisk style={{ color: 'red' }} />
-                <p style={{ color: 'grey' }}>This promotion is only available at selected stores, please check with your store for promotion availability</p>
-                <FaAsterisk style={{ color: 'red' }} />
-            </div>
-            {showPaginationButtons && (
-                <PaginationButtons
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
-            )}
+            {windowWidthValid ? (
+                <>
+                    <div className={style.mostthree}>
+                        {currentImages.map((step, index) => (
+                            <Image
+                                key={index}
+                                src={step.url}
+                                alt={`Promo ${index}`}
+                                width={620}
+                                height={420}
+                                quality={100}
+                                className={imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o}
+                            />
+                        ))}
+                    </div>
+                    <div className={style.currentnote}>
+                        <FaAsterisk style={{ color: 'red' }} />
+                        <p style={{ color: 'grey' }}>This promotion is only available at selected stores, please check with your store for promotion availability</p>
+                        <FaAsterisk style={{ color: 'red' }} />
+                    </div>
+                    {showPaginationButtons && (
+                        <PaginationButtons
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
+                </>)
+                : null}
         </div>
     );
 }

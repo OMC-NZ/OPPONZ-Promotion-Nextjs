@@ -15,7 +15,7 @@ const imgs = [
     { url: '/temporary/events/2ds/events04.jpg' },
 ]
 
-export default function CurrentEvents({ id }) {
+export default function CurrentEvents() {
     const { width: windowWidth } = useWindowSize();
     const [windowWidthValid, setWindowWidthValid] = useState(false);
     const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length, 'CurrentEvents');
@@ -25,10 +25,6 @@ export default function CurrentEvents({ id }) {
             setWindowWidthValid(true);
         }
     }, [windowWidth]);
-
-    if (!windowWidthValid) {
-        return null;
-    }
 
     const handlePageChange = (page) => {
         if (page >= 0 && page < totalPages) {
@@ -43,30 +39,34 @@ export default function CurrentEvents({ id }) {
     const showPaginationButtons = (windowWidth <= 1024 && imgs.length > 2) || (windowWidth <= 768 && imgs.length === 2) || imgs.length > 3;
 
     return (
-        <div id={id} className={`${globalStyle.itemsBlock}`}>
+        <div className={`${globalStyle.itemsBlock}`}>
             <div className={globalStyle.itemsTitle}>
                 <p>Current Events</p>
             </div>
-            <div className={style.mostthree}>
-                {currentImages.map((step, index) => (
-                    <Image
-                        key={index}
-                        src={step.url}
-                        alt={`Promo ${index}`}
-                        width={620}
-                        height={420}
-                        quality={100}
-                        className={`${imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o} ${selfStyle.imgBorder}`}
-                    />
-                ))}
-            </div>
-            {showPaginationButtons && (
-                <PaginationButtons
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
-            )}
+            {windowWidthValid ? (
+                <>
+                    <div className={style.mostthree}>
+                        {currentImages.map((step, index) => (
+                            <Image
+                                key={index}
+                                src={step.url}
+                                alt={`Promo ${index}`}
+                                width={620}
+                                height={420}
+                                quality={100}
+                                className={`${imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o} ${selfStyle.imgBorder}`}
+                            />
+                        ))}
+                    </div>
+                    {showPaginationButtons && (
+                        <PaginationButtons
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
+                </>)
+                : null}
         </div>
     )
 }

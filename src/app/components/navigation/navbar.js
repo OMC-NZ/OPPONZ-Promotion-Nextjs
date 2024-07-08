@@ -1,13 +1,41 @@
+"use client"
+
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./navbar.module.css";
 
 export default function Navbar() {
-    const scrollToSection = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+    const router = useRouter();
+    const pathname = usePathname();
+    const [scrollTo, setScrollTo] = useState(null);
+
+    const handleNavigation = (id) => {
+        if (pathname === '/') {
+            setScrollTo(id);
+        } else {
+            localStorage.setItem('scrollTo', id);
+            router.push('/');
         }
     };
+
+    useEffect(() => {
+        if (pathname === '/') {
+            const storedScrollTo = localStorage.getItem('scrollTo');
+            if (storedScrollTo) {
+                setScrollTo(storedScrollTo);
+                localStorage.removeItem('scrollTo');
+            }
+        }
+
+        if (scrollTo) {
+            const element = document.getElementById(scrollTo);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                setScrollTo(null);
+            }
+        }
+    }, [pathname, scrollTo]);
 
     return (
         <div className="max-lg:hidden relative flex justify-between items-center box-border border-b-[1px] border-solid border-[#ececec] h-full px-[64px] py-0">
@@ -27,17 +55,17 @@ export default function Navbar() {
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="#monthlyPromo">Monthly Promotions</Link>
+                            <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="#currentEvs">Current Events</Link>
+                            <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
                         <span className={style.item_span}>
-                            <Link href="#faQues">FAQ</Link>
+                            <button onClick={() => handleNavigation('faQues')}>FAQ</button>
                         </span>
                     </li>
                     <li className="m-0 p-0 list-none font-normal">
@@ -46,9 +74,6 @@ export default function Navbar() {
                         </span>
                     </li>
                 </ul>
-            </div>
-            <div className="flex flex-row justify-end items-center min-w-0">
-
             </div>
         </div>
     );

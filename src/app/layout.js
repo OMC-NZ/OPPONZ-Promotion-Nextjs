@@ -3,8 +3,8 @@ import style from "./globals.css";
 import Navigation from '@/app/components/navigation/index';
 import Footer from "@/app/components/footer/index";
 
-export default function RootLayout({ children }) {
 
+export default function RootLayout({ children }) {
   return (
     <html lang="en-NZ">
       <head>

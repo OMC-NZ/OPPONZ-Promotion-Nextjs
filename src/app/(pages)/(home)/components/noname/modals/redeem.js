@@ -73,7 +73,7 @@ export default function Redeem({ isVisible, onClose }) {
                                             3. Go to [Settings] &gt; [About Phone] &gt; [Status] &gt; [IMEI-1].
                                         </i>
                                     </span>
-                                    <input type="type" placeholder="Type and Check an IMEI-1" onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} required />
+                                    <input type="type" placeholder="Input an IMEI-1" onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} required />
                                     {imeiCorrect && <p className={`${style.validatetick}`}><GiCheckMark /></p>}
                                     {imeiError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                 </div>
@@ -87,7 +87,7 @@ export default function Redeem({ isVisible, onClose }) {
                                     <span className={`${style.conIcon}`}>
                                         <FiCalendar />
                                     </span>
-                                    <DatePicker wrapperClassName={`${style.datepicker}`} selected={selectedDate} onChange={handleDateChange} dateFormat="yyyy-MM-dd" placeholderText="Click and Select a date" maxDate={maxDate} popperPlacement={popperStatus} required />
+                                    <DatePicker wrapperClassName={`${style.datepicker}`} selected={selectedDate} onChange={handleDateChange} dateFormat="yyyy-MM-dd" placeholderText="Select a Date" maxDate={maxDate} popperPlacement={popperStatus} required />
                                     {dateError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                 </div>
                             </div>

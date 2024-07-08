@@ -1,11 +1,9 @@
-export const metadata = {
-    title: 'Claim | OPPO NZ Promotions'
-}
 
 export default function Claim() {
 
     return (
         <>
+            <title>Claim | OPPO NZ Promotions</title>
             Hi Claim!
         </>
     )

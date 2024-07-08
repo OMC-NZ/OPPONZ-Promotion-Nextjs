@@ -16,10 +16,6 @@
   --foreground-rgb: 0, 0, 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
   color: rgb(var(--foreground-rgb));
