@@ -6,7 +6,7 @@ import selfStyle from "./style.module.css";
 import globalStyle from "@/app/publicstyle.module.css";
 import useWindowSize from "@/hooks/useWindowSize";
 import usePagination from "@/hooks/usePagination";
-import PaginationButtons from "@/app/components/public/paginationButtons";
+import PaginationButtons from "@/app/components/public/pagination/index";
 
 const imgs = [
     { url: '/temporary/events/2ds/events01.jpg' },

@@ -1,16 +1,15 @@
 "use client"
 
-import { ReCaptchaProvider } from 'react-grecaptcha-v3';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
-const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+const recaptchaSiteKeyV3 = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V3;
 
 export default function Template({ children }) {
     return (
         <>
-            <ReCaptchaProvider siteKey={recaptchaSiteKey}>
+            <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKeyV3}>
                 {children}
-            </ReCaptchaProvider>
-
+            </GoogleReCaptchaProvider>
         </>
     )
 }

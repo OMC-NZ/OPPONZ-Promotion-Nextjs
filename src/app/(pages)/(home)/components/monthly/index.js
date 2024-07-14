@@ -6,7 +6,7 @@ import globalStyle from "@/app/publicstyle.module.css";
 import { FaAsterisk } from "react-icons/fa6";
 import useWindowSize from "@/hooks/useWindowSize";
 import usePagination from "@/hooks/usePagination";
-import PaginationButtons from "@/app/components/public/paginationButtons";
+import PaginationButtons from "@/app/components/public/pagination/index";
 
 const imgs = [
     { url: '/temporary/img/promo01.jpg' },

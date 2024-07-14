@@ -1,0 +1,44 @@
+.claim_content {
+    padding: 3rem 0;
+}
+
+.claim_title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.claim_title p {
+    font-family: "OPPOSans-Medium";
+    font-size: 4rem;
+}
+
+.claim_title span {
+    font-size: 1.1rem;
+    color: #6b5a5a8c;
+}
+
+.claim_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 0;
+}
+
+.form_container {
+    max-width: 1300px;
+}
+
+.specWords {
+    text-decoration: underline;
+}
+
+.specWords:hover {
+    color: black;
+}
+
+@media (max-width: 1440px) {
+    .claim_title p {
+        font-size: 3rem;
+    }
+}
