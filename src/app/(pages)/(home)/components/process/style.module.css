@@ -81,6 +81,7 @@
 
 .disabled {
     color: #afafaf;
+    cursor: unset;
 }
 
 @media (max-width: 1280px) {

@@ -57,3 +57,34 @@
     box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%);
     color: #fff;
   }
+
+  @media (max-width: 1024px) {
+    .modal_content {
+      max-width: 800px;
+    }
+
+    .modal_close {
+      margin-top: 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .modal_content {
+      max-width: 600px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .modal_title {
+      font-size: 22px;
+    }
+
+    .modal_text {
+      font-size: 14px;
+    }
+
+    .close_button {
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+  }

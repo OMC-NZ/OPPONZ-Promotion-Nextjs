@@ -18,4 +18,5 @@
 
 .disabled {
     color: #afafaf;
+    cursor: unset;
 }

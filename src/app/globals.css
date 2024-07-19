@@ -5,11 +5,13 @@
 @font-face {
   font-family: "OPPOSans-Medium";
   src: url("../../public/fonts/otf/OPPOSans-Medium.otf") format('Opentype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: "OPPOSans-Regular";
   src: url("../../public/fonts/otf/OPPOSans-Regular.otf") format('Opentype');
+  font-display: swap;
 }
 
 :root {
