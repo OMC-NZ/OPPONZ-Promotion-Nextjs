@@ -1,0 +1,79 @@
+.faqlayout {
+    display: flex;
+    column-gap: 10rem;
+}
+
+.faqcontent {
+    width: 100%;
+}
+
+.faq_listitem {
+    color: rgba(0, 0, 0, 0.95);
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.faq_listitem h2 {
+    font-family: 'OPPOSans-Medium';
+    font-size: 26px;
+    font-weight: 300;
+    padding: 10px 17px 10px 0px;
+    width: fit-content;
+}
+
+.faq_listitem p {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.1px;
+    padding: 1rem 1rem 1rem 0;
+    overflow: hidden;
+    color: #383838
+}
+
+.faqicon {
+    transition: transform 0.2s ease-in-out;
+}
+
+.faqrotate {
+    transform: rotate(90deg);
+}
+
+.answer {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+  
+.answer.show {
+    opacity: 1;
+}
+
+@media (max-width: 1440px) {
+    .faqlayout {
+        column-gap: 3rem;
+    }
+
+    .faq_listitem h2 {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .faqlayout {
+        flex-direction: column;   
+    }    
+
+    .faqtitle {
+        margin-bottom: 3rem;
+    }
+
+    .faq_listitem h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .faq_listitem h2 {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,60 @@
+.mostthree {
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
+.cppadlayout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cpimg_o {
+    max-width: 70%;
+}
+
+.cpimg_t {
+    max-width: 30vw;
+}
+
+.cpimg_th {
+    max-width: 20vw;
+}
+
+.currentnote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5px;
+    margin-top: 2rem;
+}
+
+@media (max-width: 1440px) {
+    .cpimg_th {
+        max-width: 23vw;
+    }
+}
+
+@media (max-width: 1024px) {
+    .cpimg_th {
+        max-width: 40vw;
+    }
+
+    .cpimg_t {
+        max-width: 35vw;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .cpimg_o {
+        max-width: 80%;
+    }
+}
+
+@media (max-width: 575.5px) {
+    .cpimg_o {
+        max-width: 75vw;
+    }
+}

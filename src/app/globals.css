@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "OPPOSans-Medium";
+  src: url("../../public/fonts/otf/OPPOSans-Medium.otf") format('Opentype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OPPOSans-Regular";
+  src: url("../../public/fonts/otf/OPPOSans-Regular.otf") format('Opentype');
+  font-display: swap;
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+}
+
+body {
+  margin: 0;
+  color: rgb(var(--foreground-rgb));
+  font-size: 14px;
+  font-family: "OPPOSans-Regular";
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+em, i, strong {
+  font-style: normal;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+#launcher {
+  display: none !important;
+}
+
+.grecaptcha-badge {
+  display: none !important;  
+}
+
+.oc_wrapper {
+  margin-top: 0px;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 100vh;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  transition: all .3s;
+}

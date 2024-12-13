@@ -1,0 +1,110 @@
+.termsMain {
+    margin-top: 7.5rem;
+    margin-bottom: 11.25rem;
+}
+
+.termsCenter {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.termsTitle {
+    width: 68.13rem;
+    text-align: center;
+}
+
+.termsTitle p {
+    font-size: 5.75rem;
+    font-weight: 600;
+    line-height: 6.88rem;
+}
+
+.termsSection {
+    width: 68.13rem;
+    margin-top: 7.5rem;
+}
+
+.termsSectionTitle {
+    font-size: 1.25rem;
+    font-family: 'OPPOSans-Medium';
+    line-height: 1.88rem;
+}
+
+.termsSectionContent {
+    margin-top: 1.25rem;
+    counter-reset: list-counter;
+}
+
+.termsSectionContent li {
+    position: relative;
+    font-size: 1rem;
+    font-variation-settings: 'wght' 550;
+    line-height: 1.5rem;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.termsSectionContent li:before {
+    content: counter(list-counter) ".";
+    counter-increment: list-counter;
+    position: absolute;
+    left: 0;
+    width: 2rem;
+}
+
+@media (max-width: 1439.98px) {
+    .termsMain {
+        margin-top: 6.25rem;
+    }
+
+    .termsTitle {
+        width: 74.512vw;
+    }
+
+    .termsTitle p {
+        font-size: 4rem;
+        line-height: 4.75rem;
+    }
+
+    .termsSection {
+        width: 74.512vw;
+        margin-top: 8.789vw;
+    }
+}
+
+@media (max-width: 1023.98px) {
+    .termsMain {
+        margin-top: 5.6rem;
+    }
+
+    .termsTitle {
+        width: 74.089vw;
+    }
+
+    .termsSection {
+        width: 74.089vw;
+        margin-top: 11.719vw;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .termsMain {
+        margin-top: 4.43rem;
+    }
+
+    .termsTitle {
+        width: 91.667vw;
+    }
+
+    .termsTitle p {
+        font-size: 2.25rem;
+        line-height: 2.875rem;
+    }
+
+    .termsSection {
+        width: 91.667vw;
+        margin-top: 8.789vw;
+    }
+}

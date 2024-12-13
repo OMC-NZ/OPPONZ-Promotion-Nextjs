@@ -1,0 +1,161 @@
+.claim_process {
+    position: relative;
+    background-color: white;
+    z-index: 2;
+    margin-top: -8rem;
+    margin-bottom: 6rem;
+}
+
+.top_radian {
+    position: absolute;
+    width: 100%;
+    height: 10rem;
+    bottom: 18rem;
+    z-index: -1;
+}
+
+.pro_title {
+    font-family: 'OPPOSans-Medium';
+    font-size: 45px;
+    text-align: center;
+    padding: 45px 0;
+}
+
+.pro_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 1rem 0;
+}
+
+.pro_step {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+.feature_box {
+    position: relative;
+    background: #eee;
+    padding: 30px 30px 20px 80px;
+    height: 100%;
+    border-radius: 40px;
+}
+
+.feature_icon {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    color: #333;
+}
+
+.pro_h4 {
+    font-size: 20px;
+    line-height: 40px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.pro_words {
+    font-size: 15px;
+    line-height: 24px;
+    color: #999;
+}
+
+.showButtonSl {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1rem;
+    font-weight: 700;
+}
+
+.showButton {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+}
+
+.showButton p {
+    font-size: 16px;
+}
+
+.disabled {
+    color: #afafaf;
+    cursor: unset;
+}
+
+@media (max-width: 1280px) {
+    .claim_process {
+        margin-bottom: 4rem;
+    }
+
+    .pro_content {
+        row-gap: 3rem;
+    }
+
+    .pro_step {
+        flex: 0 0 50%;
+        max-width: 45%;
+    }
+
+    .feature_box {
+        padding-bottom: 15px;
+    }
+
+    .feature_icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .pro_h4 {
+        line-height: 30px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .claim_process {
+        margin-top: 0;
+    }
+    
+    .pro_content {
+        row-gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {  
+    .pro_title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .pro_content {
+        flex-wrap: nowrap;
+        column-gap: 1rem;
+        overflow-y: auto;
+        height: 13rem;
+    }
+
+    .pro_step {
+        flex: 0 0 100%;
+        max-width: 80%;
+    }
+
+    .feature_box {
+        padding-top: 50px;
+    }
+
+    .feature_icon {
+        top: 50px
+    }
+}
+
+@media (max-width: 350px) {
+    .feature_box {
+        padding-top: 20px;
+    }
+
+    .feature_icon {
+        top: 20px
+    }
+}
