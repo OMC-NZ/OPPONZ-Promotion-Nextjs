@@ -18,10 +18,13 @@
   --foreground-rgb: 0, 0, 0;
 }
 
+html {
+  font-size: 14px;
+}
+
 body {
   margin: 0;
   color: rgb(var(--foreground-rgb));
-  font-size: 14px;
   font-family: "OPPOSans-Regular";
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
@@ -30,7 +33,9 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-em, i, strong {
+em,
+i,
+strong {
   font-style: normal;
 }
 
@@ -38,27 +43,45 @@ svg:not(:root) {
   overflow: hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-#launcher {
+#launcher,
+.grecaptcha-badge {
   display: none !important;
 }
 
-.grecaptcha-badge {
-  display: none !important;  
-}
-
 .oc_wrapper {
-  margin-top: 0px;
+  margin: 0 auto;
   box-sizing: border-box;
   height: auto;
   min-height: 100vh;
   width: 100%;
-  margin: auto;
   overflow: hidden;
-  transition: all .3s;
+  transition: all 0.3s;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }

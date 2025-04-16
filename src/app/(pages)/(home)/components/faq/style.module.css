@@ -1,79 +1,75 @@
 .faqlayout {
-    display: flex;
-    column-gap: 10rem;
+  display: flex;
+  flex-direction: column;
+  column-gap: 0;
 }
 
 .faqcontent {
-    width: 100%;
+  width: 100%;
 }
 
 .faq_listitem {
-    color: rgba(0, 0, 0, 0.95);
-    border-bottom: 1px solid #f0f0f0;
+  color: rgba(0, 0, 0, 0.95);
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .faq_listitem h2 {
-    font-family: 'OPPOSans-Medium';
-    font-size: 26px;
-    font-weight: 300;
-    padding: 10px 17px 10px 0px;
-    width: fit-content;
+  font-family: 'OPPOSans-Medium';
+  font-size: 18px;
+  font-weight: 300;
+  padding: 10px 17px 10px 0px;
+  width: fit-content;
 }
 
 .faq_listitem p {
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: -0.1px;
-    padding: 1rem 1rem 1rem 0;
-    overflow: hidden;
-    color: #383838
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: -0.1px;
+  padding: 1rem 1rem 1rem 0;
+  overflow: hidden;
+  color: #383838;
 }
 
 .faqicon {
-    transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .faqrotate {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .answer {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }
-  
+
 .answer.show {
-    opacity: 1;
+  opacity: 1;
 }
 
-@media (max-width: 1440px) {
-    .faqlayout {
-        column-gap: 3rem;
-    }
+@media (min-width: 768px) {
+  .faqlayout {
+    flex-direction: row;
+    column-gap: 3rem;
+  }
 
-    .faq_listitem h2 {
-        font-size: 18px;
-    }
+  .faq_listitem h2 {
+    font-size: 22px;
+  }
 }
 
-@media (max-width: 1024px) {
-    .faqlayout {
-        flex-direction: column;   
-    }    
 
-    .faqtitle {
-        margin-bottom: 3rem;
-    }
-
-    .faq_listitem h2 {
-        font-size: 24px;
-    }
+@media (min-width: 1024px) {
+  .faq_listitem h2 {
+    font-size: 24px;
+  }
 }
 
-@media (max-width: 768px) {
-    .faq_listitem h2 {
-        font-size: 20px;
-    }
+
+@media (min-width: 1280px) {
+  .faqlayout {
+    column-gap: 10rem;
+  }
 }

@@ -58,7 +58,7 @@ export default function Claim() {
     console.log(data)
 
     useEffect(() => {
-        if (windowWidth < 576) {
+        if (windowWidth < 768) {
             setBannerURL(imgs.url.mobile);
         } else {
             setBannerURL(imgs.url.tablet);

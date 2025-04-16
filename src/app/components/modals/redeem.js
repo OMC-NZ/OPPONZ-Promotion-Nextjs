@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import style from "../style.module.css";
+import style from "./style.module.css";
 import { FiCalendar } from "react-icons/fi";
 import { PiQuestionBold } from "react-icons/pi";
 import { GiCheckMark, GiCrossMark } from "react-icons/gi";

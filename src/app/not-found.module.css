@@ -1,39 +1,39 @@
 .oppo_error_page_container {
     text-align: center;
-}
-
-.oppo_error_page_container * {
+  }
+  
+  .oppo_error_page_container * {
     box-sizing: border-box;
-}
-
-.responsive_layout {
+  }
+  
+  .responsive_layout {
     height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.oppo_error_page_container_img {
-    width: 275px;
-    height: 120px;
+  }
+  
+  .oppo_error_page_container_img {
+    width: 230px;
+    height: 100px;
     opacity: 1;
     transition: opacity 300ms;
-}
-
-.oppo_error_page_container_text {
-    font-size: 20px;
-    line-height: 28px;
-    letter-spacing: .5px;
+  }
+  
+  .oppo_error_page_container_text {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
     color: #000;
     margin-top: 24px;
-}
-
-.back_button {
-    margin-top: 48px;
-    height: 40px;
+  }
+  
+  .back_button {
+    margin-top: 16px;
+    height: 32px;
     color: #fff;
-    background: #000;    
+    background: #000;
     --click-start-top: 50%;
     --click-start-left: 50%;
     display: inline-block;
@@ -50,31 +50,50 @@
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -webkit-transform: translate3d(0, 0, 0);
-}
-
-.back_button_content {
-    line-height: 40px;
+  }
+  
+  .back_button_content {
+    line-height: 32px;
     font-size: 14px;
-    letter-spacing: .5px;
-}
+    letter-spacing: 0.5px;
+  }
+  
 
-@media screen and (max-width: 1024px) {
+  @media (min-width: 768px) {
     .oppo_error_page_container_img {
-        width: 230px;
-        height: 100px;
+      width: 275px;
+      height: 120px;
     }
-
+  
     .oppo_error_page_container_text {
-        font-size: 16px;
-        line-height: 24px;
+      font-size: 18px;
+      line-height: 26px;
     }
-
+  
     .back_button {
-        margin-top: 16px;
-        height: 32px;
+      margin-top: 36px;
+      height: 36px;
     }
+  
+    .back_button_content {
+      line-height: 36px;
+    }
+  }
+  
 
-    .back_button_content {        
-        line-height: 32px;
+  @media (min-width: 1024px) {
+    .oppo_error_page_container_text {
+      font-size: 20px;
+      line-height: 28px;
     }
-}
+  
+    .back_button {
+      margin-top: 48px;
+      height: 40px;
+    }
+  
+    .back_button_content {
+      line-height: 40px;
+    }
+  }
+  

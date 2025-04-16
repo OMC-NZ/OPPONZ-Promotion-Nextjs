@@ -1,28 +1,49 @@
 .oc_container {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .oc_subcontents {
-    max-width: 1312px;
-    margin: 0 auto;
-    box-sizing: border-box;
+  max-width: 1312px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 2rem;
 }
 
-@media screen and (min-width: 1025px) and (max-width: 1439px) {
-    .oc_subcontents {
-        padding: 0 64px;
-    }
+.top_radian {
+  position: absolute;
+  width: 100%;
+  height: 10rem;
+  top: 25rem;
 }
 
-@media screen and (min-width: 651px) and (max-width: 1024px) {
-    .oc_subcontents {
-        padding: 0 4rem;
-    }
+@media (min-width: 768px) {
+  .oc_subcontents {
+    padding: 0 3rem;
+  }
+
+  .top_radian {
+    height: 4rem;
+    top: 22rem;
+  }
 }
 
-@media screen and (max-width: 650px) {
-    .oc_subcontents {
-        padding: 0 1rem;
-    }
+
+@media (min-width: 1024px) {
+  .oc_subcontents {
+    padding: 0 4rem;
+  }
+
+  .top_radian {
+    top: 24rem;
+  }
+}
+
+
+@media (min-width: 1280px) {
+  .oc_subcontents {
+    padding: 0 64px;
+    position: relative;
+    bottom: 1rem;
+  }
 }

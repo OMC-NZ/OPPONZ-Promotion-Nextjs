@@ -50,7 +50,7 @@ export default function MobileSteps() {
                         <div className={style.pro_step} key={index}>
                             <div className={style.feature_box}>
                                 <div className={style.feature_icon}>
-                                    <Image src={step.icon} alt={step.alt} width={40} height={40} />
+                                    <Image src={step.icon} alt={step.alt} width={20} height={20} />
                                 </div>
                                 <p className={style.pro_h4}>{step.title}</p>
                                 <p className={style.pro_words}>{step.description}</p>

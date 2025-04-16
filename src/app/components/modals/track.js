@@ -1,5 +1,5 @@
 import { useState, Suspense } from 'react';
-import style from "../style.module.css";
+import style from "./style.module.css";
 import { PiQuestionBold } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
 import useClaimIDValidation from "@/hooks/validations/useClaimIDValidation";

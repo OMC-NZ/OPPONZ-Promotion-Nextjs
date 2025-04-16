@@ -54,7 +54,7 @@ export default function CurrentEvents() {
                                 width={620}
                                 height={420}
                                 quality={100}
-                                className={`${imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o} ${selfStyle.imgBorder}`}
+                                className={`${imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o} ${style.imgBorder}`}
                             />
                         ))}
                     </div>

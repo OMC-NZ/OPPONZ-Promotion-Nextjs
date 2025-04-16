@@ -1,240 +1,211 @@
 .claim_banner {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .claim_content {
-    padding: 3rem 0;
+  padding: 2rem 0;
 }
 
 .claim_title {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .claim_title p {
-    font-family: "OPPOSans-Medium";
-    font-size: 4rem;
+  font-family: "OPPOSans-Medium";
+  font-size: 2.5rem;
 }
 
 .claim_title span {
-    font-size: 1.1rem;
-    color: #6b5a5a8c;
+  font-size: 14px;
+  color: #6b5a5a8c;
 }
 
 .claim_form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0;
 }
 
 .form_container {
-    max-width: 1300px;
+  max-width: 1300px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem 0;
+  gap: 2rem;
 }
 
 .specWords {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .specWords:hover {
-    color: black;
+  color: black;
 }
 
 .device_info {
-    display: flex;
-    justify-content: center;
-    margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
 }
 
 .device_width {
-    max-width:1300px;
-    display: flex;
-    gap: 10rem;
+  max-width: 1300px;
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
 }
 
 .device_cell {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
 }
 
 .device_data {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #6b5a5a8c;
-}
-
-.form_container {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    align-items: center;
-    margin: 1rem 0;
-    gap: 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #6b5a5a8c;
 }
 
 .modal_card {
-    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 50%);
-    border-radius: 15px;
-    background-color: #fff;
-    font-family: "OPPOSans-Medium";
-    padding: 2rem;
-    width: 50rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 50%);
+  border-radius: 15px;
+  background-color: #fff;
+  font-family: "OPPOSans-Medium";
+  padding: 2rem;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.card_cell {    
-    display: flex;
-    flex-direction: column;
-    position: relative;
+.card_cell {
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .card_main {
-    display:flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .card_label {
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    width: 100%;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .card_main input {
-    width: 100%
+  width: 100%;
 }
 
 .card_border {
-    padding: 8px 12px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .normalBorder {
-    border: 2px solid #dcdcdc;
+  border: 2px solid #dcdcdc;
 }
 
 .card_border input {
-    height: 100%;
-    letter-spacing: 1px;
-    padding: 0;
-    padding-left: 5px;
-    font-size: 18px;
-    outline: 0;
-    border: 0;
-    background: transparent;
-    color: rgba(0, 0, 0, 0.95);
+  height: 100%;
+  letter-spacing: 1px;
+  padding: 0 0 0 5px;
+  font-size: 16px;
+  outline: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.95);
 }
 
 .card_icon {
-    color: #BB0929;
+  color: #BB0929;
 }
 
 .card_error {
-    color: red;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
+  color: red;
+  position: absolute;
+  bottom: 0;
+  left: 3%;
 }
+
 .errorBorder {
-    border: 2px solid red;
+  border: 2px solid red;
 }
 
 .card_checkbox {
-    flex-direction: row-reverse;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4rem;
 }
 
 .card_checkbox label {
-    width: auto;
+  width: auto;
+  font-size: 1rem;
 }
 
 .card_checkbox input {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .claim_content {
+    padding: 3rem 0;
+  }
+
+  .claim_title p {
+    font-size: 3rem;
+  }
+
+  .modal_card {
+    width: 600px;
+  }
+
+  .card_border input {
+    font-size: 16px;
+  }
 }
 
 
+@media (min-width: 1024px) {
+  .claim_title p {
+    font-size: 3.5rem;
+  }
 
-@media (max-width: 1440px) {
-    .claim_title p {
-        font-size: 3rem;
-    }
+  .modal_card {
+    width: 45rem;
+  }
 }
 
-@media (max-width: 768px) {
-    .claim_content {
-        padding: 1rem 0;
-    }
 
-    .claim_title p {
-        font-size: 2.5rem;
-    }
+@media (min-width: 1280px) {
+  .claim_title p {
+    font-size: 4rem;
+  }
 
-    .modal_card {        
-        width: 95%;
-    }
-
-    .card_border input {
-        font-size: 16px;
-    }
-
-    .card_checkbox {
-        gap: 4rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .claim_title span {
-        font-size: 14px;
-    }
-
-    .device_width {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .modal_card {
-        gap: 1.5rem;
-    }
-
-    .card_main {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .card_border input {
-        font-size: 14px;
-    }
-
-    .card_checkbox {
-        gap: 1rem;
-    }
-
-    .card_checkbox label {
-        font-size: 1rem;
-    }
-
-    .card_error {
-        left: 3%;
-    }
-}
-
-@media (max-width: 374.9px) {
-    .card_border input {
-        font-size: 10px;
-    }
+  .modal_card {
+    width: 50rem;
+  }
 }

@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from "next/image";
-import Redeem from "./modals/redeem";
-import Track from "./modals/track";
+import Redeem from "../../../../components/modals/redeem";
+import Track from "../../../../components/modals/track";
 import style from "./style.module.css";
 
 export default function Noname() {
@@ -21,7 +21,7 @@ export default function Noname() {
         <>
             <Redeem isVisible={isVisible.redeem} onClose={() => toggleVisibility('redeem', false)} />
             <Track isVisible={isVisible.track} onClose={() => toggleVisibility('track', false)} />
-            <div className='relative lg:h-[600px] h-[500px] md:h-[400px]'>
+            <div className='relative xl:h-[500px] lg:h-[460px] h-[350px]'>
                 <div className={`${style.dark_overlay}`}></div>
                 <picture className={`${style.main_banner}`}>
                     <source srcSet="/imgs/imagine-if_720-1060.jpg" media="(max-width: 650px)" />
@@ -30,7 +30,7 @@ export default function Noname() {
                 </picture>
                 <div className={`${style.content_container} ${style.content_center} ${style.responsive_layout}`}>
                     <div className={`${style.top_layout}`}>
-                        <div className={`${style.ft_headline}`}>Welcome to OPPO Promotions</div>
+                        <div className={`${style.ft_headline}`}>Welcome to<br/>OPPO Promotions</div>
                     </div>
                     <div className={`${style.claim_button}`}>
                         <button className={`${style.btn}`} onClick={() => toggleVisibility('redeem', true)}>Redeem My Gift</button>
