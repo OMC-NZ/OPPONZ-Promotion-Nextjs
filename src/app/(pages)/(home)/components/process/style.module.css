@@ -5,32 +5,40 @@
 }
 
 .pro_title {
-  font-family: 'OPPOSans-Medium';
-  font-size: 24px;
+  font-family: 'OPPOSans-Bold';
   text-align: center;
   margin-bottom: 2rem;
 }
 
 .pro_content {
   display: flex;
-  flex-wrap: wrap;
+  align-items: stretch;
   justify-content: center;
-  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.pro_step {
+  flex: 1;
+  min-width: 0;
 }
 
 .feature_box {
-  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background: #eee;
-  padding: 20px 15px 15px 60px;
-  height: 12rem;
   border-radius: 40px;
 }
 
 .feature_icon {
-  position: absolute;
-  top: 25px;
-  left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #333;
+}
+
+.pro_words {
+  flex: 1;
 }
 
 .pro_h4 {
@@ -38,10 +46,11 @@
   line-height: 30px;
   font-weight: 700;
   text-transform: capitalize;
+  margin-bottom: 0.5rem;
 }
 
 .pro_words {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 24px;
   color: #999;
 }
@@ -69,42 +78,13 @@
   cursor: unset;
 }
 
-@media (min-width: 480px) {
-  .feature_box {
-    height: 10rem;
-  }
-}
-
-@media (min-width: 576px) {
-  .feature_box {
-    width: 32rem;
-    height: 8rem;
-  }
-}
-
 @media (min-width: 768px) {
   .pro_words {
     font-size: 16px;
   }
 
-  .pro_content {
-    justify-content: center;
-    margin-top: 3rem;
-  }
-
-  .feature_box {
-    width: auto;
-    height: 100%;
-    padding: 30px 30px 30px 80px;
-  }
-
   .pro_title {
     margin-top: 2rem;
-  }
-
-  .pro_step {
-    flex: 0 0 calc(50% - 10px);
-    width: 40%;
   }
 
   .showButton p {
@@ -133,30 +113,19 @@
     margin-bottom: auto;
   }
 
-  .pro_content {
-    flex-wrap: unset;
-    gap: 3rem;
-  }
-
   .pro_title {
-    padding: 0 0 2.5rem 0;
+    font-size: 40px;
   }
 
-  .pro_step {
-    flex: 0 0 20%;
-    max-width: 20%;
+  .pro_content {
+    gap: 16px;
   }
 
   .feature_box {
-    padding-bottom: 15px;
+    padding: 16px;
   }
 
   .feature_icon {
-    width: 30px;
-    height: 30px;
-  }
-
-  .pro_h4 {
-    line-height: 30px;
+    height: 44px;
   }
 }

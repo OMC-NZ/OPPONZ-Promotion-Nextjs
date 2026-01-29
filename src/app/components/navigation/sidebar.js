@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./sidebar.module.css";
 import LoadingModal from "@/app/components/public/loadingModal";
+import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
+import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
 
 export default function Sidebar() {
     const router = useRouter();
@@ -94,22 +96,26 @@ export default function Sidebar() {
                                     </Link>
                                 </p>
                             </li>
-                            <li>
-                                <p className={style.second_nav_title}>
-                                    <span className="flex items-center justify-between" onClick={() => handleNavigation('monthlyPromo')}>
-                                        <span>Monthly Promotions</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
-                                    </span>
-                                </p>
-                            </li>
-                            <li>
-                                <p className={style.second_nav_title}>
-                                    <span className="flex items-center justify-between" onClick={() => handleNavigation('currentEvs')}>
-                                        <span>Current Events</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
-                                    </span>
-                                </p>
-                            </li>
+                            {hasMonthlyPromotions && (
+                                <li>
+                                    <p className={style.second_nav_title}>
+                                        <span className="flex items-center justify-between" onClick={() => handleNavigation('monthlyPromo')}>
+                                            <span>Monthly Promotions</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
+                                        </span>
+                                    </p>
+                                </li>
+                            )}
+                            {hasCurrentEvents && (
+                                <li>
+                                    <p className={style.second_nav_title}>
+                                        <span className="flex items-center justify-between" onClick={() => handleNavigation('currentEvs')}>
+                                            <span>Current Events</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
+                                        </span>
+                                    </p>
+                                </li>
+                            )}
                             <li>
                                 <p className={style.second_nav_title}>
                                     <span className="flex items-center justify-between" onClick={() => handleNavigation('faQues')}>
@@ -120,7 +126,7 @@ export default function Sidebar() {
                             </li>
                             <li>
                                 <p className={style.second_nav_title}>
-                                    <Link href="https://shop.oppomobile.nz/" target="_blank" className="flex items-center justify-between" onClick={handleClick}>
+                                    <Link href="https://oppostore.co.nz/" target="_blank" className="flex items-center justify-between" onClick={handleClick}>
                                         <span>Shop Now</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="arrow_right"><path fillRule="evenodd" clipRule="evenodd" d="M15.6 12.4926L9.3 19.0996L8.26668 18.0137L14 11.9996L8.26668 5.98558L9.3 4.89962L15.6 11.5066C15.8641 11.7789 15.8641 12.2203 15.6 12.4926Z" fill="black" fillOpacity="0.55"></path></svg>
                                     </Link>

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from 'react';
 
 const usePagination = (windowWidth, imgsLength, callerIdentifier) => {

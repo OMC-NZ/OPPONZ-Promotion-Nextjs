@@ -14,7 +14,7 @@
 }
 
 .faq_listitem h2 {
-  font-family: 'OPPOSans-Medium';
+  font-family: 'OPPOSans-Regular';
   font-size: 18px;
   font-weight: 300;
   padding: 10px 17px 10px 0px;
@@ -22,7 +22,7 @@
 }
 
 .faq_listitem p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 24px;
   letter-spacing: -0.1px;
   padding: 1rem 1rem 1rem 0;

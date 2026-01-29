@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from 'react';
 import style from "./style.module.css";
 import { FiCalendar } from "react-icons/fi";
@@ -67,7 +68,7 @@ export default function Redeem({ isVisible, onClose }) {
                                     <span className={`${style.conIcon} ${style.conPiIcon}`}>
                                         <PiQuestionBold onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => hovered ? setHovered(false) : setHovered(true)} />
                                         <i className={`${style.tipText} ${hovered ? style.visible : ''}`}>
-                                            Three ways to find the IMEI-1: <br />
+                                            Ways to find the IMEI-1: <br />
                                             1. Dial *#06# on the keypad to retrieve.<br />
                                             2. Check the bottom of product packing box.<br />
                                             3. Go to [Settings] &gt; [About Phone] &gt; [Status] &gt; [IMEI-1].

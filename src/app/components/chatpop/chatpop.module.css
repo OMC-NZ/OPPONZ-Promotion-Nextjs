@@ -1,8 +1,18 @@
 .contact_pop {
-    bottom: 20px;
-    right: 64px;
-    position: fixed;
-    z-index: 100;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: #ffffffbf;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px #00000014;
+    cursor: pointer;
+    display: flex;
+    font-size: 0;
+    height: 42px;
+    justify-content: center;
+    margin-top: 10px;
+    transition: bottom .3s;
+    width: 42px;
 }
 
 .contact_pop * {
@@ -58,7 +68,8 @@
     }
 }
 
-@media (max-width: 768px), screen and (max-device-width: 1023.98px) and (orientation: landscape) {
+@media (max-width: 768px),
+screen and (max-device-width: 1023.98px) and (orientation: landscape) {
     .contact_pop_icon {
         width: 40px;
         height: 40px;

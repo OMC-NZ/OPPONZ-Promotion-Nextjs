@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./footer_main.module.css";
 import LoadingModal from "@/app/components/public/loadingModal";
+import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
+import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
 
 export default function FooterNav() {
   const router = useRouter();
@@ -48,23 +50,29 @@ export default function FooterNav() {
           <li className="min-w-[169px] mb-[40px]">
             <Link href="/" className={`${style.ft_body_2_1}`}>Home</Link>
           </li>
-          <li className="min-w-[169px] mb-[40px]">
-            <span className={`${style.ft_body_2_1}`}>
-              <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
-            </span>
-          </li>
-          <li className="min-w-[169px] mb-[40px]">
-            <span className={`${style.ft_body_2_1}`}>
-              <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>
-            </span>
-          </li>
+
+          {hasMonthlyPromotions && (
+            <li className="min-w-[169px] mb-[40px]">
+              <span className={`${style.ft_body_2_1}`}>
+                <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
+              </span>
+            </li>
+          )}
+
+          {hasCurrentEvents && (
+            <li className="min-w-[169px] mb-[40px]">
+              <span className={`${style.ft_body_2_1}`}>
+                <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>
+              </span>
+            </li>
+          )}
           <li className="min-w-[169px] mb-[40px]">
             <span className={`${style.ft_body_2_1}`}>
               <button onClick={() => handleNavigation('faQues')}>FAQ</button>
             </span>
           </li>
           <li className="min-w-[169px] mb-[40px]">
-            <Link href="https://shop.oppomobile.nz/" target="_blank" className={`${style.ft_body_2_1}`}>Shop Now</Link>
+            <Link href="https://oppostore.co.nz/" target="_blank" className={`${style.ft_body_2_1}`}>Shop Now</Link>
           </li>
         </ul>
       </nav>

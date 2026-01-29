@@ -1,7 +1,10 @@
+"use client"
+
 import { useState, useEffect } from 'react';
 
 const useSearchStreet = (req) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -14,8 +17,8 @@ const useSearchStreet = (req) => {
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`,
-            'client_id' : process.env.NEXT_PUBLIC_NZPOST_CLIENT_ID
-        }
+            'client_id': process.env.NEXT_PUBLIC_NZPOST_CLIENT_ID
+          }
         });
         if (!response.ok) {
           throw new Error('Network response was not ok');

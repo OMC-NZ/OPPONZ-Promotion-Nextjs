@@ -7,6 +7,7 @@ import globalStyle from "@/app/publicstyle.module.css";
 import useWindowSize from "@/hooks/useWindowSize";
 import usePagination from "@/hooks/usePagination";
 import PaginationButtons from "@/app/components/public/pagination/index";
+import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
 
 const imgs = [
     { url: '/temporary/events/2ds/events01.jpg' },
@@ -18,7 +19,7 @@ const imgs = [
 export default function CurrentEvents() {
     const { width: windowWidth } = useWindowSize();
     const [windowWidthValid, setWindowWidthValid] = useState(false);
-    const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, imgs.length, 'CurrentEvents');
+    const { imgsPerPage, currentPage, setCurrentPage, totalPages } = usePagination(windowWidth, currentEvents.length, 'CurrentEvents');
 
     useEffect(() => {
         if (!isNaN(windowWidth) && windowWidth > 0) {
@@ -34,9 +35,13 @@ export default function CurrentEvents() {
 
     const startIndex = currentPage * imgsPerPage;
     const endIndex = startIndex + imgsPerPage;
-    const currentImages = imgs.slice(startIndex, endIndex);
+    const currentImages = currentEvents.slice(startIndex, endIndex);
 
-    const showPaginationButtons = (windowWidth <= 1024 && imgs.length > 2) || (windowWidth <= 768 && imgs.length === 2) || imgs.length > 3;
+    const showPaginationButtons = (windowWidth <= 1024 && currentEvents.length > 2) || (windowWidth <= 768 && currentEvents.length === 2) || currentEvents.length > 3;
+
+    const shouldShow = windowWidthValid && hasCurrentEvents;
+
+    if (!shouldShow) return null;
 
     return (
         <div className={`${globalStyle.itemsBlock}`}>
@@ -55,6 +60,7 @@ export default function CurrentEvents() {
                                 height={420}
                                 quality={100}
                                 className={`${imgsPerPage == 3 ? style.cpimg_th : imgsPerPage == 2 ? style.cpimg_t : style.cpimg_o} ${style.imgBorder}`}
+                                priority
                             />
                         ))}
                     </div>

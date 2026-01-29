@@ -21,17 +21,19 @@ export default function FooterContact({ isShow, toggleWidget }) {
 
     const handleSupportModal = (event) => {
         event.stopPropagation();
-    }
+    };
 
     const handleOutsideClick = (event) => {
-        if (!divGetSptRef.current?.contains(event.target) && !divChatPopRef.current?.contains(event.target)) {
+        if (
+            !divGetSptRef.current?.contains(event.target) &&
+            !divChatPopRef.current?.contains(event.target)
+        ) {
             setIsChatVisible(false);
         }
     };
 
     useEffect(() => {
         document.addEventListener('click', handleOutsideClick);
-
         return () => {
             document.removeEventListener('click', handleOutsideClick);
         };
@@ -47,7 +49,7 @@ export default function FooterContact({ isShow, toggleWidget }) {
                         </div>
                         <span className={`${style.contact_text} ${style.ft_body_2_1}`}>
                             Get Support From OPPO
-                            <span className={`${style.arrow_icon}`}></span>
+                            <span className={`${style.arrow_icon} ${isChatVisible ? style.open : ''}`}></span>
                         </span>
 
                     </div>

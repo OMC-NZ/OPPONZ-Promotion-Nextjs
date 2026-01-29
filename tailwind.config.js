@@ -4,12 +4,12 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       fontFamily: {
         "OPPOSans-Regular": ["OPPOSans-Regular"],
-        "OPPOSans-Medium": ["OPPOSans-Medium"],
       },
       spacing: {
         '13': '3.25rem',
@@ -19,6 +19,11 @@ module.exports = {
       },
       transitionTimingFunction: {
         'cubic-custom': 'cubic-bezier(0.48, 0.04, 0.52, 0.96)',
+      },
+      flex: {
+        '2': '2 2 0%',
+        '3': '3 3 0%',
+        '4': '4 4 0%',
       },
     },
   },

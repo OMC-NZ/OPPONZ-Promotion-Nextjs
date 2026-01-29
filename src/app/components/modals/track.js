@@ -1,3 +1,4 @@
+"use client"
 import { useState, Suspense } from 'react';
 import style from "./style.module.css";
 import { PiQuestionBold } from "react-icons/pi";

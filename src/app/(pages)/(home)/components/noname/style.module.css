@@ -45,7 +45,7 @@
 }
 
 .ft_headline {
-  font-family: 'OPPOSans-Medium';
+  font-family: 'OPPOSans-Bold';
   font-size: 2rem;
   letter-spacing: 2px;
   overflow-wrap: break-word;
@@ -60,11 +60,11 @@
 }
 
 .btn {
-  font-size: 12px;
+  font-size: 14px;
   height: 40px;
   line-height: 40px;
   letter-spacing: 0.5px;
-  padding: 0 20px;
+  padding: 0 50px;
   border-radius: 16px;
   min-width: 90px;
   text-align: center;
@@ -91,7 +91,7 @@
 
   .content_container {
     gap: 4rem;
-    padding: 4rem 0;
+    padding: 3rem 0 7rem;
     align-items: center;
     text-align: center;
     justify-content: space-evenly;

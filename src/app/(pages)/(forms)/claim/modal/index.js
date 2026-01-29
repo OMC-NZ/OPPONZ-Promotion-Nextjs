@@ -1,3 +1,4 @@
+"use client";
 import style from "./modal.module.css";
 
 export default function DetailsModal({ setModalShow }) {

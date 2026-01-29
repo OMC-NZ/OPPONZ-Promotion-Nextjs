@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./navbar.module.css";
 import LoadingModal from "@/app/components/public/loadingModal";
+import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
+import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
 
 export default function Navbar() {
     const router = useRouter();
@@ -64,16 +66,20 @@ export default function Navbar() {
                                 <Link href="/">Home</Link>
                             </span>
                         </li>
-                        <li className="m-0 p-0 list-none font-normal">
-                            <span className={style.item_span}>
-                                <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
-                            </span>
-                        </li>
-                        <li className="m-0 p-0 list-none font-normal">
-                            <span className={style.item_span}>
-                                <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>
-                            </span>
-                        </li>
+                        {hasMonthlyPromotions && (
+                            <li className="m-0 p-0 list-none font-normal">
+                                <span className={style.item_span}>
+                                    <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
+                                </span>
+                            </li>
+                        )}
+                        {hasCurrentEvents && (
+                            <li className="m-0 p-0 list-none font-normal">
+                                <span className={style.item_span}>
+                                    <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>
+                                </span>
+                            </li>
+                        )}
                         <li className="m-0 p-0 list-none font-normal">
                             <span className={style.item_span}>
                                 <button onClick={() => handleNavigation('faQues')}>FAQ</button>
@@ -81,7 +87,7 @@ export default function Navbar() {
                         </li>
                         <li className="m-0 p-0 list-none font-normal">
                             <span className={style.item_span}>
-                                <Link href="https://shop.oppomobile.nz/" target="_blank">Shop Now</Link>
+                                <Link href="https://oppostore.co.nz/" target="_blank">Shop Now</Link>
                             </span>
                         </li>
                     </ul>

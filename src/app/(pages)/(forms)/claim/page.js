@@ -1,6 +1,6 @@
 "use client"
-
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from 'next/link';
 import style from "./style.module.css";
@@ -25,6 +25,7 @@ const items = {
 }
 
 export default function Claim() {
+    const router = useRouter();
     const [modalShow, setModalShow] = useState(false);
     const [bannerURL, setBannerURL] = useState(imgs.url.tablet);
     const { width: windowWidth } = useWindowSize();
@@ -52,7 +53,7 @@ export default function Claim() {
     const suburbRef = useRef(null);
     const cityRef = useRef(null);
     const postCodeRef = useRef(null);
-    
+
     const { data, error } = useSearchStreet('120 Albert street')
 
     console.log(data)
@@ -111,6 +112,11 @@ export default function Claim() {
         }
     }
 
+    const handleClick = (e) => {
+        e.preventDefault();
+        router.push('/');
+    };
+
     return (
         <>
             <title>Claim | OPPO NZ Promotions</title>
@@ -143,7 +149,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>
                                         <div className={style.card_main} ref={screenshotRef}>
                                             <label className={style.card_label}>Screenshot of IMEI-1<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full`}>
+                                            <div className={`w-full flex-3`}>
                                                 <input type="file" id="screenshot" data-type="file" accept=".jpeg,.jpg,.png,.pdf" onChange={screenshotValidation.handleChange} required />
                                             </div>
                                         </div>
@@ -152,7 +158,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>
                                         <div className={style.card_main} ref={receiptRef}>
                                             <label className={style.card_label}>Proof of Purchase<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full`}>
+                                            <div className={`w-full flex-3`}>
                                                 <input type="file" id="receipt" data-type="file" accept=".jpeg,.jpg,.png,.pdf" onChange={receiptValidation.handleChange} required />
                                             </div>
                                         </div>
@@ -161,7 +167,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>
                                         <div className={style.card_main}>
                                             <label className={style.card_label}>Order Number</label>
-                                            <div className={`w-full ${style.card_border} ${style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${style.normalBorder}`}>
                                                 <input type="type" id="order_no" data-type="text" />
                                             </div>
                                         </div>
@@ -172,7 +178,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* First Name */}
                                         <div className={style.card_main} ref={firstNameRef}>
                                             <label className={style.card_label}>First Name<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${firstNameValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${firstNameValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="first_name" data-type="name" onBlur={firstNameValidation.handleChange} required />
                                                 {firstNameValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -182,7 +188,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* Last Name */}
                                         <div className={style.card_main} ref={lastNameRef}>
                                             <label className={style.card_label}>Last Name<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${lastNameValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${lastNameValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="last_name" data-type="name" onBlur={lastNameValidation.handleChange} required />
                                                 {lastNameValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -192,7 +198,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* Email */}
                                         <div className={style.card_main} ref={emailRef}>
                                             <label className={style.card_label}>Email<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${emailValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${emailValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="email" data-type="email" onBlur={emailValidation.handleChange} required />
                                                 {emailValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -202,7 +208,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* Phone Number */}
                                         <div className={style.card_main} ref={contactRef}>
                                             <label className={style.card_label}>Phone Number<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${contactValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${contactValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="contact" data-type="phone" onBlur={contactValidation.handleChange} required />
                                                 {contactValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -215,7 +221,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* Street */}
                                         <div className={style.card_main} ref={streetRef}>
                                             <label className={style.card_label}>Street<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${streetValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${streetValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="street" onBlur={streetValidation.handleChange} placeholder="Type and select an address" required />
                                                 {streetValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -225,7 +231,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>
                                         <div className={style.card_main}>
                                             <label className={style.card_label}>Company(Optional)</label>
-                                            <div className={`w-full ${style.card_border} ${style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${style.normalBorder}`}>
                                                 <input type="type" id="instructions" placeholder="If your address is a business place." />
                                             </div>
                                         </div>
@@ -233,7 +239,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* Suburb */}
                                         <div className={style.card_main} ref={suburbRef}>
                                             <label className={style.card_label}>Suburb<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${suburbValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${suburbValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="suburb" onBlur={suburbValidation.handleChange} required />
                                                 {suburbValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -243,7 +249,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* City */}
                                         <div className={style.card_main} ref={cityRef}>
                                             <label className={style.card_label}>City<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${cityValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${cityValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="city" onBlur={cityValidation.handleChange} required />
                                                 {cityValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -253,7 +259,7 @@ export default function Claim() {
                                     <div className={style.card_cell}>  {/* Post Code */}
                                         <div className={style.card_main} ref={postCodeRef}>
                                             <label className={style.card_label}>Post Code<LuAsterisk className={style.card_icon} /></label>
-                                            <div className={`w-full ${style.card_border} ${postCodeValidation.error ? style.errorBorder : style.normalBorder}`}>
+                                            <div className={`w-full flex-3 ${style.card_border} ${postCodeValidation.error ? style.errorBorder : style.normalBorder}`}>
                                                 <input type="type" id="postcode" data-type="postcode" onBlur={postCodeValidation.handleChange} required />
                                                 {postCodeValidation.error && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
@@ -262,7 +268,7 @@ export default function Claim() {
                                     </div>
                                 </div>
 
-                                <div className={style.modal_card} style={{ 'flex-direction': 'row' }}>
+                                <div className={style.modal_card} style={{ flexDirection: 'row' }}>
                                     <div className={`${style.card_cell} ${style.card_checkbox}`}>
                                         <label className={style.card_label}>I agree to receive marketing and promotion communications from OPPO</label>
                                         <div className={``}>
@@ -270,8 +276,10 @@ export default function Claim() {
                                         </div>
                                     </div>
                                 </div>
-
-                                <button type="button" onClick={validateFields} className={style.submit_button}>Submit</button>
+                                <div className={style.claim_button}>
+                                    <button type="button" onClick={validateFields} className={style.submit_button}>Submit</button>
+                                    <button onClick={handleClick} className={style.backhome_button}>Back to Home</button>
+                                </div>
                             </div>
                         </div>
                     </form>
