@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "OPPOSans-Regular";
-  src: url("../../public/fonts/woff2/OPPOSans3.0En-VF.woff2") format('woff2');
+  src: url("/fonts/woff2/OPPOSans3.0En-VF.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: "OPPOSans-Bold";
-  src: url("../../public/fonts/woff2/OPPOSans3.0En-VF.woff2") format('woff2');
+  src: url("/fonts/woff2/OPPOSans3.0En-VF.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -53,17 +53,13 @@ svg:not(:root) {
 }
 
 .oc_wrapper {
-  margin: 0 auto;
   box-sizing: border-box;
-  height: auto;
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
+  height: auto;
+  margin: 0 auto;
   overflow: hidden;
   transition: all 0.3s;
-}
-
-html {
-  font-size: 14px;
 }
 
 @media (min-width: 768px) {

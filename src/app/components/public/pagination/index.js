@@ -8,7 +8,7 @@ export default function PaginationButtons({ currentPage, totalPages, onPageChang
                 className={`${style.showButton} ${currentPage === 0 ? style.disabled : ''}`}
                 onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0}
             >
-                <FaArrowLeftLong />
+                <FaArrowLeftLong style={{ transform: "translateY(10%)" }} />
                 <p>Previous</p>
             </button>
             <span>{currentPage + 1} / {totalPages}</span>
@@ -17,7 +17,7 @@ export default function PaginationButtons({ currentPage, totalPages, onPageChang
                 onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages - 1}
             >
                 <p>Next</p>
-                <FaArrowRightLong />
+                <FaArrowRightLong style={{ transform: "translateY(10%)" }} />
             </button>
         </div>
     )

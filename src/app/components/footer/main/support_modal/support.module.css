@@ -3,19 +3,24 @@
     opacity: 1;
     color: rgba(0, 0, 0, 0.55);
     position: absolute;
-    transform: translateY(-100%);
     left: 0;
-    width: 328px;
-    transition: all .36s cubic-bezier(0.48,0.04,0.52,0.96);
+    bottom: 0;
+    width: 100%;
+    max-height: 75vh;
+    overflow: hidden;
+    transform: translateY(0);
+    transition: all 0.36s cubic-bezier(0.48, 0.04, 0.52, 0.96);
 }
 
 .group_list {
-    background: #fff;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    border-radius: 24px;
     display: flex;
     flex-direction: column;
-    padding: 16px 0;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 24px 24px 0 0;
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: 0;
 }
 
 .group_item {
@@ -24,12 +29,20 @@
     position: relative;
 }
 
+.group_item:first-child {
+    padding-top: 16px;
+}
+
+.group_item:last-child {
+    padding-bottom: 106px;
+}
+
 .item_box {
     display: flex;
     align-items: center;
     position: relative;
     min-height: 56px;
-    padding: 0px 56px;
+    padding: 0 56px;
     box-sizing: border-box;
 }
 
@@ -40,11 +53,11 @@
 .chat_icon {
     display: block;
     position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 1;
     width: 24px;
     height: 24px;
-    left: 16px;
-    top: 16px;
-    z-index: 1;
     opacity: 1;
     transition: opacity 300ms;
 }
@@ -56,46 +69,41 @@
 }
 
 .live_chat {
-    /* border-bottom: 1px solid; */
     cursor: pointer;
 }
 
 .subtitle {
     font-size: 14px;
     line-height: 22px;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
 }
 
 .phone_number {
     border-bottom: 1px solid;
 }
 
-@media screen and (max-width: 767.98px) {
+/* md >= 768 */
+@media (min-width: 768px) {
     .live_chat_wrap {
-        position: absolute;
-        top: auto;
-        max-height: 75vh;
-        bottom: 0;
-        transform: translateY(0);
-        left: 0;
-        width: 100%;
-        overflow: hidden;
+        bottom: auto;
+        width: 328px;
+        max-height: none;
+        overflow: visible;
+        transform: translateY(-100%);
     }
 
     .group_list {
-        border-radius: 24px 24px 0 0;
-        display: flex;
-        flex-direction: column;
-        max-height: 75vh;
-        overflow-y: scroll;
-        padding: 0;
+        border-radius: 24px;
+        max-height: none;
+        overflow-y: visible;
+        padding: 16px 0;
     }
 
-    .group-item:first-child {
-        padding-top: 16px;
+    .group_item:first-child {
+        padding-top: 0;
     }
 
-    .group-item:last-child {
-        padding-bottom: 106px;
+    .group_item:last-child {
+        padding-bottom: 0;
     }
 }

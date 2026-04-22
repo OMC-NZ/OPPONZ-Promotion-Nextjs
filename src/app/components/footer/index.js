@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import Main from "./main/main";
 import Bottom from "./bottom/bottom";
-import ChatPop from "@/app/components/chatpop/index";
-import GoBackTop from "@/app/components/gobacktop/index";
-import chatpopicon from "@/public/svg/online-service.svg";
-import activeIcon from "@/public/svg/Staffservice-oli.svg";
-import zenDeskWidgetController from "@/lib/zenDeskWidgetController";
+import ChatPop from "@app/components/chatpop/index";
+import GoBackTop from "@app/components/gobacktop/index";
+import chatpopicon from "@public/svg/online-service.svg";
+import activeIcon from "@public/svg/Staffservice-oli.svg";
+import zenDeskWidgetController from "@lib/zenDeskWidgetController";
 
 export default function Footer() {
     const sourceId = "footer-widget";

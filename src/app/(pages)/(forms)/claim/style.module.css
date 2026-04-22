@@ -32,12 +32,12 @@
 }
 
 .form_container {
-  max-width: 1300px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-around;
   align-items: center;
+  max-width: 1300px;
   margin: 1rem 0;
   gap: 2rem;
 }
@@ -47,7 +47,7 @@
 }
 
 .specWords:hover {
-  color: black;
+  color: #000;
 }
 
 .device_info {
@@ -57,9 +57,9 @@
 }
 
 .device_width {
-  max-width: 1300px;
   display: flex;
   flex-direction: column;
+  max-width: 1300px;
   gap: 1rem;
 }
 
@@ -77,21 +77,21 @@
 }
 
 .modal_card {
-  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 50%);
-  border-radius: 15px;
-  background-color: #fff;
-  font-family: "OPPOSans-Regular";
-  padding: 2rem 3rem;
-  width: 90%;
   display: flex;
   flex-direction: column;
+  width: 90%;
+  padding: 2rem 3rem;
   gap: 1.5rem;
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 50%);
+  font-family: "OPPOSans-Regular";
 }
 
 .card_cell {
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
 .card_main {
@@ -101,11 +101,11 @@
 }
 
 .card_label {
-  flex: 2;
-  font-size: 1rem;
   display: flex;
   align-items: center;
+  flex: 2;
   width: 100%;
+  font-size: 1rem;
 }
 
 .card_main input {
@@ -113,10 +113,10 @@
 }
 
 .card_border {
-  padding: 8px 12px;
-  border-radius: 10px;
   display: flex;
   align-items: center;
+  padding: 8px 12px;
+  border-radius: 10px;
 }
 
 .normalBorder {
@@ -125,24 +125,24 @@
 
 .card_border input {
   height: 100%;
-  letter-spacing: 1px;
   padding: 0 0 0 5px;
-  font-size: 16px;
-  outline: 0;
   border: 0;
+  outline: 0;
   background: transparent;
   color: rgba(0, 0, 0, 0.95);
+  font-size: 16px;
+  letter-spacing: 1px;
 }
 
 .card_icon {
-  color: #BB0929;
+  color: #bb0929;
 }
 
 .card_error {
-  color: red;
   position: absolute;
   bottom: 0;
   left: 3%;
+  color: red;
 }
 
 .errorBorder {
@@ -170,22 +170,22 @@
 }
 
 .claim_button {
-  font-size: 18px;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   margin-top: 2rem;
+  font-size: 18px;
 }
 
 .submit_button {
-  background: #2cff73;
-  cursor: pointer;
-  border-radius: 36px;
   display: block;
+  padding: 1rem 6rem;
+  border-radius: 36px;
+  background: #2cff73;
   font-weight: 600;
   line-height: 22px;
-  padding: 1rem 6rem;
   text-align: center;
+  cursor: pointer;
 }
 
 .backhome_button {
@@ -212,10 +212,6 @@
     width: 600px;
   }
 
-  .card_border input {
-    font-size: 16px;
-  }
-
   .device_width {
     flex-direction: row;
     gap: 5rem;
@@ -231,7 +227,6 @@
   }
 }
 
-
 @media (min-width: 1024px) {
   .claim_title p {
     font-size: 3.5rem;
@@ -241,7 +236,6 @@
     width: 40rem;
   }
 }
-
 
 @media (min-width: 1280px) {
   .claim_title p {

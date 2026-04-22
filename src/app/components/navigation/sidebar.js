@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./sidebar.module.css";
-import LoadingModal from "@/app/components/public/loadingModal";
+import LoadingModal from "@app/components/public/loadingModal";
 import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
 import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
 

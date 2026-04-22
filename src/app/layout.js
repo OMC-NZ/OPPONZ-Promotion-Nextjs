@@ -1,7 +1,9 @@
 import Script from 'next/script';
 import style from "./globals.css";
-import Navigation from '@/app/components/navigation/index';
-import Footer from "@/app/components/footer/index";
+import Navigation from "@app/components/navigation/index";
+import Footer from "@app/components/footer/index";
+
+const zendeskKey = process.env.NEXT_PUBLIC_ZENDESK_WEB_WIDGET;
 
 
 export default function RootLayout({ children }) {
@@ -10,7 +12,7 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="./favicon.ico" />
-        <Script type='text/javascript' id='ze-snippet' src={`https://static.zdassets.com/ekr/snippet.js?key=${process.env.NEXT_PUBLIC_ZENDESK_WEB_WIDGET}`} strategy="beforeInteractive" />
+        <Script type='text/javascript' id='ze-snippet' src={`https://static.zdassets.com/ekr/snippet.js?key=${zendeskKey}`} strategy="beforeInteractive" />
       </head>
       <body suppressHydrationWarning={true}>
         <Navigation />

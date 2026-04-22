@@ -3,9 +3,9 @@
 import React from "react";
 import Image from 'next/image';
 import style from "./support.module.css";
-import chatIcon from "@/public/svg/Chat.svg";
-import phoneIcon from "@/public/svg/Hotline.svg";
-import whatsAppIcon from "@/public/svg/WhatsApp.svg";
+import chatIcon from "@public/svg/Chat.svg";
+import phoneIcon from "@public/svg/Hotline.svg";
+import whatsAppIcon from "@public/svg/WhatsApp.svg";
 
 export default function SupportModal({ isShow, setIsChatVisible, toggleWidget, handleSupportModal }) {
     const closeModal = () => {

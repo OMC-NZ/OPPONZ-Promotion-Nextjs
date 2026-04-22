@@ -1,15 +1,15 @@
 .item_span {
-    padding: 0 12px;
     display: block;
     position: relative;
+    padding: 0 12px;
     font-family: 'OPPOSans-Regular';
     font-variation-settings: 'wght' 750;
     font-size: 14px;
     line-height: 52px;
     white-space: nowrap;
     color: #737373;
-    transition: color .2s cubic-bezier(0.4,0.8,0.74,1);
     cursor: pointer;
+    transition: color 0.2s cubic-bezier(0.4, 0.8, 0.74, 1);
 }
 
 .item_span:hover {
@@ -19,16 +19,16 @@
 .item_span::after {
     content: '';
     position: absolute;
-    left: 50%; 
+    left: 50%;
     bottom: 0;
-    width: 0; 
+    width: 0;
     height: 2px;
     background-color: #000;
-    transition: all .2s cubic-bezier(0.4, 0.8, 0.74, 1);
     transform: translateX(15%);
+    transition: all 0.2s cubic-bezier(0.4, 0.8, 0.74, 1);
 }
 
 .item_span:hover::after {
-    width: 80%;
     left: 0;
+    width: 80%;
 }

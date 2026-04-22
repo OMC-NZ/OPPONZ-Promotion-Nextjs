@@ -6,9 +6,9 @@ import { PiQuestionBold } from "react-icons/pi";
 import { GiCheckMark, GiCrossMark } from "react-icons/gi";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
-import useWindowSize from "@/hooks/useWindowSize";
-import useIMEIValidation from "@/hooks/validations/useIMEIValidation";
-import useDateValidation from "@/hooks/validations/useDateValidation";
+import useWindowSize from "@hooks/useWindowSize";
+import useIMEIValidation from "@hooks/validations/useIMEIValidation";
+import useDateValidation from "@hooks/validations/useDateValidation";
 
 export default function Redeem({ isVisible, onClose }) {
     const [imeiInput, setIMEIInput] = useState('');

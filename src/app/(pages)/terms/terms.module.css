@@ -5,9 +5,9 @@
 
 .termsCenter {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .termsTitle {
@@ -30,8 +30,8 @@
 
 .termsSectionTitle {
   font-size: 1.25rem;
-  font-family: 'OPPOSans-Regular';
   line-height: 1.88rem;
+  font-family: 'OPPOSans-Regular';
 }
 
 .termsSectionContent {
@@ -41,11 +41,11 @@
 
 .termsSectionContent li {
   position: relative;
-  font-size: 1rem;
-  font-variation-settings: 'wght' 550;
-  line-height: 1.5rem;
-  padding-left: 1.5rem;
   margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-variation-settings: 'wght' 550;
 }
 
 .termsSectionContent li:before {
@@ -77,7 +77,6 @@
   }
 }
 
-
 @media (min-width: 1024px) {
   .termsMain {
     margin-top: 7rem;
@@ -98,7 +97,6 @@
     line-height: 6rem;
   }
 }
-
 
 @media (min-width: 1280px) {
   .termsTitle p {

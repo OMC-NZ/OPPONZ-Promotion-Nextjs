@@ -5,11 +5,11 @@ import Image from "next/image";
 import Link from 'next/link';
 import style from "./style.module.css";
 import DetailsModal from "./modal/index";
-import useWindowSize from "@/hooks/useWindowSize";
+import useWindowSize from "@hooks/useWindowSize";
 import { LuAsterisk } from "react-icons/lu";
 import { GiCrossMark } from "react-icons/gi";
-import useClaimValidation from "@/hooks/validations/useClaimValidation";
-import useSearchStreet from "@/hooks/useSearchStreet";
+import useClaimValidation from "@hooks/validations/useClaimValidation";
+import useSearchStreet from "@hooks/useSearchStreet";
 
 const imgs = {
     alt: 'temp banner',

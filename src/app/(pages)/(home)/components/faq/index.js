@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef } from "react";
 import style from "./style.module.css";
-import globalStyle from "@/app/publicstyle.module.css";
+import globalStyle from "@app/publicstyle.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function FAQ() {

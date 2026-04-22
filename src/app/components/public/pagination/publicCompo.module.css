@@ -22,12 +22,12 @@
 }
 
 @media (min-width: 768px) {
-  .showButton p {
-    font-size: 16px;
-  }
-
   .showButtonSl {
     margin-top: 2rem;
+  }
+
+  .showButton p {
+    font-size: 16px;
   }
 }
 

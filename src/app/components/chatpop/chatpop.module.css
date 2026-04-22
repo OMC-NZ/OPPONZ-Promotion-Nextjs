@@ -1,18 +1,19 @@
 .contact_pop {
+    display: flex;
     align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-top: 10px;
+    font-size: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    background: #ffffffbf;
+    box-shadow: 0 4px 20px #00000014;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    background: #ffffffbf;
-    border-radius: 50%;
-    box-shadow: 0 4px 20px #00000014;
-    cursor: pointer;
-    display: flex;
-    font-size: 0;
-    height: 42px;
-    justify-content: center;
-    margin-top: 10px;
-    transition: bottom .3s;
-    width: 42px;
+    transition: bottom 0.3s;
+    right: 16px;
 }
 
 .contact_pop * {
@@ -20,20 +21,21 @@
 }
 
 .contact_pop_icon {
-    width: 42px;
-    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 99;
     background: rgba(255, 255, 255, 0.75);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    transition: bottom .3s;
-    font-size: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    z-index: 99;
-    cursor: pointer;
+    transition: bottom 0.3s;
+    border: 1px solid #f4f6ec;
 }
 
 .contact_pop_icon img {
@@ -45,46 +47,30 @@
 .chat_pop_box {
     position: absolute;
     bottom: calc(100% + 12px);
+    width: 284px;
+    padding: 20px 0 30px;
     opacity: 0;
     transform: translateY(10px);
-    width: 284px;
-    background: white;
     box-sizing: border-box;
-    padding: 20px 0 30px;
+    background: #fff;
     border: 1px solid #ededed;
-    /* right: 0;
-    transform 0.42s cubic-bezier(0.32, 0.94, 0.6, 1) 0s, opacity 0.32s cubic-bezier(0.32, 0.94, 0.6, 1) 0s; */
 }
 
-@media screen and (min-width: 651px) and (max-width: 1024px) {
+@media (min-width: 640px) {
     .contact_pop {
         right: 24px;
     }
 }
 
-@media screen and (max-width: 650px) {
-    .contact_pop {
-        right: 16px;
+@media (min-width: 768px) {
+    .contact_pop_icon {
+        border: none;
     }
 }
 
-@media (max-width: 768px),
-screen and (max-device-width: 1023.98px) and (orientation: landscape) {
+@media (min-width: 1024px) {
     .contact_pop_icon {
-        width: 40px;
-        height: 40px;
-        border: 1px solid #f4f6ec;
-    }
-
-    .contact_pop_icon img {
-        width: 24px;
-        height: 24px;
-    }
-}
-
-@media (max-width: 1023.98px) {
-    .contact_pop_icon {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
     }
 }

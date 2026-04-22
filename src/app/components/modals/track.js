@@ -3,7 +3,7 @@ import { useState, Suspense } from 'react';
 import style from "./style.module.css";
 import { PiQuestionBold } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
-import useClaimIDValidation from "@/hooks/validations/useClaimIDValidation";
+import useClaimIDValidation from "@hooks/validations/useClaimIDValidation";
 
 export default function Track({ isVisible, onClose }) {
     const [claimID, setClaimID] = useState('');

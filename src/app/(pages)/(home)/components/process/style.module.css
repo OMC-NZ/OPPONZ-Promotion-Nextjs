@@ -1,65 +1,118 @@
+.pcOnly {
+  display: none;
+}
+
+.mobileOnly {
+  display: block;
+}
+
 .claim_process {
   position: relative;
-  background-color: white;
   z-index: 2;
+  padding: 32px 12px 0;
+  background: #fff;
 }
 
 .pro_title {
-  font-family: 'OPPOSans-Bold';
+  margin: 0 0 16px;
   text-align: center;
-  margin-bottom: 2rem;
+  font-family: "OPPOSans-Bold";
+  font-size: 30px;
+  line-height: 1.2;
+  color: #111;
+}
+
+.pro_decs {
+  margin: 1rem 0;
+  text-align: center;
+  color: #595959;
+  font-size: 22px;
 }
 
 .pro_content {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 1240px;
+  min-height: 256px;
+  margin: 0 auto;
+  padding: 20px;
+  row-gap: 28px;
+  column-gap: 28px;
+  border-radius: 24px;
+  box-sizing: border-box;
+  background: #fff;
 }
 
 .pro_step {
-  flex: 1;
-  min-width: 0;
-}
-
-.feature_box {
+  position: relative;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: #eee;
-  border-radius: 40px;
+  text-align: center;
 }
 
-.feature_icon {
+.step_head {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  height: 64px;
+  margin-bottom: 32px;
 }
 
-.pro_words {
-  flex: 1;
+.step_no {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 20%;
+  background: #e8e8e8;
+}
+
+.step_line,
+.step_arrow {
+  display: none;
+}
+
+.feature_box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  padding: 0 8px;
+  border-radius: 0;
+  background: transparent;
 }
 
 .pro_h4 {
-  font-size: 16px;
-  line-height: 30px;
+  min-height: 52px;
+  margin: 0 0 14px;
+  font-size: 18px;
+  line-height: 1.25;
   font-weight: 700;
-  text-transform: capitalize;
-  margin-bottom: 0.5rem;
+  color: #111111;
+  text-transform: none;
+  white-space: pre-line;
 }
 
 .pro_words {
+  max-width: 240px;
+  margin: 0;
+  margin-inline: auto;
   font-size: 14px;
-  line-height: 24px;
-  color: #999;
+  line-height: 1.6;
+  color: #666666;
 }
 
 .showButtonSl {
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
+  justify-content: space-evenly;
   padding: 1rem;
+  margin-top: 16px;
   font-weight: 700;
 }
 
@@ -67,10 +120,17 @@
   display: flex;
   align-items: center;
   column-gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .showButton p {
   font-size: 14px;
+}
+
+.showButton:disabled {
+  cursor: not-allowed;
 }
 
 .disabled {
@@ -78,20 +138,75 @@
   cursor: unset;
 }
 
+.mobileDots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.mobileDot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #d9d9d9;
+  cursor: pointer;
+}
+
+.mobileDotActive {
+  background: #000;
+}
+
 @media (min-width: 768px) {
-  .pro_words {
-    font-size: 16px;
+  .pcOnly {
+    display: block;
+  }
+
+  .mobileOnly {
+    display: none;
+  }
+
+  .claim_process {
+    padding: 0 16px;
   }
 
   .pro_title {
-    margin-top: 2rem;
+    margin: 2rem 0 20px;
+    font-size: 36px;
+  }
+
+  .pro_content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 42px 36px 0;
+    row-gap: 36px;
+    border-radius: 32px;
+  }
+
+  .step_head {
+    height: 72px;
+    margin-bottom: 24px;
+  }
+
+  .step_no {
+    width: 72px;
+    height: 72px;
+  }
+
+  .pro_h4 {
+    font-size: 20px;
+  }
+
+  .pro_words {
+    font-size: 16px;
+    line-height: 1.7;
   }
 
   .showButton p {
     font-size: 16px;
   }
 }
-
 
 @media (min-width: 1024px) {
   .claim_process {
@@ -102,8 +217,32 @@
   .pro_title {
     font-size: 36px;
   }
-}
 
+  .pro_content {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .step_line {
+    position: absolute;
+    top: 50%;
+    left: calc(55% + 42px);
+    right: -95px;
+    display: block;
+    height: 2px;
+    background: #d9d9d9;
+    transform: translateY(-50%);
+  }
+
+  .step_arrow {
+    position: absolute;
+    top: 50%;
+    right: -32px;
+    z-index: 2;
+    display: block;
+    background: #fff;
+    transform: translateY(-50%);
+  }
+}
 
 @media (min-width: 1280px) {
   .claim_process {
@@ -118,14 +257,10 @@
   }
 
   .pro_content {
-    gap: 16px;
+    column-gap: 24px;
   }
 
   .feature_box {
-    padding: 16px;
-  }
-
-  .feature_icon {
-    height: 44px;
+    padding: 0 12px;
   }
 }

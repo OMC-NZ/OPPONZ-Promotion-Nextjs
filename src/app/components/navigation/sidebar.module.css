@@ -1,24 +1,24 @@
 .fill {
-    color: #000;
     position: absolute;
+    top: 50%;
+    left: 50%;
     width: 18px;
     height: 1.5px;
     background: #000;
-    top: 50%;
-    left: 50%;
+    color: #000;
     transform: translate(-50%, -50%);
 }
 
-.fill::before, 
+.fill::before,
 .fill::after {
     content: "";
     position: absolute;
+    left: 50%;
     width: 18px;
     height: 1.5px;
     background: #000;
-    left: 50%;
     transform: translateX(-50%);
-    transition: all .3s;
+    transition: all 0.3s;
 }
 
 .fill::before {
@@ -30,37 +30,37 @@
 }
 
 .rotate {
-    background: rgba(0,0,0,0) !important;
+    background: rgba(0, 0, 0, 0) !important;
 }
 
 .rotate::before {
     top: 0;
     transform: translateX(-50%) rotateZ(45deg);
-    transition: all .3s;
+    transition: all 0.3s;
 }
 
 .rotate::after {
     bottom: 0;
     transform: translateX(-50%) rotateZ(-45deg);
-    transition: all .3s;
+    transition: all 0.3s;
 }
 
 .header_menu {
     position: relative;
-    background: #fff;
-    height: calc(100vh - 50px);
     top: 0;
-    transition: all .24s cubic-bezier(0.26,0,0.6,0.2);
     z-index: 50;
+    height: calc(100vh - 50px);
+    background: #fff;
+    transition: all 0.24s cubic-bezier(0.26, 0, 0.6, 0.2);
 }
 
 .header_menu_box {
     position: relative;
-    margin: 0 24px;
-    background: #fff;
     height: calc(100vh - 50px);
+    margin: 0 24px;
     overflow-y: auto;
     scrollbar-width: none;
+    background: #fff;
 }
 
 .second_nav_title {

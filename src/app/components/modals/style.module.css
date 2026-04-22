@@ -1,36 +1,33 @@
 .modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: black;
+  inset: 0;
   z-index: 3;
-  padding-top: 10rem;
   overflow: auto;
+  padding-top: 10rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #000;
 }
 
 .modal {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  background: white;
-  padding: 1rem 2rem;
-  border-radius: 5px;
-  position: relative;
-  max-width: 500px;
   width: 100%;
+  max-width: 500px;
   height: 32rem;
   margin: 0 auto;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  background: #fff;
 }
 
 .closeButton {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: transparent;
   border: none;
+  background: transparent;
   font-size: 1.5rem;
   cursor: pointer;
 }
@@ -48,8 +45,8 @@
 
 .conForm label {
   display: block;
-  font-size: 18px;
   margin-bottom: 15px;
+  font-size: 18px;
   letter-spacing: 1px;
 }
 
@@ -68,39 +65,37 @@
 }
 
 .conForm .search .search_box .conIcon {
-  border-right: 1px solid rgba(0, 0, 0, 0.55);
-  padding-right: 7px;
-  margin-right: 5px;
   position: relative;
   display: inline-block;
+  margin-right: 5px;
+  padding-right: 7px;
+  border-right: 1px solid rgba(0, 0, 0, 0.55);
 }
 
 .conForm .search .search_box svg {
+  width: 24px;
+  height: 24px;
   opacity: 0.55;
   cursor: default;
-  height: 24px;
-  width: 24px;
 }
 
 .conForm .search .search_box input {
   width: 100%;
   height: 100%;
-  letter-spacing: 1px;
   padding: 0 0 0 5px;
-  font-size: 18px;
-  outline: 0;
   border: 0;
+  outline: 0;
   background: transparent;
   color: rgba(0, 0, 0, 0.95);
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 
 .conForm_track {
   height: auto;
-  padding: 0;
   margin: 1rem 0;
+  padding: 0;
 }
-
-.conInput {}
 
 .search_normal {
   border: 2px solid #dcdcdc;
@@ -114,16 +109,16 @@
   position: absolute;
   top: 2rem;
   left: 9.5rem;
+  z-index: 1;
+  width: 21rem;
+  padding: 4px 8px;
   transform: translateX(-50%);
+  border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: opacity 0.3s ease;
-  width: 21rem;
   letter-spacing: 1px;
   visibility: hidden;
-  z-index: 1;
+  transition: opacity 0.3s ease;
 }
 
 .tipText.visible {
@@ -135,11 +130,11 @@
 }
 
 .validateError {
-  color: red;
-  margin-left: 1rem;
-  margin-top: 5px;
-  letter-spacing: 1px;
   position: absolute;
+  margin-top: 5px;
+  margin-left: 1rem;
+  color: red;
+  letter-spacing: 1px;
 }
 
 .datepicker {
@@ -152,14 +147,14 @@
 }
 
 .conBtn button {
+  min-width: 120px;
   height: 40px;
-  font-size: 16px;
   margin: 12px 0;
+  padding: 0 20px;
   border: 1px solid #000;
   border-radius: 36px;
-  padding: 0 20px;
-  min-width: 120px;
-  font-variation-settings: 'wght' 750;
+  font-size: 16px;
+  font-variation-settings: "wght" 750;
   transition: all 0.24s cubic-bezier(0.48, 0.04, 0.52, 0.96);
 }
 
@@ -168,10 +163,9 @@
 }
 
 .modal_track {
-  height: 24rem;
   max-width: 600px;
+  height: 24rem;
 }
-
 
 @media (min-width: 768px) {
   .modal {
@@ -191,11 +185,9 @@
     font-size: 20px;
   }
 
-  .conInput {}
-
   .conBtn button {
-    margin-top: 2rem;
     min-width: 144px;
+    margin-top: 2rem;
   }
 
   .tipText {
@@ -204,18 +196,16 @@
   }
 }
 
-
 @media (min-width: 1024px) {
   .modalOverlay {
     padding-top: 8rem;
   }
 
   .tipText {
-    width: 26rem;
     left: 14rem;
+    width: 26rem;
   }
 }
-
 
 @media (min-width: 1280px) {
   .modalOverlay {
@@ -223,7 +213,7 @@
   }
 
   .tipText {
-    width: 28rem;
     left: 16rem;
+    width: 28rem;
   }
 }

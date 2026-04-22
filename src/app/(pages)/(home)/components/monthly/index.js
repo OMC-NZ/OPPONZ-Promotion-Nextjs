@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import Image from "next/image";
 import style from "./style.module.css";
-import globalStyle from "@/app/publicstyle.module.css";
-import useWindowSize from "@/hooks/useWindowSize";
-import usePagination from "@/hooks/usePagination";
-import PaginationButtons from "@/app/components/public/pagination/index";
+import globalStyle from "@app/publicstyle.module.css";
+import useWindowSize from "@hooks/useWindowSize";
+import usePagination from "@hooks/usePagination";
+import PaginationButtons from "@app/components/public/pagination/index";
 import Redeem from "../../../../components/modals/redeem";
 import Track from "../../../../components/modals/track";
 import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";

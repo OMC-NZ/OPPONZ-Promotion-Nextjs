@@ -14,20 +14,20 @@
 }
 
 .faq_listitem h2 {
+  width: fit-content;
+  padding: 10px 17px 10px 0;
   font-family: 'OPPOSans-Regular';
   font-size: 18px;
   font-weight: 300;
-  padding: 10px 17px 10px 0px;
-  width: fit-content;
 }
 
 .faq_listitem p {
+  overflow: hidden;
+  padding: 1rem 1rem 1rem 0;
+  color: #383838;
   font-size: 14px;
   line-height: 24px;
   letter-spacing: -0.1px;
-  padding: 1rem 1rem 1rem 0;
-  overflow: hidden;
-  color: #383838;
 }
 
 .faqicon {
@@ -60,13 +60,11 @@
   }
 }
 
-
 @media (min-width: 1024px) {
   .faq_listitem h2 {
     font-size: 24px;
   }
 }
-
 
 @media (min-width: 1280px) {
   .faqlayout {
