@@ -34,7 +34,7 @@
   grid-template-columns: 1fr;
   width: 100%;
   max-width: 1240px;
-  min-height: 256px;
+  min-height: 270px;
   margin: 0 auto;
   padding: 20px;
   row-gap: 28px;
@@ -65,8 +65,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 20%;
   background: #e8e8e8;
 }
@@ -81,7 +81,6 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 100%;
   padding: 0 8px;
   border-radius: 0;
   background: transparent;
@@ -110,7 +109,7 @@
 .showButtonSl {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-around;
   padding: 1rem;
   margin-top: 16px;
   font-weight: 700;
@@ -236,7 +235,7 @@
   .step_arrow {
     position: absolute;
     top: 50%;
-    right: -32px;
+    right: -20px;
     z-index: 2;
     display: block;
     background: #fff;

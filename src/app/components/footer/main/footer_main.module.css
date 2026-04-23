@@ -255,8 +255,22 @@
     }
 
     .footer_nav_ul {
+        /* display: flex;
+        justify-content: center;
+        gap: 32px;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        list-style: none; */
         flex-direction: row;
     }
+
+    /* .footer_nav_ul li {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    } */
 
     .live_chat_pop {
         position: absolute;

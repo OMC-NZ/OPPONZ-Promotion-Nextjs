@@ -34,7 +34,7 @@
   }
 
   .top_radian {
-    top: 24rem;
+    top: 20rem;
   }
 }
 
@@ -43,5 +43,9 @@
     position: relative;
     bottom: 1rem;
     padding: 0 64px;
+  }
+
+  .top_radian {
+    top: 24rem;
   }
 }

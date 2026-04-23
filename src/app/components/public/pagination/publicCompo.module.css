@@ -24,6 +24,7 @@
 @media (min-width: 768px) {
   .showButtonSl {
     margin-top: 2rem;
+    gap: 5rem;
   }
 
   .showButton p {

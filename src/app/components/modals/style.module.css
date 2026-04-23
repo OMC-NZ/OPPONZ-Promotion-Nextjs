@@ -159,7 +159,8 @@
 }
 
 .conBtn button:hover {
-  background: rgba(0, 0, 0, 0.04);
+  color: #fff;
+  background: rgb(0, 0, 0);
 }
 
 .modal_track {

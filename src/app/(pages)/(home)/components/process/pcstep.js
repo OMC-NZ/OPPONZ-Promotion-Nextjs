@@ -1,5 +1,6 @@
 import Image from "next/image";
 import style from "./style.module.css";
+import { FaAngleRight } from "react-icons/fa6";
 
 const steps = [
     {
@@ -47,12 +48,7 @@ export default function PCSteps() {
                             <>
                                 <div className={style.step_line} />
                                 <div className={style.step_arrow}>
-                                    <Image
-                                        src="/imgs/angle-right-11-64.png"
-                                        alt="Next"
-                                        width={45}
-                                        height={45}
-                                    />
+                                    <FaAngleRight />
                                 </div>
                             </>
                         )}

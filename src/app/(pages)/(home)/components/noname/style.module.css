@@ -47,7 +47,7 @@
 .ft_headline {
   overflow-wrap: break-word;
   font-family: 'OPPOSans-Bold';
-  font-size: 2rem;
+  font-size: 3rem;
   letter-spacing: 2px;
   color: rgba(255, 255, 255, 0.95);
 }
@@ -56,7 +56,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .btn {
@@ -64,23 +64,26 @@
   z-index: 0;
   overflow: hidden;
   min-width: 90px;
-  height: 40px;
+  height: 60px;
   padding: 0 45px;
   border: 0;
   border-radius: 16px;
   background: #fff;
   color: rgba(0, 0, 0, 0.95);
-  font-size: 18px;
+  font-size: 22px;
+  font-family: "OPPOSans-Bold";
   line-height: 40px;
   letter-spacing: 0.5px;
   text-align: center;
   white-space: nowrap;
   -webkit-backface-visibility: hidden;
   -webkit-transform: translate3d(0, 0, 0);
+  transition: all 0.24s cubic-bezier(0.48, 0.04, 0.52, 0.96);
 }
 
 .btn:hover {
-  background: rgb(214, 214, 214);
+  color: #fff;
+  background: rgb(0, 0, 0);
 }
 
 @media (min-width: 768px) {
@@ -144,5 +147,6 @@
     height: 60px;
     font-size: 22px;
     line-height: 40px;
+    transition: all 0.24s cubic-bezier(0.48, 0.04, 0.52, 0.96);
   }
 }

@@ -21,7 +21,7 @@ export default function Noname() {
         <>
             <Redeem isVisible={isVisible.redeem} onClose={() => toggleVisibility('redeem', false)} />
             <Track isVisible={isVisible.track} onClose={() => toggleVisibility('track', false)} />
-            <div className='relative xl:h-[500px] lg:h-[460px] h-[350px]'>
+            <div className='relative xl:h-[500px] md:h-[400px] h-[500px]'>
                 <div className={`${style.dark_overlay}`}></div>
                 <picture className={`${style.main_banner}`}>
                     <source srcSet="/imgs/imagine-if_720-1060.jpg" media="(max-width: 650px)" />

@@ -63,13 +63,7 @@ export default function MonthlyPromotions() {
                             width={620}
                             height={420}
                             quality={100}
-                            className={
-                                imgsPerPage === 3
-                                    ? style.cpimg_th
-                                    : imgsPerPage === 2
-                                        ? style.cpimg_t
-                                        : style.cpimg_o
-                            }
+                            className={ `${imgsPerPage === 3 ? style.cpimg_th : imgsPerPage === 2 ? style.cpimg_t : style.cpimg_o} ${style.imgBorder} ${style.imgSize}` }
                             priority
                         />
                     ))}
