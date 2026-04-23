@@ -98,7 +98,7 @@
 }
 
 .pro_words {
-  max-width: 240px;
+  /* max-width: 240px; */
   margin: 0;
   margin-inline: auto;
   font-size: 14px;

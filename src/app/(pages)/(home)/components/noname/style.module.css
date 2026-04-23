@@ -81,9 +81,16 @@
   transition: all 0.24s cubic-bezier(0.48, 0.04, 0.52, 0.96);
 }
 
-.btn:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    color: #fff;
+    background: #000;
+  }
+}
+
+.btn:active {
   color: #fff;
-  background: rgb(0, 0, 0);
+  background: #000;
 }
 
 @media (min-width: 768px) {
