@@ -2,9 +2,6 @@
 
 import { useState, useEffect, useRef, React } from "react";
 import Image from 'next/image';
-import { FaXTwitter } from "react-icons/fa6";
-import { IoLogoYoutube } from "react-icons/io";
-import { ImInstagram } from "react-icons/im";
 import robot from "/public/imgs/robot.png";
 import Link from "next/link";
 import style from "./footer_main.module.css";
@@ -43,12 +40,12 @@ export default function FooterContact({ isShow, toggleWidget }) {
         <>
             <section className="flex flex-col relative">
                 <div className={`${style.contact_bar} ${style.top_line}`}>
-                    <div ref={divGetSptRef} className={`${style.contact_us_btn} ${style.bottom_line}`} onClick={handleSupportClick}>
+                    <div ref={divGetSptRef} className={`${style.contact_us_btn}`} onClick={handleSupportClick}>
                         <div className={`${style.robot_icon}`}>
                             <Image className={`${style.lazyloaded}`} src={robot} width={34} height={34} alt="" />
                         </div>
                         <span className={`${style.contact_text} ${style.ft_body_2_1}`}>
-                            Get Support From OPPO
+                            Get Support From OPPO New Zealand
                             <span className={`${style.arrow_icon} ${isChatVisible ? style.open : ''}`}></span>
                         </span>
 
@@ -61,23 +58,38 @@ export default function FooterContact({ isShow, toggleWidget }) {
 
                     <div className={`${style.contact_bottom}`}>
                         <ul className={`${style.social_media}`}>
+                            <li name="Facebook">
+                                <Link href="https://www.facebook.com/OPPONewZealand" target="_blank" className={`${style.media_link}`}>
+                                    <Image src="/svg/Facebook.svg" alt="Facebook" width={24} height={24} className={`${style.social_icon}`} />
+                                </Link>
+                            </li>
                             <li name="Twitter">
                                 <Link href="https://twitter.com/OPPONewZealand" target="_blank" className={`${style.media_link}`}>
-                                    <FaXTwitter className={`${style.social_icon}`} />
+                                    <Image src="/svg/Twitter.svg" alt="Twitter" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Youtube">
                                 <Link href="https://www.youtube.com/channel/UC0twtNru9HeQiF1EVf31IQA" target="_blank" className={`${style.media_link}`}>
-                                    <IoLogoYoutube className={`${style.social_icon_youtube}`} />
+                                    <Image src="/svg/Youtube.svg" alt="Youtube" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Instagram">
                                 <Link href="https://instagram.com/opponewzealand" target="_blank" className={`${style.media_link}`}>
-                                    <ImInstagram className={`${style.social_icon_ins}`} />
+                                    <Image src="/svg/Instagram.svg" alt="Instagram" width={24} height={24} className={`${style.social_icon}`} />
+                                </Link>
+                            </li>
+                            <li name="Threads">
+                                <Link href="https://www.threads.com/@opponewzealand" target="_blank" className={`${style.media_link}`}>
+                                    <Image src="/svg/Threads.svg" alt="Threads" width={24} height={24} className={`${style.social_icon}`} />
+                                </Link>
+                            </li>
+                            <li name="TikTok">
+                                <Link href="https://www.tiktok.com/@opponewzealand" target="_blank" className={`${style.media_link}`}>
+                                    <Image src="/svg/TikTok.svg" alt="TikTok" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                         </ul>
-                        <div className={`${style.copyright}`}>
+                        <div className={`${style.copyright} ${style.mobile_region}`}>
                             <p>
                                 <Link href="https://www.oppo.com/en/choose-site/" className={`${style.languages} ${style.ft_body_3_1}`}>New Zealand (English)</Link>
                             </p>

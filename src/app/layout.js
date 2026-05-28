@@ -1,5 +1,5 @@
 import Script from 'next/script';
-import style from "./globals.css";
+import "./globals.css";
 import Navigation from "@app/components/navigation/index";
 import Footer from "@app/components/footer/index";
 
@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       </head>
       <body suppressHydrationWarning={true}>
         <Navigation />
-        <main className={style.oc_wrapper}>
+        <main className="oc_wrapper">
           {children}
         </main>
         <Footer />

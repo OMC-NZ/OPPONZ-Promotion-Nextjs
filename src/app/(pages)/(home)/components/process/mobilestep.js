@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import style from "./style.module.css";
-import { FaLeftLong, FaRightLong } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 const steps = [
     {
@@ -97,7 +97,9 @@ export default function MobileSteps() {
                     onClick={handlePrev}
                     disabled={isFirst}
                 >
-                    <FaLeftLong size={28} />
+                    <span className={style.arrowCircle}>
+                        <FaAngleLeft size={28} />
+                    </span>
                 </button>
 
                 <button
@@ -106,7 +108,9 @@ export default function MobileSteps() {
                     onClick={handleNext}
                     disabled={isLast}
                 >
-                    <FaRightLong size={28} />
+                    <span className={style.arrowCircle}>
+                        <FaAngleRight size={28} />
+                    </span>
                 </button>
             </div>
         </>

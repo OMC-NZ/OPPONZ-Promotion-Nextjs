@@ -2,14 +2,9 @@
 import React from "react";
 import Link from "next/link";
 import style from "./bottom.module.css";
-import { IoIosArrowUp } from "react-icons/io";
 
 export default function Bottom() {
     const currentYear = new Date().toLocaleString('en-NZ', { year: 'numeric', timeZone: 'Pacific/Auckland' });
-
-    const handleBackToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth'});
-    };
 
     return (
         <section className={`${style.bottom}`}>
@@ -30,12 +25,15 @@ export default function Bottom() {
                     <Link href="https://www.oppo.com/en/legal/" target="_blank">Legal & Compliance</Link>
                 </li>
                 <li>
-                    Copyright © 2004-{currentYear} OPPO. All rights reserved.
+                    Copyright © 2004-{currentYear} OPPO New Zealand. All rights reserved.
                 </li>
             </ul>
-            <Link href="/" className={`${style.back_top_btn} ${style.ft_body_3_1}`} onClick={handleBackToTop}>
+            {/* <Link href="/" className={`${style.back_top_btn} ${style.ft_body_3_1}`} onClick={handleBackToTop}>
                 Back to Top
                 <IoIosArrowUp className={`${style.arrow_icon}`} />
+            </Link> */}
+            <Link href="https://www.oppo.com/en/choose-site/" className={`${style.languages} ${style.desktop_region} ${style.ft_body_3_1}`}>
+                New Zealand (English)
             </Link>
         </section>
     )

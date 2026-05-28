@@ -1,4 +1,4 @@
-import { FaLeftLong, FaRightLong } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import style from "./publicCompo.module.css";
 
 export default function PaginationButtons({ currentPage, totalPages, onPageChange }) {
@@ -8,14 +8,14 @@ export default function PaginationButtons({ currentPage, totalPages, onPageChang
                 className={`${style.showButton} ${currentPage === 0 ? style.disabled : ''}`}
                 onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0}
             >
-                <FaLeftLong size={28} />
+                <FaAngleLeft size={28} />
             </button>
             <span>{currentPage + 1} / {totalPages}</span>
             <button
                 className={`${style.showButton} ${currentPage === totalPages - 1 ? style.disabled : ''}`}
                 onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages - 1}
             >
-                <FaRightLong size={28} />
+                <FaAngleRight size={28} />
             </button>
         </div>
     )

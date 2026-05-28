@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 12px 16px 16px;
+    padding: 32px 16px;
 }
 
 .bottom::after {
@@ -47,6 +47,16 @@
 .back_top_btn {
     flex-shrink: 0;
     color: rgba(255, 255, 255, 0.55);
+}
+
+.languages {
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+.desktop_region {
+    display: none;
 }
 
 .arrow_icon {
@@ -104,9 +114,15 @@
     }
 }
 
+@media screen and (min-width: 1024px) {
+    .desktop_region {
+        display: inline-block;
+    }
+}
+
 @media screen and (max-width: 767.98px) {
     .bottom {
-        padding: 12px 16px 16px
+        padding: 32px 16px 16px
     }
 
     .bottom::after {

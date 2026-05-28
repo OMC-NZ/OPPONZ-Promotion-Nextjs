@@ -151,7 +151,7 @@
 .social_icon {
     width: 70%;
     height: 70%;
-    filter: invert(100%);
+    /* filter: invert(100%); */
 }
 
 .social_icon_youtube {
@@ -181,7 +181,11 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.95);
 }
 
-.bottom_line::after {
+.mobile_region {
+    display: block;
+}
+
+/* .bottom_line::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -189,7 +193,7 @@
     width: calc(100% + 32px);
     height: 1px;
     background-color: rgba(255, 255, 255, 0.15);
-}
+} */
 
 .footer_nav_ul {
     flex-direction: column;
@@ -293,6 +297,7 @@
         height: 1px;
         background-color: rgba(255, 255, 255, 0.15);
     }
+
 }
 
 /* lg >= 1024 */
@@ -300,5 +305,11 @@
     .ft_body_3_1 {
         font-size: 14px;
         line-height: 22px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .mobile_region {
+        display: none;
     }
 }
