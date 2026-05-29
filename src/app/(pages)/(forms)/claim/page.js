@@ -514,13 +514,8 @@ function DocumentPreviewModal({ document: previewDocument, onClose }) {
 
                 <div className={style.documentPreviewBody}>
                     {isImage && fileUrl && (
-                        <Image
-                            src={fileUrl}
-                            alt={previewDocument.fileName}
-                            width={900}
-                            height={640}
-                            unoptimized
-                        />
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={fileUrl} alt={previewDocument.fileName} />
                     )}
 
                     {isPdf && fileUrl && (
