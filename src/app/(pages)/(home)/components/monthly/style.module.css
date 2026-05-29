@@ -147,6 +147,8 @@
 .loadingCard {
   aspect-ratio: 31 / 21;
   min-height: 180px;
+  cursor: default;
+  pointer-events: none;
 }
 
 .promoImage {
@@ -219,14 +221,14 @@
   align-items: center;
   justify-content: center;
   appearance: none;
-  min-width: 140px;
-  height: 30px;
-  /* padding: 0 18px; */
+  min-width: 152px;
+  height: 36px;
+  padding: 0 18px;
   border: 1px solid #000;
   border-radius: 30px;
   background: #fff;
   color: #111;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   text-decoration: none;
   transform: var(--overlay-btn-shift);
@@ -257,8 +259,10 @@
   }
 
   .overlayBtn {
-    height: 42px;
-    padding: 0 18px;
+    min-width: 168px;
+    height: 46px;
+    padding: 0 22px;
+    font-size: 16px;
   }
 
   .overlayBtn:hover {
