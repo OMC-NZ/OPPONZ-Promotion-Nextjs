@@ -6,18 +6,19 @@ import style from "./style.module.css";
 import globalStyle from "@app/publicstyle.module.css";
 import useWindowSize from "@hooks/useWindowSize";
 import usePagination from "@hooks/usePagination";
-import PaginationButtons from "@app/components/public/pagination/index";
+import usePromotionContent from "@hooks/usePromotionContent";
 import Redeem from "../../../../components/modals/redeem";
 import Track from "../../../../components/modals/track";
 import MonthlyModal from "./monthlyModal";
-import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
-import { FaAngleRight } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
-const TOUCH_CAROUSEL_MAX_WIDTH = 1366;
 const TABLET_LAYOUT_MAX_WIDTH = 1100;
 
 export default function MonthlyPromotions() {
     const { width: windowWidth } = useWindowSize();
+    const { monthly } = usePromotionContent();
+    const monthlyItems = monthly.items;
+    const isMonthlyLoading = monthly.loading;
     const [windowWidthValid, setWindowWidthValid] = useState(false);
     const [selectedPromotion, setSelectedPromotion] = useState(null);
     const [loadedImages, setLoadedImages] = useState({});
@@ -31,7 +32,7 @@ export default function MonthlyPromotions() {
     });
 
     const { imgsPerPage, currentPage, setCurrentPage, totalPages } =
-        usePagination(windowWidth, monthlyPromotions.length, "MonthlyPromotions");
+        usePagination(windowWidth, monthlyItems.length, "MonthlyPromotions");
 
     useEffect(() => {
         if (!Number.isNaN(windowWidth) && windowWidth > 0) {
@@ -56,17 +57,8 @@ export default function MonthlyPromotions() {
         }
     };
 
-    const canDragCarousel = (event) => {
-        const isTouchPointer = event.pointerType === "touch" || event.pointerType === "pen";
-
-        return (
-            totalPages > 1 &&
-            (isTouchPointer || windowWidth <= TOUCH_CAROUSEL_MAX_WIDTH)
-        );
-    };
-
     const handleDragStart = (event) => {
-        if (!canDragCarousel(event)) return;
+        if (totalPages <= 1) return;
 
         dragStartRef.current = { x: event.clientX, y: event.clientY };
         setIsDragging(true);
@@ -148,15 +140,26 @@ export default function MonthlyPromotions() {
     const promotionPages = Array.from({ length: totalPages }, (_, pageIndex) => {
         const startIndex = pageIndex * imgsPerPage;
         const endIndex = startIndex + imgsPerPage;
-        return monthlyPromotions.slice(startIndex, endIndex);
+        return monthlyItems.slice(startIndex, endIndex);
     });
 
-    const showPaginationButtons =
-        (windowWidth <= TABLET_LAYOUT_MAX_WIDTH && monthlyPromotions.length > 2) ||
-        (windowWidth <= 768 && monthlyPromotions.length === 2) ||
-        monthlyPromotions.length > 3;
+    const showPaginationDots = totalPages > 1;
 
-    const shouldShow = windowWidthValid && hasMonthlyPromotions;
+    const getLoadingCardCount = () => {
+        if (windowWidth > TABLET_LAYOUT_MAX_WIDTH) return 3;
+        if (windowWidth > 768) return 2;
+        return 1;
+    };
+
+    const getCardSizeClass = (itemsPerRow) => {
+        if (itemsPerRow === 3) return style.cpimg_th;
+        if (itemsPerRow === 2) return style.cpimg_t;
+        return style.cpimg_o;
+    };
+
+    const loadingCardCount = getLoadingCardCount();
+    const loadingCardSizeClass = getCardSizeClass(loadingCardCount);
+    const shouldShow = isMonthlyLoading || monthlyItems.length > 0;
 
     if (!shouldShow) return null;
 
@@ -182,106 +185,148 @@ export default function MonthlyPromotions() {
                     <p>Monthly Promotion</p>
                 </div>
 
-                <div
-                    className={style.carouselViewport}
-                    onPointerDown={handleDragStart}
-                    onPointerMove={handleDragMove}
-                    onPointerUp={finishDrag}
-                    onPointerCancel={cancelDrag}
-                    onPointerLeave={cancelDrag}
-                >
-                    <div
-                        className={`${style.carouselTrack} ${isDragging ? style.carouselTrackDragging : ""}`}
-                        style={{
-                            transform: `translateX(calc(-${currentPage * 100}% - ${currentPage * 16}px + ${dragOffset}px))`,
-                        }}
-                    >
-                        {promotionPages.map((pagePromotions, pageIndex) => (
-                            <div className={style.carouselPage} key={pageIndex}>
-                                <div className={style.mostthree}>
-                                    {pagePromotions.map((promotion) => (
-                                        <div
-                                            key={promotion.id}
-                                            className={`${style.promoCard} ${imgsPerPage === 3
-                                                ? style.cpimg_th
-                                                : imgsPerPage === 2
-                                                    ? style.cpimg_t
-                                                    : style.cpimg_o
-                                                } ${style.imgBorder} ${style.imgSize}`}
-                                            onClick={() => openPromotionModal(promotion)}
-                                            role="button"
-                                            tabIndex={0}
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter" || e.key === " ") {
-                                                    e.preventDefault();
-                                                    openPromotionModal(promotion);
-                                                }
-                                            }}
-                                        >
-                                            {!loadedImages[promotion.id] && (
-                                                <div className={style.imageLoading}>
-                                                    <span className={style.loadingSpinner} />
-                                                </div>
-                                            )}
-
-                                            <Image
-                                                src={promotion.url}
-                                                alt={promotion.title}
-                                                width={620}
-                                                height={420}
-                                                quality={100}
-                                                className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
-                                                onLoad={() => handleImageLoad(promotion.id)}
-                                                onError={() => handleImageLoad(promotion.id)}
-                                                priority
-                                            />
-
-                                            <div className={style.promoOverlay}>
-                                                <button
-                                                    type="button"
-                                                    className={style.overlayBtn}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        openPromotionModal(promotion);
-                                                    }}
-                                                >
-                                                    <span
-                                                        style={{
-                                                            display: "inline-flex",
-                                                            alignItems: "center",
-                                                            gap: "10px",
-                                                            lineHeight: 1,
-                                                        }}
-                                                    >
-                                                        <span>View Details</span>
-                                                        <FaAngleRight style={{ display: "unset" }} />
-                                                    </span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
+                {isMonthlyLoading ? (
+                    <div className={style.mostthree} aria-hidden="true">
+                        {Array.from({ length: loadingCardCount }).map((_, index) => (
+                            <div
+                                key={index}
+                                className={`${style.promoCard} ${loadingCardSizeClass} ${style.imgBorder} ${style.imgSize} ${style.loadingCard}`}
+                            >
+                                <div className={style.imageLoading}>
+                                    <span className={style.loadingSpinner} />
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
-
-                <div className={style.claim_button}>
-                    <button
-                        type="button"
-                        className={style.btn}
-                        onClick={() => toggleVisibility("redeem", true)}
+                ) : (
+                    <div
+                        className={style.carouselViewport}
+                        onPointerDown={handleDragStart}
+                        onPointerMove={handleDragMove}
+                        onPointerUp={finishDrag}
+                        onPointerCancel={cancelDrag}
+                        onPointerLeave={cancelDrag}
                     >
-                        Redeem My Gift
-                    </button>
-                </div>
+                        <div
+                            className={`${style.carouselTrack} ${isDragging ? style.carouselTrackDragging : ""}`}
+                            style={{
+                                transform: `translateX(calc(-${currentPage * 100}% - ${currentPage * 16}px + ${dragOffset}px))`,
+                            }}
+                        >
+                            {promotionPages.map((pagePromotions, pageIndex) => (
+                                <div className={style.carouselPage} key={pageIndex}>
+                                    <div className={style.mostthree}>
+                                        {pagePromotions.map((promotion) => (
+                                            <div
+                                                key={promotion.id}
+                                                className={`${style.promoCard} ${getCardSizeClass(imgsPerPage)} ${style.imgBorder} ${style.imgSize}`}
+                                                onClick={() => openPromotionModal(promotion)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter" || e.key === " ") {
+                                                        e.preventDefault();
+                                                        openPromotionModal(promotion);
+                                                    }
+                                                }}
+                                            >
+                                                {!loadedImages[promotion.id] && (
+                                                    <div className={style.imageLoading}>
+                                                        <span className={style.loadingSpinner} />
+                                                    </div>
+                                                )}
 
-                {showPaginationButtons && (
-                    <PaginationButtons
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
+                                                <Image
+                                                    src={promotion.url}
+                                                    alt={promotion.title}
+                                                    width={620}
+                                                    height={420}
+                                                    quality={100}
+                                                    className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
+                                                    onLoad={() => handleImageLoad(promotion.id)}
+                                                    onError={() => handleImageLoad(promotion.id)}
+                                                    priority
+                                                />
+
+                                                <div className={style.promoOverlay}>
+                                                    <button
+                                                        type="button"
+                                                        className={style.overlayBtn}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            openPromotionModal(promotion);
+                                                        }}
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                display: "inline-flex",
+                                                                alignItems: "center",
+                                                                gap: "10px",
+                                                                lineHeight: 1,
+                                                            }}
+                                                        >
+                                                            <span>View Details</span>
+                                                            <FaAngleRight style={{ display: "unset" }} />
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {!isMonthlyLoading && (
+                    <div className={style.claim_button}>
+                        <button
+                            type="button"
+                            className={style.btn}
+                            onClick={() => toggleVisibility("redeem", true)}
+                        >
+                            Redeem My Gift
+                        </button>
+                    </div>
+                )}
+
+                {!isMonthlyLoading && showPaginationDots && (
+                    <>
+                        <div className={style.carouselDots}>
+                            {Array.from({ length: totalPages }).map((_, index) => (
+                                <button
+                                    key={index}
+                                    type="button"
+                                    className={`${style.carouselDot} ${index === currentPage ? style.carouselDotActive : ""}`}
+                                    onClick={() => handlePageChange(index)}
+                                    aria-label={`Go to promotion page ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+
+                        <div className={style.carouselArrowButtons}>
+                            <button
+                                type="button"
+                                className={`${style.carouselArrowButton} ${currentPage === 0 ? style.carouselArrowButtonDisabled : ""}`}
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 0}
+                                aria-label="Previous promotion page"
+                            >
+                                <FaAngleLeft size={28} />
+                            </button>
+
+                            <button
+                                type="button"
+                                className={`${style.carouselArrowButton} ${currentPage === totalPages - 1 ? style.carouselArrowButtonDisabled : ""}`}
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages - 1}
+                                aria-label="Next promotion page"
+                            >
+                                <FaAngleRight size={28} />
+                            </button>
+                        </div>
+                    </>
                 )}
             </div>
         </>

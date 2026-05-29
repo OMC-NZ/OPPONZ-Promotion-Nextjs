@@ -3,18 +3,18 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaAngleRight } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import style from "../monthly/style.module.css";
 import globalStyle from "@app/publicstyle.module.css";
 import useWindowSize from "@hooks/useWindowSize";
 import usePagination from "@hooks/usePagination";
-import PaginationButtons from "@app/components/public/pagination/index";
-import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
-
-const TOUCH_CAROUSEL_MAX_WIDTH = 1366;
+import usePromotionContent from "@hooks/usePromotionContent";
 
 export default function CurrentEvents() {
     const { width: windowWidth } = useWindowSize();
+    const { currentEvents } = usePromotionContent();
+    const currentEventItems = currentEvents.items;
+    const isCurrentEventsLoading = currentEvents.loading;
     const [windowWidthValid, setWindowWidthValid] = useState(false);
     const [loadedImages, setLoadedImages] = useState({});
     const [dragOffset, setDragOffset] = useState(0);
@@ -23,7 +23,7 @@ export default function CurrentEvents() {
     const didSwipeRef = useRef(false);
 
     const { imgsPerPage, currentPage, setCurrentPage, totalPages } =
-        usePagination(windowWidth, currentEvents.length, "CurrentEvents");
+        usePagination(windowWidth, currentEventItems.length, "CurrentEvents");
 
     useEffect(() => {
         if (!Number.isNaN(windowWidth) && windowWidth > 0) {
@@ -37,17 +37,8 @@ export default function CurrentEvents() {
         }
     };
 
-    const canDragCarousel = (event) => {
-        const isTouchPointer = event.pointerType === "touch" || event.pointerType === "pen";
-
-        return (
-            totalPages > 1 &&
-            (isTouchPointer || windowWidth <= TOUCH_CAROUSEL_MAX_WIDTH)
-        );
-    };
-
     const handleDragStart = (event) => {
-        if (!canDragCarousel(event)) return;
+        if (totalPages <= 1) return;
 
         dragStartRef.current = { x: event.clientX, y: event.clientY };
         setIsDragging(true);
@@ -115,15 +106,13 @@ export default function CurrentEvents() {
     const eventPages = Array.from({ length: totalPages }, (_, pageIndex) => {
         const startIndex = pageIndex * imgsPerPage;
         const endIndex = startIndex + imgsPerPage;
-        return currentEvents.slice(startIndex, endIndex);
+        return currentEventItems.slice(startIndex, endIndex);
     });
 
-    const showPaginationButtons =
-        (windowWidth <= 1024 && currentEvents.length > 2) ||
-        (windowWidth <= 768 && currentEvents.length === 2) ||
-        currentEvents.length > 3;
+    const showPaginationDots = totalPages > 1;
 
-    const shouldShow = windowWidthValid && hasCurrentEvents;
+    const shouldShow =
+        windowWidthValid && !isCurrentEventsLoading && currentEventItems.length > 0;
 
     if (!shouldShow) return null;
 
@@ -213,12 +202,42 @@ export default function CurrentEvents() {
                 </div>
             </div>
 
-            {showPaginationButtons && (
-                <PaginationButtons
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
+            {showPaginationDots && (
+                <>
+                    <div className={style.carouselDots}>
+                        {Array.from({ length: totalPages }).map((_, index) => (
+                            <button
+                                key={index}
+                                type="button"
+                                className={`${style.carouselDot} ${index === currentPage ? style.carouselDotActive : ""}`}
+                                onClick={() => handlePageChange(index)}
+                                aria-label={`Go to event page ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+
+                    <div className={style.carouselArrowButtons}>
+                        <button
+                            type="button"
+                            className={`${style.carouselArrowButton} ${currentPage === 0 ? style.carouselArrowButtonDisabled : ""}`}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 0}
+                            aria-label="Previous event page"
+                        >
+                            <FaAngleLeft size={28} />
+                        </button>
+
+                        <button
+                            type="button"
+                            className={`${style.carouselArrowButton} ${currentPage === totalPages - 1 ? style.carouselArrowButtonDisabled : ""}`}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages - 1}
+                            aria-label="Next event page"
+                        >
+                            <FaAngleRight size={28} />
+                        </button>
+                    </div>
+                </>
             )}
         </div>
     );

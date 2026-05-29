@@ -1,4 +1,4 @@
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import style from "./publicCompo.module.css";
 
 export default function PaginationButtons({ currentPage, totalPages, onPageChange }) {

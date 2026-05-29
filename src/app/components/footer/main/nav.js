@@ -5,14 +5,16 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./footer_main.module.css";
 import LoadingModal from "@app/components/public/loadingModal";
-import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
-import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
+import usePromotionContent from "@hooks/usePromotionContent";
 
 export default function FooterNav() {
   const router = useRouter();
   const pathname = usePathname();
+  const { monthly, currentEvents } = usePromotionContent();
   const [scrollTo, setScrollTo] = useState(null);
   const [loading, setLoading] = useState(false);
+  const showMonthlyPromotions = monthly.loading || monthly.items.length > 0;
+  const showCurrentEvents = !currentEvents.loading && currentEvents.items.length > 0;
 
   const handleNavigation = (id) => {
     if (pathname === '/') {
@@ -51,7 +53,7 @@ export default function FooterNav() {
             <Link href="/" className={`${style.ft_body_2_1}`}>Home</Link>
           </li>
 
-          {hasMonthlyPromotions && (
+          {showMonthlyPromotions && (
             <li className="min-w-[169px] mb-[40px]">
               <span className={`${style.ft_body_2_1}`}>
                 <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
@@ -59,7 +61,7 @@ export default function FooterNav() {
             </li>
           )}
 
-          {hasCurrentEvents && (
+          {showCurrentEvents && (
             <li className="min-w-[169px] mb-[40px]">
               <span className={`${style.ft_body_2_1}`}>
                 <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>

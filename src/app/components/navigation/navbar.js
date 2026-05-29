@@ -5,14 +5,16 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./navbar.module.css";
 import LoadingModal from "@app/components/public/loadingModal";
-import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
-import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
+import usePromotionContent from "@hooks/usePromotionContent";
 
 export default function Navbar() {
     const router = useRouter();
     const pathname = usePathname();
+    const { monthly, currentEvents } = usePromotionContent();
     const [scrollTo, setScrollTo] = useState(null);
     const [loading, setLoading] = useState(false);
+    const showMonthlyPromotions = monthly.loading || monthly.items.length > 0;
+    const showCurrentEvents = !currentEvents.loading && currentEvents.items.length > 0;
 
     const handleNavigation = (id) => {
         if (pathname === '/') {
@@ -66,14 +68,14 @@ export default function Navbar() {
                                 <Link href="/">Home</Link>
                             </span>
                         </li>
-                        {hasMonthlyPromotions && (
+                        {showMonthlyPromotions && (
                             <li className="m-0 p-0 list-none font-normal">
                                 <span className={style.item_span}>
                                     <button onClick={() => handleNavigation('monthlyPromo')}>Monthly Promotions</button>
                                 </span>
                             </li>
                         )}
-                        {hasCurrentEvents && (
+                        {showCurrentEvents && (
                             <li className="m-0 p-0 list-none font-normal">
                                 <span className={style.item_span}>
                                     <button onClick={() => handleNavigation('currentEvs')}>Current Events</button>

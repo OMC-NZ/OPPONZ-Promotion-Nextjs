@@ -12,7 +12,14 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="./favicon.ico" />
-        <Script type='text/javascript' id='ze-snippet' src={`https://static.zdassets.com/ekr/snippet.js?key=${zendeskKey}`} strategy="beforeInteractive" />
+        {zendeskKey && (
+          <Script
+            type="text/javascript"
+            id="ze-snippet"
+            src={`https://static.zdassets.com/ekr/snippet.js?key=${zendeskKey}`}
+            strategy="beforeInteractive"
+          />
+        )}
       </head>
       <body suppressHydrationWarning={true}>
         <Navigation />

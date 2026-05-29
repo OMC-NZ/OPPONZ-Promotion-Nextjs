@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import style from "./style.module.css";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 const steps = [
     {
@@ -38,42 +38,115 @@ const steps = [
 
 export default function MobileSteps() {
     const [currentStep, setCurrentStep] = useState(0);
+    const [dragOffset, setDragOffset] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
+    const dragStartRef = useRef({ x: 0, y: 0 });
 
     const isFirst = currentStep === 0;
     const isLast = currentStep === steps.length - 1;
-    const step = steps[currentStep];
 
-    const handlePrev = () => {
-        if (!isFirst) {
-            setCurrentStep((prev) => prev - 1);
+    const handleStepChange = (stepIndex) => {
+        if (stepIndex >= 0 && stepIndex < steps.length) {
+            setCurrentStep(stepIndex);
         }
     };
 
+    const handlePrev = () => {
+        handleStepChange(currentStep - 1);
+    };
+
     const handleNext = () => {
-        if (!isLast) {
-            setCurrentStep((prev) => prev + 1);
+        handleStepChange(currentStep + 1);
+    };
+
+    const handleDragStart = (event) => {
+        dragStartRef.current = { x: event.clientX, y: event.clientY };
+        setIsDragging(true);
+        setDragOffset(0);
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+    };
+
+    const handleDragMove = (event) => {
+        if (!isDragging) return;
+
+        const deltaX = event.clientX - dragStartRef.current.x;
+        const deltaY = event.clientY - dragStartRef.current.y;
+
+        if (Math.abs(deltaX) < Math.abs(deltaY)) return;
+
+        const isPullingPastStart = isFirst && deltaX > 0;
+        const isPullingPastEnd = isLast && deltaX < 0;
+
+        setDragOffset(isPullingPastStart || isPullingPastEnd ? deltaX * 0.28 : deltaX);
+    };
+
+    const finishDrag = (event) => {
+        if (!isDragging) return;
+
+        const deltaX = event.clientX - dragStartRef.current.x;
+        const deltaY = event.clientY - dragStartRef.current.y;
+        const isHorizontalSwipe = Math.abs(deltaX) >= 50 && Math.abs(deltaX) > Math.abs(deltaY);
+
+        setIsDragging(false);
+        setDragOffset(0);
+        event.currentTarget.releasePointerCapture?.(event.pointerId);
+
+        if (!isHorizontalSwipe) return;
+
+        if (deltaX < 0) {
+            handleNext();
+        } else {
+            handlePrev();
         }
+    };
+
+    const cancelDrag = (event) => {
+        if (!isDragging) return;
+
+        setIsDragging(false);
+        setDragOffset(0);
+        event.currentTarget.releasePointerCapture?.(event.pointerId);
     };
 
     return (
         <>
-            <div className={style.pro_content}>
-                <div className={style.pro_step}>
-                    <div className={style.step_head}>
-                        <div className={style.step_no}>
-                            <Image
-                                src={step.icon}
-                                alt={step.alt}
-                                width={35}
-                                height={35}
-                            />
-                        </div>
-                    </div>
+            <div
+                className={style.mobileStepViewport}
+                onPointerDown={handleDragStart}
+                onPointerMove={handleDragMove}
+                onPointerUp={finishDrag}
+                onPointerCancel={cancelDrag}
+                onPointerLeave={cancelDrag}
+            >
+                <div
+                    className={`${style.mobileStepTrack} ${isDragging ? style.mobileStepTrackDragging : ""}`}
+                    style={{
+                        transform: `translateX(calc(-${currentStep * 100}% - ${currentStep * 16}px + ${dragOffset}px))`,
+                    }}
+                >
+                    {steps.map((step) => (
+                        <div className={style.mobileStepPage} key={step.alt}>
+                            <div className={style.pro_content}>
+                                <div className={style.pro_step}>
+                                    <div className={style.step_head}>
+                                        <div className={style.step_no}>
+                                            <Image
+                                                src={step.icon}
+                                                alt={step.alt}
+                                                width={35}
+                                                height={35}
+                                            />
+                                        </div>
+                                    </div>
 
-                    <div className={style.feature_box}>
-                        <h4 className={style.pro_h4}>{step.title}</h4>
-                        <p className={style.pro_words}>{step.description}</p>
-                    </div>
+                                    <div className={style.feature_box}>
+                                        <h4 className={style.pro_h4}>{step.title}</h4>
+                                        <p className={style.pro_words}>{step.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -84,7 +157,7 @@ export default function MobileSteps() {
                         type="button"
                         className={`${style.mobileDot} ${index === currentStep ? style.mobileDotActive : ""
                             }`}
-                        onClick={() => setCurrentStep(index)}
+                        onClick={() => handleStepChange(index)}
                         aria-label={`Go to step ${index + 1}`}
                     />
                 ))}
@@ -97,9 +170,7 @@ export default function MobileSteps() {
                     onClick={handlePrev}
                     disabled={isFirst}
                 >
-                    <span className={style.arrowCircle}>
-                        <FaAngleLeft size={28} />
-                    </span>
+                    <FaAngleLeft size={28} />
                 </button>
 
                 <button
@@ -108,9 +179,7 @@ export default function MobileSteps() {
                     onClick={handleNext}
                     disabled={isLast}
                 >
-                    <span className={style.arrowCircle}>
-                        <FaAngleRight size={28} />
-                    </span>
+                    <FaAngleRight size={28} />
                 </button>
             </div>
         </>

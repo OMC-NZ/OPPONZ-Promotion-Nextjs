@@ -36,6 +36,79 @@
   width: 100%;
 }
 
+.carouselDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.carouselDot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #d8d8d8;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carouselDotActive {
+  background: #000;
+}
+
+.carouselDot:hover,
+.carouselDot:focus-visible {
+  transform: scale(1.12);
+}
+
+.carouselArrowButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(96px, 12vw, 160px);
+  margin-top: 28px;
+}
+
+.carouselArrowButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid #d8d8d8;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.carouselArrowButton:hover,
+.carouselArrowButton:focus-visible {
+  border-color: #8f8f8f;
+}
+
+.carouselArrowButton:active {
+  transform: scale(0.96);
+}
+
+.carouselArrowButtonDisabled,
+.carouselArrowButton:disabled {
+  color: #c7c7c7;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.carouselArrowButtonDisabled:hover,
+.carouselArrowButton:disabled:hover {
+  border-color: #d8d8d8;
+}
+
 .cppadlayout {
   display: flex;
   align-items: center;
@@ -69,6 +142,11 @@
   border-radius: 10px;
   cursor: pointer;
   background: #f4f4f4;
+}
+
+.loadingCard {
+  aspect-ratio: 31 / 21;
+  min-height: 180px;
 }
 
 .promoImage {

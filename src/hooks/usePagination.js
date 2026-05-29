@@ -7,7 +7,7 @@ const TABLET_MAX_WIDTH = 1100;
 const usePagination = (windowWidth, imgsLength, callerIdentifier) => {
     const [imgsPerPage, setImgsPerPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
-    const totalPages = Math.ceil(imgsLength / imgsPerPage);
+    const totalPages = Math.max(1, Math.ceil(imgsLength / imgsPerPage));
 
     useEffect(() => {
         const updateImgsPerPage = () => {
@@ -31,7 +31,7 @@ const usePagination = (windowWidth, imgsLength, callerIdentifier) => {
         updateImgsPerPage();
 
         if (currentPage >= totalPages) {
-            setCurrentPage(totalPages - 1);
+            setCurrentPage(Math.max(0, totalPages - 1));
         }
     }, [windowWidth, imgsLength, currentPage, totalPages, callerIdentifier]);
 

@@ -5,16 +5,18 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from "next/link";
 import style from "./sidebar.module.css";
 import LoadingModal from "@app/components/public/loadingModal";
-import { monthlyPromotions, hasMonthlyPromotions } from "@data/monthlyPromotions";
-import { currentEvents, hasCurrentEvents } from "@data/currentEvents";
+import usePromotionContent from "@hooks/usePromotionContent";
 
 export default function Sidebar() {
     const router = useRouter();
     const pathname = usePathname();
+    const { monthly, currentEvents } = usePromotionContent();
     const [scrollTo, setScrollTo] = useState(null);
     const [isRotate, setIsRotate] = useState(false);
     const [isMenu, setIsMenu] = useState(false);
     const [loading, setLoading] = useState(false);
+    const showMonthlyPromotions = monthly.loading || monthly.items.length > 0;
+    const showCurrentEvents = !currentEvents.loading && currentEvents.items.length > 0;
 
     const handleClick = () => {
         setIsRotate(!isRotate);
@@ -96,7 +98,7 @@ export default function Sidebar() {
                                     </Link>
                                 </p>
                             </li>
-                            {hasMonthlyPromotions && (
+                            {showMonthlyPromotions && (
                                 <li>
                                     <p className={style.second_nav_title}>
                                         <span className="flex items-center justify-between" onClick={() => handleNavigation('monthlyPromo')}>
@@ -106,7 +108,7 @@ export default function Sidebar() {
                                     </p>
                                 </li>
                             )}
-                            {hasCurrentEvents && (
+                            {showCurrentEvents && (
                                 <li>
                                     <p className={style.second_nav_title}>
                                         <span className="flex items-center justify-between" onClick={() => handleNavigation('currentEvs')}>
