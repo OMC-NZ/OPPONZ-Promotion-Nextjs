@@ -1,244 +1,487 @@
-.claim_banner {
-  display: flex;
-  justify-content: center;
+.claimPage {
+  min-height: 100vh;
+  padding: 48px 20px 36px;
+  background: #fafafa;
+  color: #111;
 }
 
-.claim_content {
-  padding: 2rem 0;
-}
-
-.claim_title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.heroTitle {
+  margin: 0 auto 32px;
   text-align: center;
 }
 
-.claim_title p {
-  font-family: "OPPOSans-Regular";
-  font-size: 2.5rem;
+.heroTitle h1 {
+  margin: 0 0 12px;
+  font-size: 40px;
+  line-height: calc(1.2em + 4px);
+  font-weight: 700;
 }
 
-.claim_title span {
-  font-size: 14px;
-  color: #6b5a5a8c;
+.heroTitle p {
+  margin: 0;
+  color: #555;
+  font-size: 22px;
 }
 
-.claim_form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 0;
-}
-
-.form_container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: center;
-  max-width: 1300px;
-  margin: 1rem 0;
-  gap: 2rem;
-}
-
-.specWords {
-  text-decoration: underline;
-}
-
-.specWords:hover {
-  color: #000;
-}
-
-.device_info {
-  display: flex;
-  justify-content: center;
-  margin-top: 3rem;
-}
-
-.device_width {
-  display: flex;
-  flex-direction: column;
-  max-width: 1300px;
-  gap: 1rem;
-}
-
-.device_cell {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 1rem;
-}
-
-.device_data {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #6b5a5a8c;
-}
-
-.modal_card {
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  padding: 2rem 3rem;
-  gap: 1.5rem;
-  border-radius: 15px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 50%);
-  font-family: "OPPOSans-Regular";
-}
-
-.card_cell {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.card_main {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.card_label {
-  display: flex;
-  align-items: center;
-  flex: 2;
-  width: 100%;
-  font-size: 1rem;
-}
-
-.card_main input {
-  width: 100%;
-}
-
-.card_border {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 10px;
-}
-
-.normalBorder {
-  border: 2px solid #dcdcdc;
-}
-
-.card_border input {
-  height: 100%;
-  padding: 0 0 0 5px;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: rgba(0, 0, 0, 0.95);
-  font-size: 16px;
-  letter-spacing: 1px;
-}
-
-.card_icon {
-  color: #bb0929;
-}
-
-.card_error {
-  position: absolute;
-  bottom: 0;
-  left: 3%;
-  color: red;
-}
-
-.errorBorder {
-  border: 2px solid red;
-}
-
-.card_checkbox {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 1rem;
-}
-
-.card_checkbox label {
-  width: auto;
-  font-size: 1rem;
-}
-
-.card_checkbox input {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.claim_button {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 2rem;
+.heroTitle small {
+  display: block;
+  margin-top: 14px;
+  color: #666;
   font-size: 18px;
 }
 
-.submit_button {
-  display: block;
-  padding: 1rem 6rem;
-  border-radius: 36px;
-  background: #2cff73;
+.claimForm {
+  display: grid;
+  gap: 16px;
+  width: min(100%, 784px);
+  margin: 0 auto;
+}
+
+.formSection,
+.claimActions {
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--oppo-card-shadow);
+}
+
+.formSection {
+  padding: 26px 28px;
+}
+
+.formSection h2 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  line-height: calc(1.2em + 4px);
+  font-weight: 700;
+}
+
+.promotionCard {
+  display: grid;
+  grid-template-columns: 205px minmax(0, 1fr);
+  align-items: center;
+  gap: 40px;
+}
+
+.promotionMedia {
+  display: grid;
+  gap: 20px;
+}
+
+.promotionImage {
+  width: 205px;
+  height: auto;
+  aspect-ratio: 236 / 160;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.promotionInfo h3 {
+  margin: 0 0 12px;
+  font-size: 24px;
+  line-height: calc(1.25em + 4px);
+  font-weight: 700;
+}
+
+.promotionInfo p {
+  margin: 0 0 26px;
+  color: #555;
+  font-size: 19px;
+}
+
+.promotionInfo dl {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  font-size: 18px;
+}
+
+.promotionInfo dl div {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 32px;
+}
+
+.promotionInfo dt,
+.promotionInfo dd {
+  margin: 0;
+}
+
+.promotionInfo dt {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.promotionInfo dd {
+  color: #444;
+}
+
+.detailsButton,
+.secondaryButton,
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 32px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 19px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease;
+}
+
+.detailsButton {
+  gap: 12px;
+  width: 100%;
+}
+
+.detailsButton:hover,
+.secondaryButton:hover,
+.primaryButton:hover {
+  background: #000;
+  color: #fff;
+}
+
+.detailsButton:disabled,
+.secondaryButton:disabled,
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.detailsButton:disabled:hover,
+.secondaryButton:disabled:hover,
+.primaryButton:disabled:hover {
+  background: #fff;
+  color: #111;
+}
+
+.giftOptionPanel {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.giftOptionPanel p {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.giftOptionPanel strong {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.giftItems {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.giftItem {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.giftOptionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.giftOptionButton {
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease;
+}
+
+.giftOptionButton:hover,
+.giftOptionButtonActive {
+  background: #000;
+  color: #fff;
+}
+
+.giftOptionButton:disabled {
+  cursor: default;
+}
+
+.giftOptionButton:disabled:hover {
+  background: #000;
+  color: #fff;
+}
+
+.twoColumnGrid,
+.threeColumnGrid,
+.singleColumnGrid {
+  display: grid;
+  gap: 22px 34px;
+}
+
+.twoColumnGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.threeColumnGrid {
+  grid-template-columns: 1fr 1fr 0.62fr;
+  margin-top: 22px;
+}
+
+.singleColumnGrid {
+  grid-template-columns: 1fr;
+  margin-bottom: 20px;
+}
+
+.fieldGroup {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+
+.fieldGroup label {
+  font-size: 18px;
   font-weight: 600;
-  line-height: 22px;
+}
+
+.fieldLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+}
+
+.helpWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.helpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #555;
+  cursor: help;
+}
+
+.helpButton svg {
+  width: 22px;
+  height: 22px;
+}
+
+.helpText {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 2;
+  width: max-content;
+  max-width: 260px;
+  padding: 8px 10px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 400;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.helpButton:hover + .helpText,
+.helpButton:focus + .helpText {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.fieldGroup input[type="text"] {
+  width: 100%;
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 19px;
+  outline: none;
+}
+
+.fieldGroup input[type="text"]:focus {
+  border-color: #111;
+}
+
+.fieldGroup input.inputError {
+  border-color: #c70000;
+}
+
+.prefixedInput {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.prefixedInput span {
+  flex: 0 0 auto;
+  padding: 0 10px 0 12px;
+  color: #8a8a8a;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.prefixedInput input[type="text"] {
+  height: 100%;
+  padding-left: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.prefixedInput:focus-within {
+  border-color: #111;
+}
+
+.prefixedInput.inputError {
+  border-color: #c70000;
+}
+
+.fieldError {
+  margin: 0;
+  color: #c70000;
+  font-size: 16px;
+}
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 122px;
+  border: 1px dashed #9f9f9f;
+  border-radius: 8px;
+  color: #111;
   text-align: center;
   cursor: pointer;
 }
 
-.backhome_button {
-  cursor: pointer;
+.uploadBox svg {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 14px;
 }
 
-.backhome_button:hover {
+.uploadBox span {
+  font-size: 18px;
+}
+
+.uploadBox strong {
+  color: #0057b8;
   font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
 }
 
-@media (min-width: 768px) {
-  .claim_content {
-    padding: 3rem 0;
-  }
-
-  .claim_title p {
-    font-size: 3rem;
-  }
-
-  .modal_card {
-    width: 600px;
-  }
-
-  .device_width {
-    flex-direction: row;
-    gap: 5rem;
-  }
-
-  .claim_button {
-    flex-direction: row;
-    margin-top: 0;
-  }
-
-  .submit_button {
-    padding: 0.6rem 3rem;
-  }
+.uploadBox small {
+  margin-top: 10px;
+  color: #666;
+  font-size: 16px;
 }
 
-@media (min-width: 1024px) {
-  .claim_title p {
-    font-size: 3.5rem;
-  }
-
-  .modal_card {
-    width: 40rem;
-  }
+.uploadBox input {
+  display: none;
 }
 
-@media (min-width: 1280px) {
-  .claim_title p {
-    font-size: 4rem;
+.uploadError {
+  border-color: #c70000;
+}
+
+.declarationRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 18px;
+}
+
+.declarationRow input {
+  width: 16px;
+  height: 16px;
+}
+
+.declarationRow a {
+  color: #0057b8;
+}
+
+.claimActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  padding: 18px 20px;
+}
+
+.secondaryButton,
+.primaryButton {
+  min-width: 130px;
+}
+
+.primaryButton {
+  min-width: 164px;
+}
+
+@media (max-width: 767px) {
+  .claimPage {
+    padding-top: 32px;
+  }
+
+  .heroTitle h1 {
+    font-size: 34px;
+  }
+
+  .claimForm {
+    width: 100%;
+  }
+
+  .formSection {
+    padding: 22px;
+  }
+
+  .promotionCard,
+  .twoColumnGrid,
+  .threeColumnGrid,
+  .giftItems {
+    grid-template-columns: 1fr;
+  }
+
+  .promotionImage {
+    width: 100%;
+    height: auto;
+  }
+
+  .claimActions {
+    flex-direction: column;
+  }
+
+  .secondaryButton,
+  .primaryButton {
+    width: 100%;
   }
 }

@@ -12,7 +12,7 @@ export default function useClaimValidation(type) {
             error = "Required";
         } else {
             if (type === "name") {
-                const nameRegex = /^[A-Za-zĀāĒēĪīŌōŪū ]+$/;
+                const nameRegex = /^[A-Za-z ]+$/;
                 if (!nameRegex.test(value)) {
                     error = "Invalid Information";
                 }

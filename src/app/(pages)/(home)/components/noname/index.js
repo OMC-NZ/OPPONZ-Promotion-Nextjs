@@ -19,7 +19,11 @@ export default function Noname() {
 
     return (
         <>
-            <Redeem isVisible={isVisible.redeem} onClose={() => toggleVisibility('redeem', false)} />
+            <Redeem
+                isVisible={isVisible.redeem}
+                onClose={() => toggleVisibility('redeem', false)}
+                onOpenTrack={() => toggleVisibility('track', true)}
+            />
             <Track isVisible={isVisible.track} onClose={() => toggleVisibility('track', false)} />
             <div className='relative xl:h-[500px] md:h-[400px] h-[500px]'>
                 <div className={`${style.dark_overlay}`}></div>

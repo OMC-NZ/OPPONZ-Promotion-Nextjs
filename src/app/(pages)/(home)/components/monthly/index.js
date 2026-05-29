@@ -168,6 +168,7 @@ export default function MonthlyPromotions() {
             <Redeem
                 isVisible={isVisible.redeem}
                 onClose={() => toggleVisibility("redeem", false)}
+                onOpenTrack={() => toggleVisibility("track", true)}
             />
 
             <Track

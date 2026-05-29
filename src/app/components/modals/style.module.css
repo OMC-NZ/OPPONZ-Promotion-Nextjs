@@ -20,12 +20,22 @@
   padding: 1rem 2rem;
   border-radius: 5px;
   background: #fff;
+  box-shadow: var(--oppo-card-shadow);
+}
+
+.modalResult {
+  max-width: 920px;
+  height: auto;
+  min-height: 560px;
+  overflow: hidden;
+  justify-content: flex-start;
 }
 
 .closeButton {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  z-index: 4;
   border: none;
   background: transparent;
   font-size: 1.5rem;
@@ -170,9 +180,305 @@
   background: #000;
 }
 
+.conBtn button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.conBtn button:disabled:hover,
+.conBtn button:disabled:active {
+  color: #000;
+  background: transparent;
+}
+
 .modal_track {
   max-width: 600px;
   height: 24rem;
+}
+
+.searchOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: inherit;
+  background: #fff;
+}
+
+.searchingPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  gap: 16px;
+  font-size: 22px;
+  color: #111;
+}
+
+.searchingSpinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(0, 0, 0, 0.12);
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: modalSpin 0.8s linear infinite;
+}
+
+.resultPanel {
+  width: 100%;
+  min-height: 560px;
+  padding: 32px 48px 18px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.resultPanelIn {
+  animation: slideResultIn 0.34s cubic-bezier(0.48, 0.04, 0.52, 0.96);
+}
+
+.resultTitle {
+  margin: 0 0 18px;
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #111;
+}
+
+.resultLead {
+  margin: 0 0 18px;
+  font-size: 18px;
+  line-height: 1.45;
+  color: #333;
+}
+
+.searchSummary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  margin-bottom: 22px;
+  padding: 9px 18px;
+  border: 1px solid #cfcfcf;
+  border-radius: 14px;
+  color: #111;
+  font-size: 18px;
+}
+
+.searchSummary span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 12px;
+  border-right: 1px solid #cfcfcf;
+  color: #111;
+}
+
+.searchSummary svg {
+  width: 24px;
+  height: 24px;
+}
+
+.searchSummary p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.promotionResultCard,
+.noPromotionCard {
+  border: 1px solid #dddddd;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--oppo-card-shadow);
+}
+
+.promotionResultCard {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 30px;
+  padding: 20px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.promotionResultImage {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.promotionResultInfo h3 {
+  margin: 0 0 12px;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.promotionResultInfo p {
+  margin: 0 0 20px;
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+.promotionResultInfo dl {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 24px;
+  font-size: 19px;
+}
+
+.promotionResultInfo dl div {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.promotionResultInfo dt,
+.promotionResultInfo dd {
+  margin: 0;
+}
+
+.resultActions,
+.emptyActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.resultActions {
+  justify-content: center;
+}
+
+.resultActions button,
+.resultActions a,
+.backButton,
+.emptyActions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 168px;
+  height: 46px;
+  padding: 0 24px;
+  border: 1px solid #000;
+  border-radius: 12px;
+  background: #fff;
+  color: #111;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.resultActions button:hover,
+.resultActions a:hover,
+.backButton:hover,
+.emptyActions button:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.backButton {
+  display: flex;
+  width: 220px;
+  margin: 0 auto;
+}
+
+.noPromotionCard {
+  min-height: 250px;
+  padding: 30px 24px;
+  text-align: center;
+}
+
+.noPromotionIcon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #f7f7f7;
+}
+
+.noPromotionIcon svg:first-child {
+  width: 42px;
+  height: 42px;
+}
+
+.noPromotionIcon svg:last-child {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 28px;
+  height: 28px;
+  background: #f7f7f7;
+}
+
+.noPromotionCard h3 {
+  margin: 0 0 14px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.noPromotionCard p,
+.trackHint {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+  color: #444;
+}
+
+.noPromotionCard p a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.trackHint {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.trackHint button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trackHint button:hover,
+.trackHint button:focus-visible {
+  text-decoration: underline;
+}
+
+.emptyActions {
+  justify-content: center;
+}
+
+@keyframes modalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideResultIn {
+  from {
+    opacity: 0;
+    transform: translateX(-36px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @media (min-width: 768px) {
@@ -202,6 +508,10 @@
     left: 12.5rem;
     width: 24rem;
   }
+
+  .modalResult {
+    height: auto;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -223,5 +533,60 @@
   .tipText {
     left: 16rem;
     width: 28rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .modalResult {
+    width: calc(100% - 24px);
+    min-height: 620px;
+    max-height: calc(100vh - 32px);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .resultPanel {
+    padding: 32px 18px;
+    min-height: auto;
+  }
+
+  .resultTitle {
+    font-size: 28px;
+  }
+
+  .resultLead {
+    font-size: 16px;
+  }
+
+  .searchSummary {
+    grid-template-columns: auto minmax(0, 1fr);
+    font-size: 15px;
+    row-gap: 10px;
+  }
+
+  .promotionResultCard {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .promotionResultInfo h3,
+  .noPromotionCard h3 {
+    font-size: 24px;
+  }
+
+  .promotionResultInfo p {
+    font-size: 18px;
+  }
+
+  .resultActions,
+  .emptyActions {
+    flex-direction: column;
+  }
+
+  .resultActions button,
+  .resultActions a,
+  .backButton,
+  .emptyActions button {
+    width: 100%;
   }
 }

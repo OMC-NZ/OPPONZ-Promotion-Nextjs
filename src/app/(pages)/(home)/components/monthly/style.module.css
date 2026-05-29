@@ -3,6 +3,7 @@
   justify-content: center;
   gap: 16px;
   overflow: hidden;
+  padding-bottom: 12px;
   touch-action: pan-y;
   user-select: none;
 }
