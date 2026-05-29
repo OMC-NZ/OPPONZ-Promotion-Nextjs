@@ -121,7 +121,7 @@ export default function MobileSteps() {
                 <div
                     className={`${style.mobileStepTrack} ${isDragging ? style.mobileStepTrackDragging : ""}`}
                     style={{
-                        transform: `translateX(calc(-${currentStep * 100}% - ${currentStep * 16}px + ${dragOffset}px))`,
+                        transform: `translateX(calc(-${currentStep * 100}% + ${dragOffset}px))`,
                     }}
                 >
                     {steps.map((step) => (

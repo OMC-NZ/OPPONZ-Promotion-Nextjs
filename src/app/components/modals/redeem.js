@@ -53,7 +53,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setIMEICorrect(false);
         setSearchStatus('idle');
         setMatchedPromotion(null);
-        document.body.style.overflow = '';
+        document.body.style.overflowY = '';
     };
 
     const resetSearchInputs = () => {

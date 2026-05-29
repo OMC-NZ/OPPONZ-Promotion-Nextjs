@@ -44,10 +44,10 @@ export default function MonthlyPromotions() {
         const shouldLockBody =
             isVisible.redeem || isVisible.track || Boolean(selectedPromotion);
 
-        document.body.style.overflow = shouldLockBody ? "hidden" : "";
+        document.body.style.overflowY = shouldLockBody ? "hidden" : "";
 
         return () => {
-            document.body.style.overflow = "";
+            document.body.style.overflowY = "";
         };
     }, [isVisible, selectedPromotion]);
 
@@ -211,7 +211,7 @@ export default function MonthlyPromotions() {
                         <div
                             className={`${style.carouselTrack} ${isDragging ? style.carouselTrackDragging : ""}`}
                             style={{
-                                transform: `translateX(calc(-${currentPage * 100}% - ${currentPage * 16}px + ${dragOffset}px))`,
+                                transform: `translateX(calc(-${currentPage * 100}% + ${dragOffset}px))`,
                             }}
                         >
                             {promotionPages.map((pagePromotions, pageIndex) => (

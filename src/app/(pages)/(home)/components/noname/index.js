@@ -11,7 +11,7 @@ export default function Noname() {
 
     const toggleVisibility = (type, state) => {
         setIsVisible(prev => ({ ...prev, [type]: state }));
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflowY = state ? 'hidden' : '';
     };
 
     //Handle preventing Wheel control over the main page after opening Modals.

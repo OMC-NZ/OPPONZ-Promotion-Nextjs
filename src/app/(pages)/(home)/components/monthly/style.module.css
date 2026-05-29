@@ -22,7 +22,6 @@
 
 .carouselTrack {
   display: flex;
-  gap: 16px;
   width: 100%;
   transition: transform 0.36s cubic-bezier(0.48, 0.04, 0.52, 0.96);
   will-change: transform;

@@ -26,7 +26,7 @@ export default function Track({ isVisible, onClose }) {
             <Suspense fallback={<Loading />}>
                 <div className={`${style.modalOverlay}`}>
                     <div className={`${style.modal} ${style.modal_track}`}>
-                        <button className={`${style.closeButton}`} onClick={() => { onClose(); setClaimID(''); setClaimIDError(false); document.body.style.overflow = '';}}>
+                        <button className={`${style.closeButton}`} onClick={() => { onClose(); setClaimID(''); setClaimIDError(false); document.body.style.overflowY = '';}}>
                             &times;
                         </button>
                         <p className={`${style.modalTitle}`}>Track Your Claim Process</p>
@@ -50,7 +50,7 @@ export default function Track({ isVisible, onClose }) {
                             </div>
                         </div>
                         <div className={`${style.conBtn}`}>
-                            <button onClick={() => { onClose(); setClaimID(''); setClaimIDError(false); document.body.style.overflow = '';}}>Close</button>
+                            <button onClick={() => { onClose(); setClaimID(''); setClaimIDError(false); document.body.style.overflowY = '';}}>Close</button>
                             <button onClick={submitValidate}>Search</button>
                         </div>
                     </div>

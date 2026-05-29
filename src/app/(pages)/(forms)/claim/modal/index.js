@@ -4,7 +4,7 @@ import style from "./modal.module.css";
 export default function DetailsModal({ setModalShow }) {
     const handleModalClose = () => {
         setModalShow(false);
-        document.body.style.overflow = 'auto';
+        document.body.style.overflowY = 'auto';
     }
     return (
         <>

@@ -55,13 +55,17 @@ export default function useClaimValidation(type) {
                 }
             } else if (type === "file") {
                 const file = value[0];
-                const maxSize = 10 * 1024 * 1024; // 10MB
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                const maxImageSize = 5 * 1024 * 1024; // 5MB
+                const maxPdfSize = 10 * 1024 * 1024; // 10MB
+                const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                const allowedPdfType = 'application/pdf';
                 if (file) {
-                    if (!allowedTypes.includes(file.type)) {
+                    if (!allowedImageTypes.includes(file.type) && file.type !== allowedPdfType) {
                         error = "File type must be in JPEG, JPG, PNG, or PDF format";
-                    } else if (file.size > maxSize) {
-                        error = "File size must be less than 10MB";
+                    } else if (allowedImageTypes.includes(file.type) && file.size > maxImageSize) {
+                        error = "Image file size must be 5MB or less";
+                    } else if (file.type === allowedPdfType && file.size > maxPdfSize) {
+                        error = "PDF file size must be 10MB or less";
                     }
                 }
             }
@@ -75,13 +79,14 @@ export default function useClaimValidation(type) {
         const { type, value, files } = event.target;
         const newValue = type === "file" ? files : value;
         setValue(newValue);
-        validate(newValue);
+        setError("");
     };
 
     return {
         value,
         error,
         handleChange,
+        handleBlur: () => validate(value),
         validate
     };
 }

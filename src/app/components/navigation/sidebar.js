@@ -56,15 +56,15 @@ export default function Sidebar() {
         // 在组件渲染后和每次更新后都会运行这里的代码
         if (isRotate || loading) {
             // 当 isRotate 为 true 时，添加 overflow: hidden 到 body
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflowY = 'hidden';
         } else {
             // 当 isRotate 为 false 时，移除 overflow: hidden
-            document.body.style.overflow = 'auto';
+            document.body.style.overflowY = 'auto';
         }
 
         // 在组件卸载时清理 effect
         return () => {
-            document.body.style.overflow = 'auto';
+            document.body.style.overflowY = 'auto';
         };
 
 

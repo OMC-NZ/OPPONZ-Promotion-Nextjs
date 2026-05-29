@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
-import { FiUploadCloud } from "react-icons/fi";
+import { FiFileText, FiGift, FiMail, FiMapPin, FiPhone, FiUploadCloud, FiUser } from "react-icons/fi";
 import { FaAngleRight } from "react-icons/fa";
 import { PiQuestionBold } from "react-icons/pi";
 import style from "./style.module.css";
@@ -40,9 +39,10 @@ const selectedPromotion = {
 export default function Claim() {
     const router = useRouter();
     const [modalShow, setModalShow] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
-    const [declarationError, setDeclarationError] = useState(false);
+    const [isReviewing, setIsReviewing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [previewDocument, setPreviewDocument] = useState(null);
+    const [companyName, setCompanyName] = useState("");
     const giftItems = selectedPromotion.giftItems?.length
         ? selectedPromotion.giftItems
         : [{
@@ -85,17 +85,61 @@ export default function Claim() {
     const cityRef = useRef(null);
     const postCodeRef = useRef(null);
     const invoiceRef = useRef(null);
-    const declarationRef = useRef(null);
+    const selectedGiftLabels = giftItems.map((giftItem) => {
+        const selectedOption = giftItem.options.find((option) => option.id === selectedGiftOptions[giftItem.id]);
+        return selectedOption?.label && selectedOption.label !== "Included"
+            ? `${giftItem.name} (${selectedOption.label})`
+            : giftItem.name;
+    });
+
+    const getFileName = (fileList) => fileList?.[0]?.name || "";
+
+    const reviewData = {
+        giftName: selectedGiftLabels.join(" + "),
+        fullName: `${firstNameValidation.value} ${lastNameValidation.value}`.trim(),
+        mobileNumber: contactValidation.value ? `+64 ${contactValidation.value}` : "",
+        email: emailValidation.value,
+        addressLines: [
+            companyName ? `Company Name: ${companyName}` : "",
+            streetValidation.value,
+            suburbValidation.value,
+            `${cityValidation.value} ${postCodeValidation.value}`.trim(),
+            "New Zealand",
+        ].filter(Boolean),
+        documents: [
+            {
+                label: "IMEI Screenshot",
+                fileName: getFileName(receiptValidation.value),
+                file: receiptValidation.value?.[0],
+            },
+            {
+                label: "Proof of Purchase",
+                fileName: getFileName(screenshotValidation.value),
+                file: screenshotValidation.value?.[0],
+            },
+        ],
+    };
+
+    useEffect(() => {
+        document.body.style.overflowY = modalShow ? "hidden" : "";
+
+        return () => {
+            document.body.style.overflowY = "";
+        };
+    }, [modalShow]);
 
     const handleModalOpen = () => {
         setModalShow(true);
-        document.body.style.overflow = "hidden";
+        document.body.style.overflowY = "hidden";
+    };
+
+    const handleBackToEdit = () => {
+        setIsReviewing(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const validateFields = () => {
         if (isSubmitting) return;
-
-        setDeclarationError(!isChecked);
 
         const validations = [
             [firstNameValidation.validate(firstNameValidation.value), firstNameRef],
@@ -109,7 +153,6 @@ export default function Claim() {
             [invoiceValidation.validate(invoiceValidation.value), invoiceRef],
             [receiptValidation.validate(receiptValidation.value), receiptRef],
             [screenshotValidation.validate(screenshotValidation.value), screenshotRef],
-            [isChecked, declarationRef],
         ];
 
         const firstInvalid = validations.find(([isValid]) => !isValid);
@@ -119,11 +162,36 @@ export default function Claim() {
             return;
         }
 
-        setIsSubmitting(true);
-
-        // TODO: Replace this with the claim submission API call.
-        console.log("All fields are valid");
+        setIsReviewing(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
+    const handleConfirmSubmit = () => {
+        setIsSubmitting(true);
+        // TODO: Replace this with the claim submission API call.
+        console.log("Claim confirmed");
+    };
+
+    if (isReviewing) {
+        return (
+            <>
+                <title>Review Your Claim | OPPO NZ Promotions</title>
+                <ReviewClaimPage
+                    data={reviewData}
+                    onBack={handleBackToEdit}
+                    onConfirm={handleConfirmSubmit}
+                    isSubmitting={isSubmitting}
+                    onPreviewDocument={setPreviewDocument}
+                />
+                {previewDocument && (
+                    <DocumentPreviewModal
+                        document={previewDocument}
+                        onClose={() => setPreviewDocument(null)}
+                    />
+                )}
+            </>
+        );
+    }
 
     return (
         <>
@@ -136,7 +204,7 @@ export default function Claim() {
                 </section>
 
                 <form className={style.claimForm}>
-                    <section className={style.formSection} ref={declarationRef}>
+                    <section className={style.formSection}>
                         <h2>Your Promotion</h2>
                         <div className={style.promotionCard}>
                             <div className={style.promotionMedia}>
@@ -226,6 +294,8 @@ export default function Claim() {
                             <Field
                                 label="Company Name (Optional)"
                                 helpText="If your address is a business address, enter the company name here."
+                                value={companyName}
+                                onChange={setCompanyName}
                             />
                         </div>
                         <div className={style.threeColumnGrid}>
@@ -261,24 +331,6 @@ export default function Claim() {
                         </div>
                     </section>
 
-                    <section className={style.formSection}>
-                        <h2>Declaration</h2>
-                        <label className={style.declarationRow}>
-                            <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={(event) => {
-                                    setIsChecked(event.target.checked);
-                                    setDeclarationError(false);
-                                }}
-                            />
-                            <span>
-                                I agree to the <Link href="/terms" target="_blank">Terms and Conditions of Promotions</Link> *
-                            </span>
-                        </label>
-                        {declarationError && <p className={style.fieldError}>Required</p>}
-                    </section>
-
                     <div className={style.claimActions}>
                         <button type="button" className={style.secondaryButton} onClick={() => router.back()}>
                             Back
@@ -289,7 +341,7 @@ export default function Claim() {
                             onClick={validateFields}
                             disabled={isSubmitting}
                         >
-                            {isSubmitting ? "Submitting" : "Submit Claim"}
+                            {isSubmitting ? "Submitting" : "Next"}
                         </button>
                     </div>
                 </form>
@@ -299,12 +351,15 @@ export default function Claim() {
     );
 }
 
-function Field({ label, validation, fieldRef, type = "text", prefix, inputMode, helpText }) {
+function Field({ label, validation, fieldRef, type = "text", prefix, inputMode, helpText, value, onChange }) {
+    const inputValue = value ?? validation?.value ?? "";
+
     const handleChange = (event) => {
         if (type === "phone") {
             event.target.value = event.target.value.replace(/\D/g, "");
         }
 
+        onChange?.(event.target.value);
         validation?.handleChange(event);
     };
 
@@ -314,6 +369,8 @@ function Field({ label, validation, fieldRef, type = "text", prefix, inputMode, 
             data-type={type}
             inputMode={inputMode}
             onChange={handleChange}
+            onBlur={validation?.handleBlur}
+            value={inputValue}
             className={validation?.error ? style.inputError : ""}
         />
     );
@@ -322,6 +379,7 @@ function Field({ label, validation, fieldRef, type = "text", prefix, inputMode, 
         <div className={style.fieldGroup} ref={fieldRef}>
             <label className={style.fieldLabel}>
                 <span>{label}</span>
+                {validation?.error && <span className={style.inlineFieldError}>{validation.error}</span>}
                 {helpText && (
                     <span className={style.helpWrap}>
                         <button type="button" className={style.helpButton} aria-label={`${label} help`}>
@@ -337,28 +395,230 @@ function Field({ label, validation, fieldRef, type = "text", prefix, inputMode, 
                     {input}
                 </div>
             ) : input}
-            {validation?.error && <p className={style.fieldError}>{validation.error}</p>}
+        </div>
+    );
+}
+
+function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, onPreviewDocument }) {
+    return (
+        <main className={style.reviewPage}>
+            <section className={style.reviewHero}>
+                <h1>Review Your Claim</h1>
+                <p>Please check your details carefully before confirming your claim.</p>
+            </section>
+
+            <div className={style.reviewFlow}>
+                <section className={style.giftReviewCard}>
+                    <div className={style.reviewCardTitleRow}>
+                        <h2><FiGift />Your Gift</h2>
+                    </div>
+                    <strong>{data.giftName}</strong>
+                    <p>This is the gift that will be sent once your claim is approved.</p>
+                </section>
+
+                <section className={style.reviewInfoCard}>
+                    <h2>Contact Details</h2>
+                    <div className={style.contactSummary}>
+                        <InfoPair icon={<FiUser />} label="Full Name:" value={data.fullName} />
+                        <InfoPair icon={<FiPhone />} label="Mobile Number:" value={data.mobileNumber} />
+                    </div>
+                    <div className={style.emailFeature}>
+                        <span><FiMail /></span>
+                        <div>
+                            <p>Email Address</p>
+                            <strong>{data.email}</strong>
+                            <small>Claim updates will be sent to this email.</small>
+                        </div>
+                    </div>
+                </section>
+
+                <section className={style.reviewInfoCard}>
+                    <h2>Delivery Address</h2>
+                    <div className={style.addressFeature}>
+                        <span><FiMapPin /></span>
+                        <div>
+                            {data.addressLines.map((line) => (
+                                <strong key={line}>{line}</strong>
+                            ))}
+                            <small>Please make sure this is the correct delivery address for your gift.</small>
+                        </div>
+                    </div>
+                </section>
+
+                <section className={style.reviewInfoCard}>
+                    <h2>Purchase Documents</h2>
+                    <div className={style.documentList}>
+                        {data.documents.map((document) => (
+                            <div className={style.documentRow} key={document.label}>
+                                <FiFileText />
+                                <p>{document.label}</p>
+                                <span>{document.fileName || "Not provided"}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => onPreviewDocument(document)}
+                                    disabled={!document.file}
+                                >
+                                    View
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </div>
+
+            <div className={style.reviewBottomBar}>
+                <p>Please confirm your gift, email and delivery address carefully.</p>
+                <div>
+                    <button type="button" className={style.secondaryButton} onClick={onBack}>
+                        Back to Edit
+                    </button>
+                    <button type="button" className={style.primaryButton} onClick={onConfirm} disabled={isSubmitting}>
+                        {isSubmitting ? "Submitting" : "Confirm & Submit"}
+                    </button>
+                </div>
+            </div>
+        </main>
+    );
+}
+
+function DocumentPreviewModal({ document: previewDocument, onClose }) {
+    const [fileUrl, setFileUrl] = useState("");
+    const fileType = previewDocument.file?.type || "";
+    const isImage = fileType.startsWith("image/");
+    const isPdf = fileType === "application/pdf";
+
+    useEffect(() => {
+        if (!previewDocument.file) return undefined;
+
+        const nextFileUrl = URL.createObjectURL(previewDocument.file);
+        setFileUrl(nextFileUrl);
+        window.document.body.style.overflowY = "hidden";
+
+        return () => {
+            URL.revokeObjectURL(nextFileUrl);
+            window.document.body.style.overflowY = "";
+        };
+    }, [previewDocument.file]);
+
+    return (
+        <div className={style.documentPreviewOverlay}>
+            <div className={style.documentPreviewModal} role="dialog" aria-modal="true" aria-labelledby="document-preview-title">
+                <button type="button" className={style.documentPreviewClose} onClick={onClose} aria-label="Close document preview">
+                    &times;
+                </button>
+
+                <div className={style.documentPreviewHeader}>
+                    <h2 id="document-preview-title">{previewDocument.label}</h2>
+                    <p>{previewDocument.fileName}</p>
+                </div>
+
+                <div className={style.documentPreviewBody}>
+                    {isImage && fileUrl && (
+                        <Image
+                            src={fileUrl}
+                            alt={previewDocument.fileName}
+                            width={900}
+                            height={640}
+                            unoptimized
+                        />
+                    )}
+
+                    {isPdf && fileUrl && (
+                        <iframe src={fileUrl} title={previewDocument.fileName} />
+                    )}
+
+                    {!isImage && !isPdf && (
+                        <p>Preview is not available for this file type.</p>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function InfoPair({ icon, label, value }) {
+    return (
+        <div className={style.infoPair}>
+            {icon}
+            <span>{label}</span>
+            <strong>{value || "Not provided"}</strong>
         </div>
     );
 }
 
 function UploadField({ label, inputId, validation, fieldRef }) {
+    const [isDraggingFile, setIsDraggingFile] = useState(false);
+    const selectedFileName = validation.value?.[0]?.name;
+
+    const handleFiles = (files) => {
+        validation.handleChange({
+            target: {
+                type: "file",
+                files,
+            },
+        });
+        validation.validate(files);
+    };
+
+    const handleFileChange = (event) => {
+        handleFiles(event.target.files);
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setIsDraggingFile(true);
+    };
+
+    const handleDragLeave = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setIsDraggingFile(false);
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setIsDraggingFile(false);
+
+        if (!event.dataTransfer.files?.length) return;
+        handleFiles(event.dataTransfer.files);
+    };
+
     return (
         <div className={style.fieldGroup} ref={fieldRef}>
-            <label>{label}</label>
-            <label className={`${style.uploadBox} ${validation.error ? style.uploadError : ""}`} htmlFor={inputId}>
+            <label className={style.fieldLabel}>
+                <span>{label}</span>
+                {validation.error && <span className={style.inlineFieldError}>{validation.error}</span>}
+            </label>
+            <label
+                className={`${style.uploadBox} ${validation.error ? style.uploadError : ""} ${isDraggingFile ? style.uploadBoxDragging : ""}`}
+                htmlFor={inputId}
+                onDragEnter={handleDragOver}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+            >
                 <FiUploadCloud />
-                <span>Drag and drop file here or <strong>browse</strong></span>
-                <small>PDF, JPG or PNG. Max 10MB.</small>
+                {selectedFileName ? (
+                    <>
+                        <span className={style.selectedFileName}>{selectedFileName}</span>
+                        <small>Click to choose a different file.</small>
+                    </>
+                ) : (
+                    <>
+                        <span>Drag and drop file here or <strong>browse</strong></span>
+                        <small>JPG or PNG max 5MB. PDF max 10MB.</small>
+                    </>
+                )}
                 <input
                     id={inputId}
                     type="file"
                     accept=".jpeg,.jpg,.png,.pdf"
-                    onChange={validation.handleChange}
+                    onChange={handleFileChange}
                     required
                 />
             </label>
-            {validation.error && <p className={style.fieldError}>{validation.error}</p>}
         </div>
     );
 }

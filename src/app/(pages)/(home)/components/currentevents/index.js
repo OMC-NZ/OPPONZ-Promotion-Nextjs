@@ -133,7 +133,7 @@ export default function CurrentEvents() {
                 <div
                     className={`${style.carouselTrack} ${isDragging ? style.carouselTrackDragging : ""}`}
                     style={{
-                        transform: `translateX(calc(-${currentPage * 100}% - ${currentPage * 16}px + ${dragOffset}px))`,
+                        transform: `translateX(calc(-${currentPage * 100}% + ${dragOffset}px))`,
                     }}
                 >
                     {eventPages.map((pageEvents, pageIndex) => (

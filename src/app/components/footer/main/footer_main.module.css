@@ -313,3 +313,14 @@
         display: none;
     }
 }
+
+@media (max-width: 393px) {
+    .social_media {
+        column-gap: 12px;
+        row-gap: 10px;
+    }
+
+    .social_media li {
+        margin-right: 0;
+    }
+}

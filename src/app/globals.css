@@ -25,9 +25,15 @@
 
 html {
   font-size: 14px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   color: rgb(var(--foreground-rgb));
   font-family: "OPPOSans-Regular";
@@ -56,11 +62,20 @@ svg:not(:root) {
 .oc_wrapper {
   box-sizing: border-box;
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   height: auto;
   margin: 0 auto;
   overflow: hidden;
   transition: all 0.3s;
+}
+
+@supports (overflow: clip) {
+  html,
+  body,
+  .oc_wrapper {
+    overflow-x: clip;
+  }
 }
 
 @media (min-width: 768px) {
