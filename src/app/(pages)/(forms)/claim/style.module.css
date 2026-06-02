@@ -316,8 +316,7 @@
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-.helpButton:hover + .helpText,
-.helpButton:focus + .helpText {
+.helpButton:hover + .helpText {
   opacity: 1;
   transform: translate(-50%, 0);
 }
@@ -429,6 +428,25 @@
 
 .uploadError {
   border-color: #c70000;
+}
+
+.declarationRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.declarationRow input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.declarationRow a {
+  color: #0057b8;
+  text-decoration: underline;
 }
 
 .claimActions {

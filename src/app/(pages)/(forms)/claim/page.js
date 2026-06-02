@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { FiFileText, FiGift, FiMail, FiMapPin, FiPhone, FiUploadCloud, FiUser } from "react-icons/fi";
 import { FaAngleRight } from "react-icons/fa";
 import { PiQuestionBold } from "react-icons/pi";
@@ -43,6 +44,8 @@ export default function Claim() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [previewDocument, setPreviewDocument] = useState(null);
     const [companyName, setCompanyName] = useState("");
+    const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+    const [termsError, setTermsError] = useState(false);
     const giftItems = selectedPromotion.giftItems?.length
         ? selectedPromotion.giftItems
         : [{
@@ -85,6 +88,7 @@ export default function Claim() {
     const cityRef = useRef(null);
     const postCodeRef = useRef(null);
     const invoiceRef = useRef(null);
+    const termsRef = useRef(null);
     const selectedGiftLabels = giftItems.map((giftItem) => {
         const selectedOption = giftItem.options.find((option) => option.id === selectedGiftOptions[giftItem.id]);
         return selectedOption?.label && selectedOption.label !== "Included"
@@ -141,6 +145,8 @@ export default function Claim() {
     const validateFields = () => {
         if (isSubmitting) return;
 
+        setTermsError(!isTermsAccepted);
+
         const validations = [
             [firstNameValidation.validate(firstNameValidation.value), firstNameRef],
             [lastNameValidation.validate(lastNameValidation.value), lastNameRef],
@@ -153,6 +159,7 @@ export default function Claim() {
             [invoiceValidation.validate(invoiceValidation.value), invoiceRef],
             [receiptValidation.validate(receiptValidation.value), receiptRef],
             [screenshotValidation.validate(screenshotValidation.value), screenshotRef],
+            [isTermsAccepted, termsRef],
         ];
 
         const firstInvalid = validations.find(([isValid]) => !isValid);
@@ -329,6 +336,24 @@ export default function Claim() {
                                 fieldRef={screenshotRef}
                             />
                         </div>
+                    </section>
+
+                    <section className={style.formSection} ref={termsRef}>
+                        <h2>Declaration</h2>
+                        <label className={style.declarationRow}>
+                            <input
+                                type="checkbox"
+                                checked={isTermsAccepted}
+                                onChange={(event) => {
+                                    setIsTermsAccepted(event.target.checked);
+                                    setTermsError(false);
+                                }}
+                            />
+                            <span>
+                                I agree to the <Link href="/terms" target="_blank">Terms and Conditions of Promotions</Link> *
+                            </span>
+                        </label>
+                        {termsError && <p className={style.inlineFieldError}>Required</p>}
                     </section>
 
                     <div className={style.claimActions}>
