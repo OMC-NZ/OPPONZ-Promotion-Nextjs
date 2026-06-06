@@ -1,7 +1,6 @@
 "use client"
 import { useState } from 'react';
 
-// validate IMEI
 export default function useClaimIDValidation() {
     const [claimIDError, setClaimIDError] = useState(false);
     const [errorClaimIDMsg, setErrorClaimIDMsg] = useState('');
@@ -11,13 +10,18 @@ export default function useClaimIDValidation() {
         if (!cleanedValue) {
             setClaimIDError(true);
             setErrorClaimIDMsg('Required');
-        } else if (!/^(?=.*[0-9])(?=.*[A-Za-z])(?=.*-)[A-Za-z0-9-]+$/.test(cleanedValue)) {
+            return false;
+        }
+
+        if (!/^(?=.*[0-9])(?=.*[A-Za-z])(?=.*-)[A-Za-z0-9-]+$/.test(cleanedValue)) {
             setClaimIDError(true);
             setErrorClaimIDMsg('Incorrect Claim ID');
-        } else {
-            setClaimIDError(false);
-            console.log('可以进行下一步了')
+            return false;
         }
+
+        setClaimIDError(false);
+        setErrorClaimIDMsg('');
+        return true;
     }
 
     return { claimIDError, setClaimIDError, errorClaimIDMsg, validateClaimID };

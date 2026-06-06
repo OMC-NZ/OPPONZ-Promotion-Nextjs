@@ -64,8 +64,6 @@ export default function MonthlyPromotions() {
         setIsDragging(true);
         setDragOffset(0);
         didSwipeRef.current = false;
-
-        event.currentTarget.setPointerCapture?.(event.pointerId);
     };
 
     const handleDragMove = (event) => {
@@ -95,7 +93,6 @@ export default function MonthlyPromotions() {
 
         setIsDragging(false);
         setDragOffset(0);
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
 
         if (!isHorizontalSwipe) return;
 
@@ -117,7 +114,6 @@ export default function MonthlyPromotions() {
 
         setIsDragging(false);
         setDragOffset(0);
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
     };
 
     const toggleVisibility = (type, state) => {
@@ -221,7 +217,10 @@ export default function MonthlyPromotions() {
                                             <div
                                                 key={promotion.id}
                                                 className={`${style.promoCard} ${getCardSizeClass(imgsPerPage)} ${style.imgBorder} ${style.imgSize}`}
-                                                onClick={() => openPromotionModal(promotion)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openPromotionModal(promotion);
+                                                }}
                                                 role="button"
                                                 tabIndex={0}
                                                 onKeyDown={(e) => {
@@ -253,6 +252,7 @@ export default function MonthlyPromotions() {
                                                     <button
                                                         type="button"
                                                         className={style.overlayBtn}
+                                                        onPointerDown={(e) => e.stopPropagation()}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             openPromotionModal(promotion);

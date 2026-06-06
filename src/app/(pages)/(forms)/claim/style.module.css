@@ -465,6 +465,40 @@
   min-width: 164px;
 }
 
+.claimAccessNotice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 52px);
+  padding: 48px 20px;
+  background: #fafafa;
+  color: #111;
+}
+
+.claimAccessNotice section {
+  width: min(100%, 560px);
+  padding: 34px 32px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: #fff;
+  text-align: center;
+  box-shadow: var(--oppo-card-shadow);
+}
+
+.claimAccessNotice h1 {
+  margin: 0 0 14px;
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.claimAccessNotice p {
+  margin: 0 0 28px;
+  color: #555;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
 .reviewPage {
   min-height: 100vh;
   padding: 42px 20px 128px;

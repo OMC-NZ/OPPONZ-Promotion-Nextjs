@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { monthlyPromotions } from "@data/monthlyPromotions";
-import { currentEvents } from "@data/currentEvents";
+import { fetchHomePromotionContent } from "@api/homePromos";
 
 const initialContent = {
     monthly: {
@@ -22,21 +21,17 @@ export default function usePromotionContent() {
         let isActive = true;
 
         const loadPromotionContent = async () => {
-            // Replace these Promise wrappers with real API calls when the endpoints are ready.
-            const [monthlyItems, currentEventItems] = await Promise.all([
-                Promise.resolve(monthlyPromotions),
-                Promise.resolve(currentEvents),
-            ]);
+            const { monthlyPromotions, currentEvents } = await fetchHomePromotionContent();
 
             if (!isActive) return;
 
             setContent({
                 monthly: {
-                    items: monthlyItems,
+                    items: monthlyPromotions,
                     loading: false,
                 },
                 currentEvents: {
-                    items: currentEventItems,
+                    items: currentEvents,
                     loading: false,
                 },
             });

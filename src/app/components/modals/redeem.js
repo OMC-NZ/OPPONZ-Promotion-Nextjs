@@ -168,6 +168,16 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         }
     };
 
+    const handleClaimNow = () => {
+        if (!matchedPromotion) return;
+
+        sessionStorage.setItem('oppoClaimDraft', JSON.stringify({
+            imei: imeiInput.replace(/\s+/g, ''),
+            purchaseDate: purchaseDateLabel,
+            promotion: matchedPromotion,
+        }));
+    };
+
 
     useEffect(() => {
         if (size.width < 768 || size.width < size.height) {
@@ -255,7 +265,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
                                     <div className={style.searchSummary}>
                                         <span><IoInformationCircleOutline /></span>
-                                        <p>IMEI-1: {maskIMEI(imeiInput)}</p>
+                                        <p>IMEI-1: {imeiInput.replace(/\s+/g, '')}</p>
                                         <span><FiCalendar /></span>
                                         <p>Purchase Date: {purchaseDateLabel}</p>
                                     </div>
@@ -283,7 +293,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                                 </div>
                                             </dl>
                                             <div className={style.resultActions}>
-                                                <Link href="/claim">Claim Now</Link>
+                                                <Link href="/claim" onClick={handleClaimNow}>Claim Now</Link>
                                             </div>
                                         </div>
                                     </div>
@@ -300,7 +310,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
                                     <div className={style.searchSummary}>
                                         <span><IoInformationCircleOutline /></span>
-                                        <p>IMEI-1: {maskIMEI(imeiInput)}</p>
+                                        <p>IMEI-1: {imeiInput.replace(/\s+/g, '')}</p>
                                         <span><FiCalendar /></span>
                                         <p>Purchase Date: {purchaseDateLabel}</p>
                                     </div>

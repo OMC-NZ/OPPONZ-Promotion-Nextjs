@@ -52,9 +52,9 @@ export default function Footer() {
         document.addEventListener("click", handleClickOutside, true);
 
         // ✅ 注册 Zendesk 事件（无 off）
-        if (typeof zE !== "undefined") {
-            zE('messenger:on', 'close', handleZendeskClose);
-            zE('messenger:on', 'open', handleZendeskOpen);
+        if (typeof window.zE === "function") {
+            window.zE('messenger:on', 'close', handleZendeskClose);
+            window.zE('messenger:on', 'open', handleZendeskOpen);
         }
 
         return () => {

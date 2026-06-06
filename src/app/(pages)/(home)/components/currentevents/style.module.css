@@ -1,6 +1,293 @@
+.mostthree {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    overflow: hidden;
+    padding-bottom: 12px;
+    touch-action: pan-y;
+    user-select: none;
+}
+
+.carouselViewport {
+    width: 100%;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    cursor: grab;
+}
+
+.carouselViewport:active {
+    cursor: grabbing;
+}
+
+.carouselTrack {
+    display: flex;
+    width: 100%;
+    transition: transform 0.36s cubic-bezier(0.48, 0.04, 0.52, 0.96);
+    will-change: transform;
+}
+
+.carouselTrackDragging {
+    transition: none;
+}
+
+.carouselPage {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.carouselDots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.carouselDot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #d8d8d8;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carouselDotActive {
+    background: #000;
+}
+
+.carouselDot:hover,
+.carouselDot:focus-visible {
+    transform: scale(1.12);
+}
+
+.carouselArrowButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(96px, 12vw, 160px);
+    margin-top: 28px;
+}
+
+.carouselArrowButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid #d8d8d8;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.carouselArrowButton:hover,
+.carouselArrowButton:focus-visible {
+    border-color: #8f8f8f;
+}
+
+.carouselArrowButton:active {
+    transform: scale(0.96);
+}
+
+.carouselArrowButtonDisabled,
+.carouselArrowButton:disabled {
+    color: #c7c7c7;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.carouselArrowButtonDisabled:hover,
+.carouselArrowButton:disabled:hover {
+    border-color: #d8d8d8;
+}
+
+.cpimg_o {
+    width: 100%;
+}
+
+.cpimg_t {
+    max-width: 35vw;
+}
+
+.cpimg_th {
+    max-width: 40vw;
+}
+
+.promoCard {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f4f4f4;
+}
+
+.promoImage {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 0.24s ease, filter 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    user-select: none;
+}
+
+.imagePending {
+    opacity: 0;
+}
+
+.imageLoaded {
+    opacity: 1;
+}
+
+.imageLoading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    background: linear-gradient(90deg, #eeeeee 0%, #f7f7f7 50%, #eeeeee 100%);
+    background-size: 200% 100%;
+    animation: loadingShimmer 1.2s linear infinite;
+}
+
+.loadingSpinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(0, 0, 0, 0.12);
+    border-top-color: rgba(0, 0, 0, 0.72);
+    border-radius: 50%;
+    animation: loadingSpin 0.8s linear infinite;
+}
+
+@keyframes loadingShimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes loadingSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .imgBorder {
     border: 1px solid black;
     border-radius: 10px;
+}
+
+.eventCard {
+    cursor: pointer;
+}
+
+.eventOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    transition: opacity 0.3s ease;
+}
+
+.eventClaimButton {
+    --event-btn-shift: translateX(0);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 152px;
+    height: 36px;
+    padding: 0 18px;
+    border: 1px solid #000;
+    border-radius: 30px;
+    background: #fff;
+    color: #111;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transform: var(--event-btn-shift);
+    transition: background-color 0.24s ease, color 0.24s ease,
+        border-color 0.24s ease, transform 0.2s ease;
+}
+
+.eventClaimButton:active {
+    color: #fff;
+    background: #000;
+    border-color: #000;
+    transform: var(--event-btn-shift) scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .eventOverlay {
+        opacity: 0;
+        background: rgba(255, 255, 255, 0.16);
+    }
+
+    .eventClaimButton {
+        min-width: 168px;
+        height: 46px;
+        padding: 0 22px;
+    }
+
+    .eventClaimButton:hover {
+        background: #000;
+        color: #fff;
+        border-color: #000;
+    }
+
+    .eventCard:hover .promoImage,
+    .eventCard:focus-visible .promoImage,
+    .eventCard:has(a:focus-visible) .promoImage {
+        filter: blur(5px) brightness(0.72);
+        transform: scale(1.02);
+    }
+
+    .eventCard:hover .eventOverlay,
+    .eventCard:focus-visible .eventOverlay,
+    .eventCard:has(a:focus-visible) .eventOverlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+@media (hover: none),
+(pointer: coarse) {
+    .eventOverlay {
+        opacity: 1;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 20px;
+    }
+
+    .eventClaimButton {
+        --event-btn-shift: translateX(-50%);
+        pointer-events: auto;
+        position: absolute;
+        left: 50%;
+        top: 75%;
+    }
+
+    .promoImage,
+    .eventCard:hover .promoImage,
+    .eventCard:focus-within .promoImage,
+    .eventCard:active .promoImage {
+        filter: none;
+        transform: none;
+    }
 }
 
 @media (min-width: 640px) {
@@ -10,7 +297,43 @@
 }
 
 @media (min-width: 768px) {
+    .cpimg_o {
+        max-width: 70%;
+    }
+
+    .cpimg_t {
+        max-width: 35vw;
+    }
+
+    .cpimg_th {
+        max-width: 23vw;
+    }
+
+    .mostthree {
+        justify-content: space-around;
+    }
+
     .imgSize {
         width: auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    .cpimg_t {
+        max-width: 30vw;
+    }
+
+    .cpimg_th {
+        max-width: 23vw;
+    }
+}
+
+@media (min-width: 1280px) {
+    .cpimg_t {
+        max-width: 400px;
+    }
+
+    .cpimg_th {
+        max-width: 358px;
     }
 }

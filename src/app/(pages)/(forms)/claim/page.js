@@ -11,7 +11,7 @@ import style from "./style.module.css";
 import DetailsModal from "./modal/index";
 import useClaimValidation from "@hooks/validations/useClaimValidation";
 
-const selectedPromotion = {
+const defaultPromotion = {
     image: "/temporary/img/promo02.jpg",
     title: "OPPO Reno10 5G Gift Campaign",
     subtitle: "With bonus OPPO Enco Air2",
@@ -37,8 +37,25 @@ const selectedPromotion = {
     imei: "86*************23",
 };
 
+const getPromotionGiftItems = (promotion) => {
+    if (promotion.giftItems?.length) return promotion.giftItems;
+
+    return [{
+        id: "default-gift",
+        name: promotion.giftName || promotion.gift || promotion.subtitle || "Included Gift",
+        options: [{ id: "default-gift-option", label: promotion.giftOption || "Included" }],
+    }];
+};
+
+const getInitialGiftOptions = (giftItems) => (
+    Object.fromEntries(giftItems.map((giftItem) => [giftItem.id, giftItem.options[0]?.id]))
+);
+
 export default function Claim() {
     const router = useRouter();
+    const [selectedPromotion, setSelectedPromotion] = useState(defaultPromotion);
+    const [isClaimReady, setIsClaimReady] = useState(false);
+    const [claimAccessExpired, setClaimAccessExpired] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [isReviewing, setIsReviewing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,16 +63,12 @@ export default function Claim() {
     const [companyName, setCompanyName] = useState("");
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
     const [termsError, setTermsError] = useState(false);
-    const giftItems = selectedPromotion.giftItems?.length
-        ? selectedPromotion.giftItems
-        : [{
-            id: "default-gift",
-            name: selectedPromotion.giftName || selectedPromotion.gift,
-            options: [{ id: "default-gift-option", label: selectedPromotion.giftOption || "Included" }],
-        }];
+    const claimInitializedRef = useRef(false);
+    const claimHasLeftRef = useRef(false);
+    const giftItems = getPromotionGiftItems(selectedPromotion);
     const canSelectGift = giftItems.some((giftItem) => giftItem.options.length > 1);
     const [selectedGiftOptions, setSelectedGiftOptions] = useState(() => (
-        Object.fromEntries(giftItems.map((giftItem) => [giftItem.id, giftItem.options[0].id]))
+        getInitialGiftOptions(getPromotionGiftItems(defaultPromotion))
     ));
 
     const handleGiftOptionSelect = (giftItemId, optionId) => {
@@ -125,12 +138,76 @@ export default function Claim() {
     };
 
     useEffect(() => {
+        if (claimInitializedRef.current) return undefined;
+
+        claimInitializedRef.current = true;
+        const claimDraft = sessionStorage.getItem("oppoClaimDraft");
+        if (!claimDraft) {
+            setClaimAccessExpired(true);
+            return undefined;
+        }
+
+        sessionStorage.removeItem("oppoClaimDraft");
+
+        try {
+            const parsedDraft = JSON.parse(claimDraft);
+            const draftPromotion = parsedDraft.promotion || {};
+            const nextPromotion = {
+                ...defaultPromotion,
+                ...draftPromotion,
+                image: draftPromotion.image || draftPromotion.url || defaultPromotion.image,
+                title: draftPromotion.campaignTitle || draftPromotion.title || defaultPromotion.title,
+                subtitle: draftPromotion.subtitle || draftPromotion.gift || defaultPromotion.subtitle,
+                purchaseDate: parsedDraft.purchaseDate || defaultPromotion.purchaseDate,
+                imei: parsedDraft.imei || defaultPromotion.imei,
+            };
+
+            const nextGiftItems = getPromotionGiftItems(nextPromotion);
+            setSelectedPromotion(nextPromotion);
+            setSelectedGiftOptions(getInitialGiftOptions(nextGiftItems));
+            setIsClaimReady(true);
+        } catch {
+            setClaimAccessExpired(true);
+        }
+    }, [router]);
+
+    useEffect(() => {
+        if (!isClaimReady) return undefined;
+
+        const handlePageHide = () => {
+            claimHasLeftRef.current = true;
+            sessionStorage.removeItem("oppoClaimDraft");
+        };
+
+        const handlePageShow = (event) => {
+            if (claimHasLeftRef.current || event.persisted) {
+                setIsClaimReady(false);
+                setClaimAccessExpired(true);
+            }
+        };
+
+        window.addEventListener("pagehide", handlePageHide);
+        window.addEventListener("pageshow", handlePageShow);
+
+        return () => {
+            window.removeEventListener("pagehide", handlePageHide);
+            window.removeEventListener("pageshow", handlePageShow);
+        };
+    }, [isClaimReady, router]);
+
+    useEffect(() => {
         document.body.style.overflowY = modalShow ? "hidden" : "";
 
         return () => {
             document.body.style.overflowY = "";
         };
     }, [modalShow]);
+
+    useEffect(() => {
+        if (!claimAccessExpired) return;
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+    }, [claimAccessExpired]);
 
     const handleModalOpen = () => {
         setModalShow(true);
@@ -178,6 +255,27 @@ export default function Claim() {
         // TODO: Replace this with the claim submission API call.
         console.log("Claim confirmed");
     };
+
+    if (claimAccessExpired) {
+        return (
+            <>
+                <title>Verify Again | OPPO NZ Promotions</title>
+                <main className={style.claimAccessNotice}>
+                    <section>
+                        <h1>Verification Required</h1>
+                        <p>
+                            This claim session has expired. Please verify your IMEI-1 and purchase date again before continuing.
+                        </p>
+                        <button type="button" className={style.primaryButton} onClick={() => router.replace("/")}>
+                            Back to Home
+                        </button>
+                    </section>
+                </main>
+            </>
+        );
+    }
+
+    if (!isClaimReady) return null;
 
     if (isReviewing) {
         return (

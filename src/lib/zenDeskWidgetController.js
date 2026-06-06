@@ -12,15 +12,27 @@ class zenDeskWidgetController {
         return zenDeskWidgetController.instance;
     }
 
+    getWidget() {
+        if (typeof window === "undefined" || typeof window.zE !== "function") {
+            return null;
+        }
+
+        return window.zE;
+    }
+
     open(sourceId) {
         if (this.currentSource === sourceId) return;
 
+        const widget = this.getWidget();
+        if (!widget) return;
+
+
         if (this.isOpen && this.currentSource !== null) {
-            zE('messenger', 'close');
+            widget('messenger', 'close');
             this.notifyListeners(false, this.currentSource);
         }
 
-        zE('messenger', 'open');
+        widget('messenger', 'open');
         this.isOpen = true;
         this.currentSource = sourceId;
         this.notifyListeners(true, sourceId);
@@ -28,7 +40,11 @@ class zenDeskWidgetController {
 
     close(sourceId) {
         if (this.currentSource === sourceId) {
-            zE('messenger', 'close');
+            const widget = this.getWidget();
+            if (widget) {
+                widget('messenger', 'close');
+            }
+
             this.isOpen = false;
             this.currentSource = null;
             this.notifyListeners(false, sourceId);

@@ -3,14 +3,16 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import style from "../monthly/style.module.css";
+import eventStyle from "./style.module.css";
 import globalStyle from "@app/publicstyle.module.css";
 import useWindowSize from "@hooks/useWindowSize";
 import usePagination from "@hooks/usePagination";
 import usePromotionContent from "@hooks/usePromotionContent";
 
 export default function CurrentEvents() {
+    const router = useRouter();
     const { width: windowWidth } = useWindowSize();
     const { currentEvents } = usePromotionContent();
     const currentEventItems = currentEvents.items;
@@ -44,7 +46,6 @@ export default function CurrentEvents() {
         setIsDragging(true);
         setDragOffset(0);
         didSwipeRef.current = false;
-        event.currentTarget.setPointerCapture?.(event.pointerId);
     };
 
     const handleDragMove = (event) => {
@@ -74,7 +75,6 @@ export default function CurrentEvents() {
 
         setIsDragging(false);
         setDragOffset(0);
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
 
         if (!isHorizontalSwipe) return;
 
@@ -96,7 +96,6 @@ export default function CurrentEvents() {
 
         setIsDragging(false);
         setDragOffset(0);
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
     };
 
     const handleImageLoad = (eventId) => {
@@ -123,7 +122,7 @@ export default function CurrentEvents() {
             </div>
 
             <div
-                className={style.carouselViewport}
+                className={eventStyle.carouselViewport}
                 onPointerDown={handleDragStart}
                 onPointerMove={handleDragMove}
                 onPointerUp={finishDrag}
@@ -131,30 +130,43 @@ export default function CurrentEvents() {
                 onPointerLeave={cancelDrag}
             >
                 <div
-                    className={`${style.carouselTrack} ${isDragging ? style.carouselTrackDragging : ""}`}
+                    className={`${eventStyle.carouselTrack} ${isDragging ? eventStyle.carouselTrackDragging : ""}`}
                     style={{
                         transform: `translateX(calc(-${currentPage * 100}% + ${dragOffset}px))`,
                     }}
                 >
                     {eventPages.map((pageEvents, pageIndex) => (
-                        <div className={style.carouselPage} key={pageIndex}>
-                            <div className={style.mostthree}>
+                        <div className={eventStyle.carouselPage} key={pageIndex}>
+                            <div className={eventStyle.mostthree}>
                                 {pageEvents.map((event, index) => {
                                     const eventId = event.id || `${pageIndex}-${index}-${event.url}`;
+                                    const eventHref = event.claimUrl || event.href || event.link || `/events/${event.slug || eventId}`;
 
                                     return (
                                         <div
                                             key={eventId}
-                                            className={`${style.promoCard} ${imgsPerPage === 3
-                                                ? style.cpimg_th
+                                            className={`${eventStyle.promoCard} ${eventStyle.eventCard} ${imgsPerPage === 3
+                                                ? eventStyle.cpimg_th
                                                 : imgsPerPage === 2
-                                                    ? style.cpimg_t
-                                                    : style.cpimg_o
-                                                } ${style.imgBorder} ${style.imgSize}`}
+                                                    ? eventStyle.cpimg_t
+                                                    : eventStyle.cpimg_o
+                                                } ${eventStyle.imgBorder} ${eventStyle.imgSize}`}
+                                            role="link"
+                                            tabIndex={0}
+                                            onClick={() => {
+                                                if (didSwipeRef.current) return;
+                                                router.push(eventHref);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter" || e.key === " ") {
+                                                    e.preventDefault();
+                                                    router.push(eventHref);
+                                                }
+                                            }}
                                         >
                                             {!loadedImages[eventId] && (
-                                                <div className={style.imageLoading}>
-                                                    <span className={style.loadingSpinner} />
+                                                <div className={eventStyle.imageLoading}>
+                                                    <span className={eventStyle.loadingSpinner} />
                                                 </div>
                                             )}
 
@@ -164,17 +176,19 @@ export default function CurrentEvents() {
                                                 width={620}
                                                 height={420}
                                                 quality={100}
-                                                className={`${style.promoImage} ${loadedImages[eventId] ? style.imageLoaded : style.imagePending}`}
+                                                className={`${eventStyle.promoImage} ${loadedImages[eventId] ? eventStyle.imageLoaded : eventStyle.imagePending}`}
                                                 onLoad={() => handleImageLoad(eventId)}
                                                 onError={() => handleImageLoad(eventId)}
                                                 priority
                                             />
 
-                                            <div className={style.promoOverlay}>
+                                            <div className={eventStyle.eventOverlay}>
                                                 <Link
-                                                    href={event.href || event.link || "/events/uefa"}
-                                                    className={`${style.overlayBtn} ${style.currentEventOverlayBtn}`}
+                                                    href={eventHref}
+                                                    className={eventStyle.eventClaimButton}
+                                                    onPointerDown={(e) => e.stopPropagation()}
                                                     onClick={(e) => {
+                                                        e.stopPropagation();
                                                         if (didSwipeRef.current) {
                                                             e.preventDefault();
                                                         }
@@ -204,22 +218,22 @@ export default function CurrentEvents() {
 
             {showPaginationDots && (
                 <>
-                    <div className={style.carouselDots}>
+                    <div className={eventStyle.carouselDots}>
                         {Array.from({ length: totalPages }).map((_, index) => (
                             <button
                                 key={index}
                                 type="button"
-                                className={`${style.carouselDot} ${index === currentPage ? style.carouselDotActive : ""}`}
+                                className={`${eventStyle.carouselDot} ${index === currentPage ? eventStyle.carouselDotActive : ""}`}
                                 onClick={() => handlePageChange(index)}
                                 aria-label={`Go to event page ${index + 1}`}
                             />
                         ))}
                     </div>
 
-                    <div className={style.carouselArrowButtons}>
+                    <div className={eventStyle.carouselArrowButtons}>
                         <button
                             type="button"
-                            className={`${style.carouselArrowButton} ${currentPage === 0 ? style.carouselArrowButtonDisabled : ""}`}
+                            className={`${eventStyle.carouselArrowButton} ${currentPage === 0 ? eventStyle.carouselArrowButtonDisabled : ""}`}
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 0}
                             aria-label="Previous event page"
@@ -229,7 +243,7 @@ export default function CurrentEvents() {
 
                         <button
                             type="button"
-                            className={`${style.carouselArrowButton} ${currentPage === totalPages - 1 ? style.carouselArrowButtonDisabled : ""}`}
+                            className={`${eventStyle.carouselArrowButton} ${currentPage === totalPages - 1 ? eventStyle.carouselArrowButtonDisabled : ""}`}
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages - 1}
                             aria-label="Next event page"
