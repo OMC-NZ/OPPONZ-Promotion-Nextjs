@@ -1,5 +1,5 @@
 "use client"
-import { useState, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import style from "./style.module.css";
 import { PiQuestionBold } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
@@ -22,6 +22,21 @@ export default function Track({ isVisible, onClose }) {
     const [result, setResult] = useState(null);
     const [hovered, setHovered] = useState(false);
     const { claimIDError, setClaimIDError, errorClaimIDMsg, validateClaimID } = useClaimIDValidation();
+
+    useEffect(() => {
+        if (!isVisible) return;
+
+        const previousBodyOverflow = document.body.style.overflow;
+        const previousHtmlOverflow = document.documentElement.style.overflow;
+
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+
+        return () => {
+            document.body.style.overflow = previousBodyOverflow;
+            document.documentElement.style.overflow = previousHtmlOverflow;
+        };
+    }, [isVisible]);
 
     const submitValidate = () => {
         if (!validateClaimID(claimID)) return;
@@ -51,7 +66,6 @@ export default function Track({ isVisible, onClose }) {
     const closeTrack = () => {
         onClose();
         resetTrack();
-        document.body.style.overflowY = '';
     }
 
     if (!isVisible) return null;

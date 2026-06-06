@@ -3,6 +3,8 @@
   inset: 0;
   z-index: 3;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 5rem 16px 2rem;
   box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.5);
