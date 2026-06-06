@@ -21,6 +21,7 @@ export default function CurrentEvents() {
     const [loadedImages, setLoadedImages] = useState({});
     const [dragOffset, setDragOffset] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
+    const [navigatingEventId, setNavigatingEventId] = useState(null);
     const dragStartRef = useRef({ x: 0, y: 0 });
     const didSwipeRef = useRef(false);
 
@@ -34,12 +35,14 @@ export default function CurrentEvents() {
     }, [windowWidth]);
 
     const handlePageChange = (page) => {
+        if (navigatingEventId) return;
         if (page >= 0 && page < totalPages) {
             setCurrentPage(page);
         }
     };
 
     const handleDragStart = (event) => {
+        if (navigatingEventId) return;
         if (totalPages <= 1) return;
 
         dragStartRef.current = { x: event.clientX, y: event.clientY };
@@ -49,6 +52,7 @@ export default function CurrentEvents() {
     };
 
     const handleDragMove = (event) => {
+        if (navigatingEventId) return;
         if (!isDragging) return;
 
         const deltaX = event.clientX - dragStartRef.current.x;
@@ -67,6 +71,7 @@ export default function CurrentEvents() {
     };
 
     const finishDrag = (event) => {
+        if (navigatingEventId) return;
         if (!isDragging) return;
 
         const deltaX = event.clientX - dragStartRef.current.x;
@@ -92,6 +97,7 @@ export default function CurrentEvents() {
     };
 
     const cancelDrag = (event) => {
+        if (navigatingEventId) return;
         if (!isDragging) return;
 
         setIsDragging(false);
@@ -109,6 +115,12 @@ export default function CurrentEvents() {
     });
 
     const showPaginationDots = totalPages > 1;
+
+    const navigateToEvent = (eventId, eventHref) => {
+        if (navigatingEventId || didSwipeRef.current) return;
+        setNavigatingEventId(eventId);
+        router.push(eventHref);
+    };
 
     const shouldShow =
         windowWidthValid && !isCurrentEventsLoading && currentEventItems.length > 0;
@@ -145,7 +157,7 @@ export default function CurrentEvents() {
                                     return (
                                         <div
                                             key={eventId}
-                                            className={`${eventStyle.promoCard} ${eventStyle.eventCard} ${imgsPerPage === 3
+                                            className={`${eventStyle.promoCard} ${eventStyle.eventCard} ${navigatingEventId ? eventStyle.eventCardNavigating : ""} ${imgsPerPage === 3
                                                 ? eventStyle.cpimg_th
                                                 : imgsPerPage === 2
                                                     ? eventStyle.cpimg_t
@@ -154,13 +166,13 @@ export default function CurrentEvents() {
                                             role="link"
                                             tabIndex={0}
                                             onClick={() => {
-                                                if (didSwipeRef.current) return;
-                                                router.push(eventHref);
+                                                navigateToEvent(eventId, eventHref);
                                             }}
                                             onKeyDown={(e) => {
+                                                if (navigatingEventId) return;
                                                 if (e.key === "Enter" || e.key === " ") {
                                                     e.preventDefault();
-                                                    router.push(eventHref);
+                                                    navigateToEvent(eventId, eventHref);
                                                 }
                                             }}
                                         >
@@ -185,13 +197,13 @@ export default function CurrentEvents() {
                                             <div className={eventStyle.eventOverlay}>
                                                 <Link
                                                     href={eventHref}
-                                                    className={eventStyle.eventClaimButton}
+                                                    className={`${eventStyle.eventClaimButton} ${navigatingEventId === eventId ? eventStyle.eventClaimButtonLoading : ""}`}
+                                                    aria-disabled={Boolean(navigatingEventId)}
                                                     onPointerDown={(e) => e.stopPropagation()}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        if (didSwipeRef.current) {
-                                                            e.preventDefault();
-                                                        }
+                                                        e.preventDefault();
+                                                        navigateToEvent(eventId, eventHref);
                                                     }}
                                                 >
                                                     <span
@@ -202,8 +214,9 @@ export default function CurrentEvents() {
                                                             lineHeight: 1,
                                                         }}
                                                     >
-                                                        <span>Claim Now</span>
-                                                        <FaAngleRight style={{ display: "unset" }} />
+                                                        {navigatingEventId === eventId && <span className={eventStyle.buttonSpinner} />}
+                                                        <span>{navigatingEventId === eventId ? "Loading" : "Claim Now"}</span>
+                                                        {navigatingEventId !== eventId && <FaAngleRight style={{ display: "unset" }} />}
                                                     </span>
                                                 </Link>
                                             </div>
@@ -224,6 +237,7 @@ export default function CurrentEvents() {
                                 key={index}
                                 type="button"
                                 className={`${eventStyle.carouselDot} ${index === currentPage ? eventStyle.carouselDotActive : ""}`}
+                                disabled={Boolean(navigatingEventId)}
                                 onClick={() => handlePageChange(index)}
                                 aria-label={`Go to event page ${index + 1}`}
                             />

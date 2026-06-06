@@ -109,6 +109,11 @@
     border-color: #d8d8d8;
 }
 
+.carouselDot:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
 .cpimg_o {
     width: 100%;
 }
@@ -193,6 +198,10 @@
     cursor: pointer;
 }
 
+.eventCardNavigating {
+    cursor: wait;
+}
+
 .eventOverlay {
     position: absolute;
     inset: 0;
@@ -231,6 +240,24 @@
     transform: var(--event-btn-shift) scale(0.98);
 }
 
+.eventClaimButtonLoading,
+.eventClaimButtonLoading:active {
+    cursor: not-allowed;
+    color: #111;
+    background: #fff;
+    border-color: #000;
+    transform: var(--event-btn-shift);
+}
+
+.buttonSpinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top-color: #111;
+    border-radius: 50%;
+    animation: loadingSpin 0.8s linear infinite;
+}
+
 @media (hover: hover) and (pointer: fine) {
     .eventOverlay {
         opacity: 0;
@@ -243,7 +270,7 @@
         padding: 0 22px;
     }
 
-    .eventClaimButton:hover {
+    .eventClaimButton:not(.eventClaimButtonLoading):hover {
         background: #000;
         color: #fff;
         border-color: #000;
