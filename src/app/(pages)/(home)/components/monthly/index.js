@@ -24,6 +24,7 @@ export default function MonthlyPromotions() {
     const [loadedImages, setLoadedImages] = useState({});
     const [dragOffset, setDragOffset] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
+    const [isPageReady, setIsPageReady] = useState(false);
     const dragStartRef = useRef({ x: 0, y: 0 });
     const didSwipeRef = useRef(false);
     const [isVisible, setIsVisible] = useState({
@@ -39,6 +40,18 @@ export default function MonthlyPromotions() {
             setWindowWidthValid(true);
         }
     }, [windowWidth]);
+
+    useEffect(() => {
+        if (document.readyState === "complete") {
+            setIsPageReady(true);
+            return;
+        }
+
+        const handleLoad = () => setIsPageReady(true);
+        window.addEventListener("load", handleLoad, { once: true });
+
+        return () => window.removeEventListener("load", handleLoad);
+    }, []);
 
     useEffect(() => {
         const shouldLockBody =
@@ -285,9 +298,11 @@ export default function MonthlyPromotions() {
                         <button
                             type="button"
                             className={style.btn}
+                            disabled={!isPageReady}
                             onClick={() => toggleVisibility("redeem", true)}
                         >
-                            Redeem My Gift
+                            {!isPageReady && <span className={style.buttonSpinner} />}
+                            {isPageReady ? "Redeem My Gift" : "Loading"}
                         </button>
                     </div>
                 )}

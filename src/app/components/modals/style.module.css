@@ -47,6 +47,11 @@
   cursor: pointer;
 }
 
+.closeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .modalTitle {
   font-size: 2rem;
 }
@@ -162,6 +167,10 @@
 }
 
 .conBtn button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-width: 120px;
   height: 40px;
   margin: 12px 0;
@@ -194,6 +203,15 @@
 .conBtn button:disabled:active {
   color: #000;
   background: transparent;
+}
+
+.buttonSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: modalSpin 0.8s linear infinite;
 }
 
 .modal_track {

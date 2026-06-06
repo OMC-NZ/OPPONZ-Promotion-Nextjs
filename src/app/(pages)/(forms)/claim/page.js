@@ -448,7 +448,7 @@ export default function Claim() {
                                 }}
                             />
                             <span>
-                                I agree to the <Link href="/terms" target="_blank">Terms and Conditions of Promotions</Link> *
+                                I agree to the <Link href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions of Promotions</Link> *
                             </span>
                         </label>
                         {termsError && <p className={style.inlineFieldError}>Required</p>}

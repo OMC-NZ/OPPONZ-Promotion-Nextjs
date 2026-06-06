@@ -15,7 +15,7 @@ import useIMEIValidation from "@hooks/validations/useIMEIValidation";
 import useDateValidation from "@hooks/validations/useDateValidation";
 import { verifyPromotionEligibility } from "@api/promotionEligibility";
 
-const ReadOnlyDateInput = forwardRef(function ReadOnlyDateInput({ value, onClick, placeholder }, ref) {
+const ReadOnlyDateInput = forwardRef(function ReadOnlyDateInput({ value, onClick, placeholder, disabled }, ref) {
     return (
         <input
             ref={ref}
@@ -24,6 +24,7 @@ const ReadOnlyDateInput = forwardRef(function ReadOnlyDateInput({ value, onClick
             placeholder={placeholder}
             onClick={onClick}
             onKeyDown={(event) => event.preventDefault()}
+            disabled={disabled}
             readOnly
         />
     );
@@ -188,13 +189,14 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     if (!isVisible) return null;
 
     const purchaseDateLabel = formatPurchaseDate(selectedDate);
-    const showSearchOverlay = searchStatus !== 'idle';
+    const isSearching = searchStatus === 'searching';
+    const showSearchOverlay = searchStatus === 'success' || searchStatus === 'empty';
 
     return (
         <>
             <div className={style.modalOverlay}>
                 <div className={`${style.modal} ${showSearchOverlay ? style.modalResult : ''}`}>
-                    <button className={style.closeButton} onClick={() => { onClose(); resetForm(); }}>
+                    <button className={style.closeButton} onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>
                         &times;
                     </button>
                     <p className={`${style.modalTitle}`}>Find Your Promotion</p>
@@ -212,7 +214,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                             3. Go to [Settings] &gt; [About Phone] &gt; [Status] &gt; [IMEI-1].
                                         </i>
                                     </span>
-                                    <input type="type" placeholder="Input an IMEI-1" value={imeiInput} onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} required />
+                                    <input type="type" placeholder="Input an IMEI-1" value={imeiInput} onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} disabled={isSearching} required />
                                     {imeiCorrect && <p className={`${style.validatetick}`}><GiCheckMark /></p>}
                                     {imeiError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                 </div>
@@ -235,6 +237,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                         maxDate={maxDate}
                                         popperPlacement={popperStatus}
                                         customInput={<ReadOnlyDateInput />}
+                                        disabled={isSearching}
                                         required
                                     />
                                     {dateError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
@@ -244,9 +247,10 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                         </div>
                     </div>
                     <div className={`${style.conBtn}`}>
-                        <button onClick={() => { onClose(); resetForm(); }}>Close</button>
-                        <button onClick={submitValidate} disabled={searchStatus === 'searching'}>
-                            {searchStatus === 'searching' ? 'Searching' : 'Search'}
+                        <button onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>Close</button>
+                        <button onClick={submitValidate} disabled={isSearching}>
+                            {isSearching && <span className={style.buttonSpinner} />}
+                            {isSearching ? 'Searching' : 'Search'}
                         </button>
                     </div>
 

@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import style from "./style.module.css";
 import { PiQuestionBold } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
@@ -17,9 +17,12 @@ const statusIcons = {
     notFound: FiSearch,
 };
 
+const TRACK_SEARCH_DELAY = 900;
+
 export default function Track({ isVisible, onClose }) {
     const [claimID, setClaimID] = useState('');
     const [result, setResult] = useState(null);
+    const [isSearching, setIsSearching] = useState(false);
     const [hovered, setHovered] = useState(false);
     const { claimIDError, setClaimIDError, errorClaimIDMsg, validateClaimID } = useClaimIDValidation();
 
@@ -38,18 +41,26 @@ export default function Track({ isVisible, onClose }) {
         };
     }, [isVisible]);
 
-    const submitValidate = () => {
+    const submitValidate = async () => {
+        if (isSearching) return;
         if (!validateClaimID(claimID)) return;
 
         const normalizedClaimId = claimID.trim().replace(/\s+/g, "").toUpperCase();
-        const record = getClaimTrackingRecord(normalizedClaimId);
-        setResult(record ? { ...record, claimId: normalizedClaimId } : {
-            status: "notFound",
-            label: "Not Found",
-            claimId: normalizedClaimId,
-            title: "We couldn’t find a claim with this Claim ID.",
-            description: "Please recheck the Claim ID and try again.",
-        });
+        setIsSearching(true);
+
+        try {
+            await new Promise((resolve) => setTimeout(resolve, TRACK_SEARCH_DELAY));
+            const record = getClaimTrackingRecord(normalizedClaimId);
+            setResult(record ? { ...record, claimId: normalizedClaimId } : {
+                status: "notFound",
+                label: "Not Found",
+                claimId: normalizedClaimId,
+                title: "We couldn't find a claim with this Claim ID.",
+                description: "Please recheck the Claim ID and try again.",
+            });
+        } finally {
+            setIsSearching(false);
+        }
     }
 
     const handleInputChange = (e) => {
@@ -60,10 +71,12 @@ export default function Track({ isVisible, onClose }) {
     const resetTrack = () => {
         setClaimID('');
         setResult(null);
+        setIsSearching(false);
         setClaimIDError(false);
     }
 
     const closeTrack = () => {
+        if (isSearching) return;
         onClose();
         resetTrack();
     }
@@ -75,7 +88,7 @@ export default function Track({ isVisible, onClose }) {
             <Suspense fallback={<Loading />}>
                 <div className={`${style.modalOverlay}`}>
                     <div className={`${style.modal} ${style.modal_track} ${result ? style.trackResultModal : ""}`}>
-                        <button className={`${style.closeButton}`} onClick={closeTrack}>
+                        <button className={`${style.closeButton}`} onClick={closeTrack} disabled={isSearching}>
                             &times;
                         </button>
                         {result ? (
@@ -95,7 +108,7 @@ export default function Track({ isVisible, onClose }) {
                                                         Please check the Confirmation Email you received during the successful redemption.
                                                     </i>
                                                 </span>
-                                                <input type="text" value={claimID} onChange={handleInputChange} placeholder="Type a Claim ID" required />
+                                                <input type="text" value={claimID} onChange={handleInputChange} placeholder="Type a Claim ID" disabled={isSearching} required />
                                                 {claimIDError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                             </div>
                                         </div>
@@ -103,8 +116,11 @@ export default function Track({ isVisible, onClose }) {
                                     </div>
                                 </div>
                                 <div className={`${style.conBtn}`}>
-                                    <button onClick={closeTrack}>Close</button>
-                                    <button onClick={submitValidate}>Search</button>
+                                    <button onClick={closeTrack} disabled={isSearching}>Close</button>
+                                    <button onClick={submitValidate} disabled={isSearching}>
+                                        {isSearching && <span className={style.buttonSpinner} />}
+                                        {isSearching ? 'Searching' : 'Search'}
+                                    </button>
                                 </div>
                             </>
                         )}
@@ -156,18 +172,8 @@ function TrackResult({ result, onClose, onSearchAgain }) {
             )}
 
             <div className={`${style.trackResultActions}`}>
-                {result.status === "notFound" && (
-                    <>
-                        <button type="button" onClick={onClose}>Close</button>
-                        <button type="button" onClick={onSearchAgain}>Search Again</button>
-                    </>
-                )}
-                {result.status !== "notFound" && (
-                    <>
-                        <button type="button" onClick={onClose}>Close</button>
-                        <button type="button" onClick={onSearchAgain}>Search Again</button>
-                    </>
-                )}
+                <button type="button" onClick={onClose}>Close</button>
+                <button type="button" onClick={onSearchAgain}>Search Again</button>
             </div>
         </div>
     );

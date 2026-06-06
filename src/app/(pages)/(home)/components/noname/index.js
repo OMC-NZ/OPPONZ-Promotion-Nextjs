@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from "next/image";
 import Redeem from "../../../../components/modals/redeem";
 import Track from "../../../../components/modals/track";
@@ -8,8 +8,22 @@ import style from "./style.module.css";
 
 export default function Noname() {
     const [isVisible, setIsVisible] = useState({ redeem: false, track: false });
+    const [isPageReady, setIsPageReady] = useState(false);
+
+    useEffect(() => {
+        if (document.readyState === "complete") {
+            setIsPageReady(true);
+            return;
+        }
+
+        const handleLoad = () => setIsPageReady(true);
+        window.addEventListener("load", handleLoad, { once: true });
+
+        return () => window.removeEventListener("load", handleLoad);
+    }, []);
 
     const toggleVisibility = (type, state) => {
+        if (!isPageReady) return;
         setIsVisible(prev => ({ ...prev, [type]: state }));
         document.body.style.overflowY = state ? 'hidden' : '';
     };
@@ -37,8 +51,14 @@ export default function Noname() {
                         <div className={`${style.ft_headline}`}>Welcome to<br/>OPPO Promotions</div>
                     </div>
                     <div className={`${style.claim_button}`}>
-                        <button className={`${style.btn}`} onClick={() => toggleVisibility('redeem', true)}>Redeem My Gift</button>
-                        <button className={`${style.btn}`} onClick={() => toggleVisibility('track', true)}>Track My Claim</button>
+                        <button className={`${style.btn}`} onClick={() => toggleVisibility('redeem', true)} disabled={!isPageReady}>
+                            {!isPageReady && <span className={style.buttonSpinner} />}
+                            {isPageReady ? 'Redeem My Gift' : 'Loading'}
+                        </button>
+                        <button className={`${style.btn}`} onClick={() => toggleVisibility('track', true)} disabled={!isPageReady}>
+                            {!isPageReady && <span className={style.buttonSpinner} />}
+                            {isPageReady ? 'Track My Claim' : 'Loading'}
+                        </button>
                     </div>
                 </div>
             </div>
