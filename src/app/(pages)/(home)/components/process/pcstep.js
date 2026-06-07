@@ -7,7 +7,7 @@ const steps = [
         id: "01",
         icon: "/imgs/Icons-step1.png",
         title: "Enter IMEI &\nPurchase Date",
-        desc: "Click on the “Redeem My Gift” button and enter your IMEI-1 and Purchase Date.",
+        desc: "Click on the \"Redeem My Gift\" button and enter your IMEI-1 and Purchase Date.",
     },
     {
         id: "02",
