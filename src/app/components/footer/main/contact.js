@@ -70,7 +70,7 @@ export default function FooterContact({ isShow, toggleWidget }) {
                             </li>
                             <li name="Youtube">
                                 <Link href="https://www.youtube.com/channel/UC0twtNru9HeQiF1EVf31IQA" target="_blank" className={`${style.media_link}`}>
-                                    <Image src="/svg/Youtube.svg" alt="Youtube" width={24} height={24} className={`${style.social_icon}`} />
+                                    <Image src="/svg/YouTube.svg" alt="YouTube" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Instagram">
