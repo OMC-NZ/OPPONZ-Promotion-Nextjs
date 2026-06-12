@@ -13,6 +13,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import useWindowSize from "@hooks/useWindowSize";
 import useIMEIValidation from "@hooks/validations/useIMEIValidation";
 import useDateValidation from "@hooks/validations/useDateValidation";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import { verifyPromotionEligibility } from "@api/promotionEligibility";
 
 const ReadOnlyDateInput = forwardRef(function ReadOnlyDateInput({ value, onClick, placeholder, disabled }, ref) {
@@ -38,6 +39,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     const [searchStatus, setSearchStatus] = useState('idle');
     const [matchedPromotion, setMatchedPromotion] = useState(null);
     const size = useWindowSize();
+    const verifyRecaptcha = useRecaptchaAction();
     const { imeiError, setIMEIError, errorIMEIMsg, validateIMEI } = useIMEIValidation();
     const { dateError, setDateError, errorDateMsg, validateDate } = useDateValidation();
 
@@ -156,6 +158,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setMatchedPromotion(null);
 
         try {
+            await verifyRecaptcha("redeem_search");
             const result = await verifyPromotionEligibility({
                 imei: imeiInput,
                 purchaseDate: formatPurchaseDate(selectedDate),

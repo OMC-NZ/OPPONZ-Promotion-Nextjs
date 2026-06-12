@@ -10,6 +10,7 @@ import { PiQuestionBold } from "react-icons/pi";
 import style from "./style.module.css";
 import DetailsModal from "./modal/index";
 import useClaimValidation from "@hooks/validations/useClaimValidation";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 
 const defaultPromotion = {
     image: "/temporary/img/promo02.jpg",
@@ -63,6 +64,7 @@ export default function Claim() {
     const [companyName, setCompanyName] = useState("");
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
     const [termsError, setTermsError] = useState(false);
+    const verifyRecaptcha = useRecaptchaAction();
     const claimInitializedRef = useRef(false);
     const claimHasLeftRef = useRef(false);
     const giftItems = getPromotionGiftItems(selectedPromotion);
@@ -250,10 +252,19 @@ export default function Claim() {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    const handleConfirmSubmit = () => {
+    const handleConfirmSubmit = async () => {
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
-        // TODO: Replace this with the claim submission API call.
-        console.log("Claim confirmed");
+
+        try {
+            await verifyRecaptcha("claim_submit");
+            // TODO: Replace this with the claim submission API call.
+            console.log("Claim confirmed");
+        } catch (error) {
+            setIsSubmitting(false);
+            console.error(error);
+        }
     };
 
     if (claimAccessExpired) {

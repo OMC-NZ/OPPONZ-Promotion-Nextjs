@@ -17,7 +17,7 @@ const useSearchStreet = (req) => {
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`,
-            'client_id': process.env.NEXT_PUBLIC_NZPOST_CLIENT_ID
+            'client_id': process.env.NZPOST_CLIENT_ID
           }
         });
         if (!response.ok) {

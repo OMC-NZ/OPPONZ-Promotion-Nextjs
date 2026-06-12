@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_PREFIX || '';
+const API_BASE_URL = process.env.API_PREFIX || '';
 const DEFAULT_TIMEOUT = 10000; // ms
 
 import { monthlyPromotions } from "@data/monthlyPromotions";

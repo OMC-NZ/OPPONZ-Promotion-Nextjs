@@ -5,6 +5,7 @@ import { PiQuestionBold } from "react-icons/pi";
 import { GiCrossMark } from "react-icons/gi";
 import { FiCheckSquare, FiClock, FiHelpCircle, FiRefreshCcw, FiSearch, FiTruck, FiXCircle } from "react-icons/fi";
 import useClaimIDValidation from "@hooks/validations/useClaimIDValidation";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import { getClaimTrackingRecord } from "@data/claimTracking";
 
 const statusIcons = {
@@ -24,6 +25,7 @@ export default function Track({ isVisible, onClose }) {
     const [result, setResult] = useState(null);
     const [isSearching, setIsSearching] = useState(false);
     const [hovered, setHovered] = useState(false);
+    const verifyRecaptcha = useRecaptchaAction();
     const { claimIDError, setClaimIDError, errorClaimIDMsg, validateClaimID } = useClaimIDValidation();
 
     useEffect(() => {
@@ -49,6 +51,7 @@ export default function Track({ isVisible, onClose }) {
         setIsSearching(true);
 
         try {
+            await verifyRecaptcha("track_claim_search");
             await new Promise((resolve) => setTimeout(resolve, TRACK_SEARCH_DELAY));
             const record = getClaimTrackingRecord(normalizedClaimId);
             setResult(record ? { ...record, claimId: normalizedClaimId } : {
