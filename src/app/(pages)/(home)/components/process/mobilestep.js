@@ -11,7 +11,7 @@ const steps = [
         alt: "step-1",
         title: "Enter IMEI &\nPurchase Date",
         description:
-            "Click on the “Redeem My Gift” button and enter your IMEI-1 and Purchase Date.",
+            "Click on the \"Redeem My Gift\" button and enter your IMEI-1 and Purchase Date.",
     },
     {
         icon: "/imgs/Icons-step2.png",
@@ -63,7 +63,6 @@ export default function MobileSteps() {
         dragStartRef.current = { x: event.clientX, y: event.clientY };
         setIsDragging(true);
         setDragOffset(0);
-        event.currentTarget.setPointerCapture?.(event.pointerId);
     };
 
     const handleDragMove = (event) => {
@@ -89,7 +88,6 @@ export default function MobileSteps() {
 
         setIsDragging(false);
         setDragOffset(0);
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
 
         if (!isHorizontalSwipe) return;
 
@@ -105,7 +103,6 @@ export default function MobileSteps() {
 
         setIsDragging(false);
         setDragOffset(0);
-        event.currentTarget.releasePointerCapture?.(event.pointerId);
     };
 
     return (
@@ -116,7 +113,11 @@ export default function MobileSteps() {
                 onPointerMove={handleDragMove}
                 onPointerUp={finishDrag}
                 onPointerCancel={cancelDrag}
-                onPointerLeave={cancelDrag}
+                onPointerLeave={(event) => {
+                    if (event.pointerType === "mouse") {
+                        cancelDrag(event);
+                    }
+                }}
             >
                 <div
                     className={`${style.mobileStepTrack} ${isDragging ? style.mobileStepTrackDragging : ""}`}
