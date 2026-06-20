@@ -3,11 +3,16 @@
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
 export default function useRecaptchaAction() {
     const { executeRecaptcha } = useGoogleReCaptcha();
 
     return async (action) => {
+        if (!recaptchaSiteKey) {
+            return { success: true, skipped: true };
+        }
+
         if (!executeRecaptcha) {
             throw new Error("reCAPTCHA is not ready. Please try again.");
         }

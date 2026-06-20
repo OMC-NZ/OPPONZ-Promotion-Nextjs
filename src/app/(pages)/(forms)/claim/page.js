@@ -4,13 +4,19 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { FiFileText, FiGift, FiMail, FiMapPin, FiPhone, FiUploadCloud, FiUser } from "react-icons/fi";
+import { FiFileText, FiGift, FiMail, FiMapPin, FiPhone, FiUser } from "react-icons/fi";
 import { FaAngleRight } from "react-icons/fa";
-import { PiQuestionBold } from "react-icons/pi";
 import style from "./style.module.css";
 import DetailsModal from "./modal/index";
-import useClaimValidation from "@hooks/validations/useClaimValidation";
 import useRecaptchaAction from "@hooks/useRecaptchaAction";
+import {
+    DeliveryAddressCard,
+    PurchaseInformationCard,
+    YourDetailsCard,
+    useDeliveryAddressSection,
+    usePurchaseInformationSection,
+    useYourDetailsSection,
+} from "@app/components/claim-form";
 
 const defaultPromotion = {
     image: "/temporary/img/promo02.jpg",
@@ -61,7 +67,6 @@ export default function Claim() {
     const [isReviewing, setIsReviewing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [previewDocument, setPreviewDocument] = useState(null);
-    const [companyName, setCompanyName] = useState("");
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
     const [termsError, setTermsError] = useState(false);
     const verifyRecaptcha = useRecaptchaAction();
@@ -80,29 +85,10 @@ export default function Claim() {
         }));
     };
 
-    const screenshotValidation = useClaimValidation("file");
-    const receiptValidation = useClaimValidation("file");
-    const firstNameValidation = useClaimValidation("name");
-    const lastNameValidation = useClaimValidation("name");
-    const emailValidation = useClaimValidation("email");
-    const contactValidation = useClaimValidation("phone");
-    const streetValidation = useClaimValidation("street");
-    const suburbValidation = useClaimValidation("suburb");
-    const cityValidation = useClaimValidation("city");
-    const postCodeValidation = useClaimValidation("postcode");
-    const invoiceValidation = useClaimValidation("text");
+    const yourDetailsSection = useYourDetailsSection();
+    const deliveryAddressSection = useDeliveryAddressSection();
+    const purchaseInformationSection = usePurchaseInformationSection();
 
-    const screenshotRef = useRef(null);
-    const receiptRef = useRef(null);
-    const firstNameRef = useRef(null);
-    const lastNameRef = useRef(null);
-    const emailRef = useRef(null);
-    const contactRef = useRef(null);
-    const streetRef = useRef(null);
-    const suburbRef = useRef(null);
-    const cityRef = useRef(null);
-    const postCodeRef = useRef(null);
-    const invoiceRef = useRef(null);
     const termsRef = useRef(null);
     const selectedGiftLabels = giftItems.map((giftItem) => {
         const selectedOption = giftItem.options.find((option) => option.id === selectedGiftOptions[giftItem.id]);
@@ -111,32 +97,11 @@ export default function Claim() {
             : giftItem.name;
     });
 
-    const getFileName = (fileList) => fileList?.[0]?.name || "";
-
     const reviewData = {
         giftName: selectedGiftLabels.join(" + "),
-        fullName: `${firstNameValidation.value} ${lastNameValidation.value}`.trim(),
-        mobileNumber: contactValidation.value ? `+64 ${contactValidation.value}` : "",
-        email: emailValidation.value,
-        addressLines: [
-            companyName ? `Company Name: ${companyName}` : "",
-            streetValidation.value,
-            suburbValidation.value,
-            `${cityValidation.value} ${postCodeValidation.value}`.trim(),
-            "New Zealand",
-        ].filter(Boolean),
-        documents: [
-            {
-                label: "IMEI Screenshot",
-                fileName: getFileName(receiptValidation.value),
-                file: receiptValidation.value?.[0],
-            },
-            {
-                label: "Proof of Purchase",
-                fileName: getFileName(screenshotValidation.value),
-                file: screenshotValidation.value?.[0],
-            },
-        ],
+        ...yourDetailsSection.getReviewData(),
+        ...deliveryAddressSection.getReviewData(),
+        ...purchaseInformationSection.getReviewData(),
     };
 
     useEffect(() => {
@@ -226,25 +191,17 @@ export default function Claim() {
 
         setTermsError(!isTermsAccepted);
 
-        const validations = [
-            [firstNameValidation.validate(firstNameValidation.value), firstNameRef],
-            [lastNameValidation.validate(lastNameValidation.value), lastNameRef],
-            [emailValidation.validate(emailValidation.value), emailRef],
-            [contactValidation.validate(contactValidation.value), contactRef],
-            [streetValidation.validate(streetValidation.value), streetRef],
-            [suburbValidation.validate(suburbValidation.value), suburbRef],
-            [cityValidation.validate(cityValidation.value), cityRef],
-            [postCodeValidation.validate(postCodeValidation.value), postCodeRef],
-            [invoiceValidation.validate(invoiceValidation.value), invoiceRef],
-            [receiptValidation.validate(receiptValidation.value), receiptRef],
-            [screenshotValidation.validate(screenshotValidation.value), screenshotRef],
-            [isTermsAccepted, termsRef],
+        const sectionResults = [
+            yourDetailsSection.validate(),
+            deliveryAddressSection.validate(),
+            purchaseInformationSection.validate(),
+            { isValid: isTermsAccepted, firstInvalidRef: termsRef },
         ];
 
-        const firstInvalid = validations.find(([isValid]) => !isValid);
+        const firstInvalid = sectionResults.find((result) => !result.isValid);
 
         if (firstInvalid) {
-            firstInvalid[1].current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            firstInvalid.firstInvalidRef?.current?.scrollIntoView({ behavior: "smooth", block: "center" });
             return;
         }
 
@@ -381,71 +338,11 @@ export default function Claim() {
                         </div>
                     </section>
 
-                    <section className={style.formSection}>
-                        <h2>Your Details</h2>
-                        <div className={style.twoColumnGrid}>
-                            <Field label="First Name *" validation={firstNameValidation} fieldRef={firstNameRef} type="name" />
-                            <Field label="Last Name *" validation={lastNameValidation} fieldRef={lastNameRef} type="name" />
-                            <Field label="Email Address *" validation={emailValidation} fieldRef={emailRef} type="email" />
-                            <Field
-                                label="Mobile Number *"
-                                validation={contactValidation}
-                                fieldRef={contactRef}
-                                type="phone"
-                                prefix="+64"
-                                inputMode="numeric"
-                            />
-                        </div>
-                    </section>
+                    <YourDetailsCard fields={yourDetailsSection.fields} />
 
-                    <section className={style.formSection}>
-                        <h2>Delivery Address</h2>
-                        <div className={style.singleColumnGrid}>
-                            <Field
-                                label="Address Line 1 *"
-                                validation={streetValidation}
-                                fieldRef={streetRef}
-                                helpText="New Zealand delivery addresses only."
-                            />
-                            <Field
-                                label="Company Name (Optional)"
-                                helpText="If your address is a business address, enter the company name here."
-                                value={companyName}
-                                onChange={setCompanyName}
-                            />
-                        </div>
-                        <div className={style.threeColumnGrid}>
-                            <Field label="Suburb *" validation={suburbValidation} fieldRef={suburbRef} />
-                            <Field label="City *" validation={cityValidation} fieldRef={cityRef} />
-                            <Field label="Postcode *" validation={postCodeValidation} fieldRef={postCodeRef} type="postcode" />
-                        </div>
-                    </section>
+                    <DeliveryAddressCard fields={deliveryAddressSection.fields} />
 
-                    <section className={style.formSection}>
-                        <h2>Purchase Information</h2>
-                        <div className={style.singleColumnGrid}>
-                            <Field
-                                label="Invoice Number *"
-                                validation={invoiceValidation}
-                                fieldRef={invoiceRef}
-                                type="text"
-                            />
-                        </div>
-                        <div className={style.twoColumnGrid}>
-                            <UploadField
-                                label="IMEI-1 Screenshot *"
-                                inputId="receipt"
-                                validation={receiptValidation}
-                                fieldRef={receiptRef}
-                            />
-                            <UploadField
-                                label="Proof of Purchase *"
-                                inputId="screenshot"
-                                validation={screenshotValidation}
-                                fieldRef={screenshotRef}
-                            />
-                        </div>
-                    </section>
+                    <PurchaseInformationCard fields={purchaseInformationSection.fields} />
 
                     <section className={style.formSection} ref={termsRef}>
                         <h2>Declaration</h2>
@@ -482,54 +379,6 @@ export default function Claim() {
             </main>
             {modalShow && <DetailsModal setModalShow={setModalShow} />}
         </>
-    );
-}
-
-function Field({ label, validation, fieldRef, type = "text", prefix, inputMode, helpText, value, onChange }) {
-    const inputValue = value ?? validation?.value ?? "";
-
-    const handleChange = (event) => {
-        if (type === "phone") {
-            event.target.value = event.target.value.replace(/\D/g, "");
-        }
-
-        onChange?.(event.target.value);
-        validation?.handleChange(event);
-    };
-
-    const input = (
-        <input
-            type="text"
-            data-type={type}
-            inputMode={inputMode}
-            onChange={handleChange}
-            onBlur={validation?.handleBlur}
-            value={inputValue}
-            className={validation?.error ? style.inputError : ""}
-        />
-    );
-
-    return (
-        <div className={style.fieldGroup} ref={fieldRef}>
-            <label className={style.fieldLabel}>
-                <span>{label}</span>
-                {validation?.error && <span className={style.inlineFieldError}>{validation.error}</span>}
-                {helpText && (
-                    <span className={style.helpWrap}>
-                        <button type="button" className={style.helpButton} aria-label={`${label} help`}>
-                            <PiQuestionBold />
-                        </button>
-                        <span className={style.helpText}>{helpText}</span>
-                    </span>
-                )}
-            </label>
-            {prefix ? (
-                <div className={`${style.prefixedInput} ${validation?.error ? style.inputError : ""}`}>
-                    <span>{prefix}</span>
-                    {input}
-                </div>
-            ) : input}
-        </div>
     );
 }
 
@@ -675,79 +524,3 @@ function InfoPair({ icon, label, value }) {
     );
 }
 
-function UploadField({ label, inputId, validation, fieldRef }) {
-    const [isDraggingFile, setIsDraggingFile] = useState(false);
-    const selectedFileName = validation.value?.[0]?.name;
-
-    const handleFiles = (files) => {
-        validation.handleChange({
-            target: {
-                type: "file",
-                files,
-            },
-        });
-        validation.validate(files);
-    };
-
-    const handleFileChange = (event) => {
-        handleFiles(event.target.files);
-    };
-
-    const handleDragOver = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsDraggingFile(true);
-    };
-
-    const handleDragLeave = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsDraggingFile(false);
-    };
-
-    const handleDrop = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsDraggingFile(false);
-
-        if (!event.dataTransfer.files?.length) return;
-        handleFiles(event.dataTransfer.files);
-    };
-
-    return (
-        <div className={style.fieldGroup} ref={fieldRef}>
-            <label className={style.fieldLabel}>
-                <span>{label}</span>
-                {validation.error && <span className={style.inlineFieldError}>{validation.error}</span>}
-            </label>
-            <label
-                className={`${style.uploadBox} ${validation.error ? style.uploadError : ""} ${isDraggingFile ? style.uploadBoxDragging : ""}`}
-                htmlFor={inputId}
-                onDragEnter={handleDragOver}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-            >
-                <FiUploadCloud />
-                {selectedFileName ? (
-                    <>
-                        <span className={style.selectedFileName}>{selectedFileName}</span>
-                        <small>Click to choose a different file.</small>
-                    </>
-                ) : (
-                    <>
-                        <span>Drag and drop file here or <strong>browse</strong></span>
-                        <small>JPG or PNG max 5MB. PDF max 10MB.</small>
-                    </>
-                )}
-                <input
-                    id={inputId}
-                    type="file"
-                    accept=".jpeg,.jpg,.png,.pdf"
-                    onChange={handleFileChange}
-                    required
-                />
-            </label>
-        </div>
-    );
-}
