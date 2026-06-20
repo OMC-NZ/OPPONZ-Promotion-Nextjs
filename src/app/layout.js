@@ -4,7 +4,7 @@ import Providers from "./providers";
 import Navigation from "@app/components/navigation/index";
 import Footer from "@app/components/footer/index";
 
-const zendeskKey = process.env.ZENDESK_WEB_WIDGET;
+const zendeskKey = process.env.NEXT_PUBLIC_ZENDESK_WEB_WIDGET;
 
 
 export default function RootLayout({ children }) {

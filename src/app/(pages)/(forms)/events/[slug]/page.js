@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
 import { currentEvents, defaultEventFormConfig } from "@data/currentEvents";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import style from "./style.module.css";
 
 const getEventConfig = (event) => event.formConfig || defaultEventFormConfig;
@@ -24,6 +25,7 @@ const buildInitialForm = (formConfig) => (
 
 export default function EventClaimPage() {
     const router = useRouter();
+    const verifyRecaptcha = useRecaptchaAction();
     const { slug } = useParams();
     const event = currentEvents.find((item) => item.slug === slug) || currentEvents[0];
     const formConfig = useMemo(() => getEventConfig(event), [event]);
@@ -32,6 +34,7 @@ export default function EventClaimPage() {
     const [form, setForm] = useState(() => buildInitialForm(formConfig));
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         setForm(buildInitialForm(formConfig));
@@ -78,11 +81,21 @@ export default function EventClaimPage() {
         return Object.keys(nextErrors).length === 0;
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        if (isSubmitting) return;
         if (!validate()) return;
 
-        // TODO: Replace this with the event-specific submission endpoint.
-        console.log("Event claim submitted", { event: event.slug, form });
+        setIsSubmitting(true);
+
+        try {
+            await verifyRecaptcha("event_claim_submit");
+            // TODO: Replace this with the event-specific submission endpoint.
+            console.log("Event claim submitted", { event: event.slug, form });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -142,8 +155,10 @@ export default function EventClaimPage() {
                     ))}
 
                     <div className={style.actions}>
-                        <button type="button" className={style.secondaryButton} onClick={() => router.back()}>Back</button>
-                        <button type="button" className={style.primaryButton} onClick={handleSubmit}>Submit Claim</button>
+                        <button type="button" className={style.secondaryButton} onClick={() => router.back()} disabled={isSubmitting}>Back</button>
+                        <button type="button" className={style.primaryButton} onClick={handleSubmit} disabled={isSubmitting}>
+                            {isSubmitting ? "Submitting" : "Submit Claim"}
+                        </button>
                     </div>
                 </div>
             </main>

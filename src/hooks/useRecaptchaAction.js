@@ -3,7 +3,7 @@
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V3;
 
 export default function useRecaptchaAction() {
     const { executeRecaptcha } = useGoogleReCaptcha();
