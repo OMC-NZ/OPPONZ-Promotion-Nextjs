@@ -1,14 +1,20 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_PREFIX || '';
 const DEFAULT_TIMEOUT = 10000; // ms
 
-import { monthlyPromotions } from "@data/monthlyPromotions";
-import { currentEvents } from "@data/currentEvents";
-
 export const fetchHomePromos = async (
     endpoint,
-    { method = 'GET', headers = {}, body = null, timeout = DEFAULT_TIMEOUT, ...fetchOptions } = {}
+    {
+        method = 'GET',
+        headers = {},
+        body = null,
+        timeout = DEFAULT_TIMEOUT,
+        baseUrl = API_BASE_URL,
+        ...fetchOptions
+    } = {}
 ) => {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const normalizedBaseUrl = baseUrl.replace(/\/$/, '');
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${normalizedBaseUrl}${normalizedEndpoint}`;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -77,25 +83,3 @@ export const fetchHomePromos = async (
     }
 };
 
-export const fetchHomePromotionContent = async () => {
-    // Mock API response shape. Replace this with real endpoints when ready.
-    await new Promise((resolve) => setTimeout(resolve, 250));
-
-    return {
-        monthlyPromotions,
-        currentEvents: currentEvents.map((event) => ({
-            id: event.slug,
-            title: event.title,
-            imageUrl: event.url,
-            bannerUrl: event.bannerUrl || event.url,
-            url: event.url,
-            slug: event.slug,
-            claimUrl: event.claimUrl,
-            href: event.claimUrl,
-            termsUrl: event.termsUrl,
-            termsTitle: event.termsTitle,
-            termsSummary: event.termsSummary,
-            formConfig: event.formConfig,
-        })),
-    };
-};

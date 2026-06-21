@@ -250,11 +250,12 @@ export default function MonthlyPromotions() {
                                                 )}
 
                                                 <Image
-                                                    src={promotion.url}
+                                                    src={promotion.imageUrl}
                                                     alt={promotion.title}
                                                     width={620}
                                                     height={420}
                                                     quality={100}
+                                                    unoptimized={promotion.imageUrl?.startsWith("http")}
                                                     className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
                                                     onLoad={() => handleImageLoad(promotion.id)}
                                                     onError={() => handleImageLoad(promotion.id)}

@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
-import { currentEvents, defaultEventFormConfig } from "@data/currentEvents";
+import { fetchCurrentEvents } from "@api/events";
+import { defaultEventFormConfig } from "@data/currentEvents";
 import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import style from "./style.module.css";
 
@@ -27,7 +28,13 @@ export default function EventClaimPage() {
     const router = useRouter();
     const verifyRecaptcha = useRecaptchaAction();
     const { slug } = useParams();
-    const event = currentEvents.find((item) => item.slug === slug) || currentEvents[0];
+    const [event, setEvent] = useState(() => ({
+        slug,
+        title: "Current Event",
+        url: "/temporary/events/2ds/events01.jpg",
+        bannerUrl: "/temporary/events/2ds/events01.jpg",
+        formConfig: defaultEventFormConfig,
+    }));
     const formConfig = useMemo(() => getEventConfig(event), [event]);
     const fields = useMemo(() => getAllFields(formConfig), [formConfig]);
     const eventBanner = event.bannerUrl || event.imageUrl || event.url;
@@ -35,6 +42,21 @@ export default function EventClaimPage() {
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        let isActive = true;
+
+        fetchCurrentEvents()
+            .then(({ items }) => {
+                const selectedEvent = items.find((item) => item.slug === slug);
+                if (isActive && selectedEvent) setEvent(selectedEvent);
+            })
+            .catch((error) => console.error("Unable to load event:", error));
+
+        return () => {
+            isActive = false;
+        };
+    }, [slug]);
 
     useEffect(() => {
         setForm(buildInitialForm(formConfig));
