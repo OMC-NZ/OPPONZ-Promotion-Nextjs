@@ -1,11 +1,29 @@
+<<<<<<< HEAD
 const DEFAULT_TIMEOUT = 10000; // ms
 const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX;
+=======
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_PREFIX || '';
+const DEFAULT_TIMEOUT = 10000; // ms
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
 
 export const fetchHomePromos = async (
     endpoint,
-    { method = 'GET', headers = {}, body = null, timeout = DEFAULT_TIMEOUT, ...fetchOptions } = {}
+    {
+        method = 'GET',
+        headers = {},
+        body = null,
+        timeout = DEFAULT_TIMEOUT,
+        baseUrl = API_BASE_URL,
+        ...fetchOptions
+    } = {}
 ) => {
+<<<<<<< HEAD
     const url = endpoint;
+=======
+    const normalizedBaseUrl = baseUrl.replace(/\/$/, '');
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${normalizedBaseUrl}${normalizedEndpoint}`;
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -74,6 +92,7 @@ export const fetchHomePromos = async (
     }
 };
 
+<<<<<<< HEAD
 export const fetchHomePromotionContent = async () => {
     if (!API_PREFIX) {
         throw new Error('NEXT_PUBLIC_API_PREFIX is not configured.');
@@ -89,3 +108,5 @@ export const fetchHomePromotionContent = async () => {
         currentEvents: eventResponse.data,
     };
 };
+=======
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d

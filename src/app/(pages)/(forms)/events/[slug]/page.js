@@ -4,8 +4,14 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
+<<<<<<< HEAD
 import { defaultEventFormConfig } from "@data/currentEvents";
 import usePromotionContent from "@hooks/usePromotionContent";
+=======
+import { fetchCurrentEvents } from "@api/events";
+import { defaultEventFormConfig } from "@data/currentEvents";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
 import style from "./style.module.css";
 
 const getEventConfig = (event) => event?.formConfig || defaultEventFormConfig;
@@ -25,15 +31,42 @@ const buildInitialForm = (formConfig) => (
 
 export default function EventClaimPage() {
     const router = useRouter();
+    const verifyRecaptcha = useRecaptchaAction();
     const { slug } = useParams();
+<<<<<<< HEAD
     const { currentEvents } = usePromotionContent();
     const event = currentEvents.items.find((item) => item.slug_url === slug);
+=======
+    const [event, setEvent] = useState(() => ({
+        slug,
+        title: "Current Event",
+        url: "/temporary/events/2ds/events01.jpg",
+        bannerUrl: "/temporary/events/2ds/events01.jpg",
+        formConfig: defaultEventFormConfig,
+    }));
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
     const formConfig = useMemo(() => getEventConfig(event), [event]);
     const fields = useMemo(() => getAllFields(formConfig), [formConfig]);
     const eventBanner = event?.banner_url;
     const [form, setForm] = useState(() => buildInitialForm(formConfig));
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        let isActive = true;
+
+        fetchCurrentEvents()
+            .then(({ items }) => {
+                const selectedEvent = items.find((item) => item.slug === slug);
+                if (isActive && selectedEvent) setEvent(selectedEvent);
+            })
+            .catch((error) => console.error("Unable to load event:", error));
+
+        return () => {
+            isActive = false;
+        };
+    }, [slug]);
 
     useEffect(() => {
         setForm(buildInitialForm(formConfig));
@@ -80,11 +113,26 @@ export default function EventClaimPage() {
         return Object.keys(nextErrors).length === 0;
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        if (isSubmitting) return;
         if (!validate()) return;
 
+<<<<<<< HEAD
         // TODO: Replace this with the event-specific submission endpoint.
         console.log("Event claim submitted", { event: event.slug_url, form });
+=======
+        setIsSubmitting(true);
+
+        try {
+            await verifyRecaptcha("event_claim_submit");
+            // TODO: Replace this with the event-specific submission endpoint.
+            console.log("Event claim submitted", { event: event.slug, form });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsSubmitting(false);
+        }
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
     };
 
     if (currentEvents.loading) {
@@ -165,8 +213,10 @@ export default function EventClaimPage() {
                     ))}
 
                     <div className={style.actions}>
-                        <button type="button" className={style.secondaryButton} onClick={() => router.back()}>Back</button>
-                        <button type="button" className={style.primaryButton} onClick={handleSubmit}>Submit Claim</button>
+                        <button type="button" className={style.secondaryButton} onClick={() => router.back()} disabled={isSubmitting}>Back</button>
+                        <button type="button" className={style.primaryButton} onClick={handleSubmit} disabled={isSubmitting}>
+                            {isSubmitting ? "Submitting" : "Submit Claim"}
+                        </button>
                     </div>
                 </div>
             </main>

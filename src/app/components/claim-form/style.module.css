@@ -1,0 +1,231 @@
+.formSection {
+  padding: 26px 28px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--oppo-card-shadow);
+}
+
+.formSection h2 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  line-height: calc(1.2em + 4px);
+  font-weight: 700;
+}
+
+.twoColumnGrid,
+.threeColumnGrid,
+.singleColumnGrid {
+  display: grid;
+  gap: 22px 34px;
+}
+
+.twoColumnGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.threeColumnGrid {
+  grid-template-columns: 0.85fr 0.85fr 1fr;
+  margin-top: 22px;
+}
+
+.singleColumnGrid {
+  grid-template-columns: 1fr;
+  margin-bottom: 20px;
+}
+
+.fieldGroup {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+
+.fieldGroup label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.fieldLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.inlineFieldError {
+  color: #c70000;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.helpWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.helpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #555;
+  cursor: help;
+}
+
+.helpButton svg {
+  width: 22px;
+  height: 22px;
+}
+
+.helpText {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 2;
+  width: max-content;
+  max-width: 260px;
+  padding: 8px 10px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 400;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.helpButton:hover + .helpText,
+.helpButton:focus-visible + .helpText {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.fieldGroup input[type="text"] {
+  width: 100%;
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 19px;
+  outline: none;
+}
+
+.fieldGroup input[type="text"]:focus {
+  border-color: #111;
+}
+
+.fieldGroup input.inputError {
+  border-color: #c70000;
+}
+
+.prefixedInput {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.prefixedInput > span {
+  flex: 0 0 auto;
+  padding: 0 10px 0 12px;
+  color: #8a8a8a;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.prefixedInput input[type="text"] {
+  height: 100%;
+  padding-left: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.prefixedInput:focus-within {
+  border-color: #111;
+}
+
+.prefixedInput.inputError {
+  border-color: #c70000;
+}
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 122px;
+  border: 1px dashed #9f9f9f;
+  border-radius: 8px;
+  color: #111;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.uploadBoxDragging {
+  border-color: #2f6df6;
+  background: #f3f7ff;
+  box-shadow: inset 0 0 0 1px #2f6df6;
+}
+
+.uploadBox svg {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 14px;
+}
+
+.uploadBox span {
+  font-size: 18px;
+}
+
+.uploadBox strong {
+  color: #0057b8;
+  font-weight: 600;
+}
+
+.uploadBox .selectedFileName {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: #111;
+  font-weight: 700;
+}
+
+.uploadBox small {
+  margin-top: 10px;
+  color: #666;
+  font-size: 16px;
+}
+
+.uploadBox input {
+  display: none;
+}
+
+.uploadError {
+  border-color: #c70000;
+}
+
+@media (max-width: 767px) {
+  .formSection {
+    padding: 22px;
+  }
+
+  .twoColumnGrid,
+  .threeColumnGrid {
+    grid-template-columns: 1fr;
+  }
+}

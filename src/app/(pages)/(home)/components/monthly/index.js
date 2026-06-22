@@ -250,15 +250,26 @@ export default function MonthlyPromotions() {
                                                 )}
 
                                                 <Image
+<<<<<<< HEAD
                                                     src={promotion.banner}
+=======
+                                                    src={promotion.imageUrl}
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
                                                     alt={promotion.title}
                                                     width={620}
                                                     height={420}
                                                     quality={100}
+<<<<<<< HEAD
                                                     unoptimized
                                                     className={`${style.promoImage} ${loadedImages[promotion.url] ? style.imageLoaded : style.imagePending}`}
                                                     onLoad={() => handleImageLoad(promotion.url)}
                                                     onError={() => handleImageLoad(promotion.url)}
+=======
+                                                    unoptimized={promotion.imageUrl?.startsWith("http")}
+                                                    className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
+                                                    onLoad={() => handleImageLoad(promotion.id)}
+                                                    onError={() => handleImageLoad(promotion.id)}
+>>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
                                                     priority
                                                 />
 

@@ -729,6 +729,8 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .trackHint button:hover,
