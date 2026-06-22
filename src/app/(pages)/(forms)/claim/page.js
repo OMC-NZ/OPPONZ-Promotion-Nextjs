@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { FiFileText, FiGift, FiMail, FiMapPin, FiPhone, FiUser } from "react-icons/fi";
@@ -19,29 +19,12 @@ import {
 } from "@app/components/claim-form";
 
 const defaultPromotion = {
-    image: "/temporary/img/promo02.jpg",
-    title: "OPPO Reno10 5G Gift Campaign",
-    subtitle: "With bonus OPPO Enco Air2",
-    giftItems: [
-        {
-            id: "enco-air2",
-            name: "OPPO Enco Air2",
-            options: [
-                { id: "enco-air2-white", label: "White" },
-                { id: "enco-air2-black", label: "Black" },
-            ],
-        },
-        {
-            id: "watch",
-            name: "Watch",
-            options: [
-                { id: "watch-black", label: "Black" },
-                { id: "watch-blue", label: "Blue" },
-            ],
-        },
-    ],
-    purchaseDate: "12 Jan 2026",
-    imei: "86*************23",
+    image: "",
+    title: "",
+    subtitle: "",
+    giftItems: [],
+    purchaseDate: "",
+    imei: "",
 };
 
 const getPromotionGiftItems = (promotion) => {
@@ -60,6 +43,7 @@ const getInitialGiftOptions = (giftItems) => (
 
 export default function Claim() {
     const router = useRouter();
+    const { slug: routeSlug } = useParams();
     const [selectedPromotion, setSelectedPromotion] = useState(defaultPromotion);
     const [isClaimReady, setIsClaimReady] = useState(false);
     const [claimAccessExpired, setClaimAccessExpired] = useState(false);
@@ -90,14 +74,24 @@ export default function Claim() {
     const purchaseInformationSection = usePurchaseInformationSection();
 
     const termsRef = useRef(null);
-    const selectedGiftLabels = giftItems.map((giftItem) => {
+    const selectedGifts = giftItems.map((giftItem) => {
         const selectedOption = giftItem.options.find((option) => option.id === selectedGiftOptions[giftItem.id]);
-        return selectedOption?.label && selectedOption.label !== "Included"
-            ? `${giftItem.name} (${selectedOption.label})`
-            : giftItem.name;
+        return {
+            name: giftItem.name,
+            color: selectedOption?.color || "",
+            alias: selectedOption?.alias || "",
+            label: selectedOption?.label || "Included",
+        };
     });
+    const selectedGiftLabels = selectedGifts.map((gift) => (
+        gift.label !== "Included" ? `${gift.name} (${gift.label})` : gift.name
+    ));
 
     const reviewData = {
+        promotion: selectedPromotion,
+        verifiedImei: selectedPromotion.imei,
+        verifiedPurchaseDate: selectedPromotion.purchaseDate,
+        selectedGifts,
         giftName: selectedGiftLabels.join(" + "),
         ...yourDetailsSection.getReviewData(),
         ...deliveryAddressSection.getReviewData(),
@@ -119,12 +113,19 @@ export default function Claim() {
         try {
             const parsedDraft = JSON.parse(claimDraft);
             const draftPromotion = parsedDraft.promotion || {};
+            const promotionSlug = draftPromotion.slugUrl || draftPromotion.slug || "";
+
+            if (routeSlug && promotionSlug !== routeSlug) {
+                setClaimAccessExpired(true);
+                return undefined;
+            }
+
             const nextPromotion = {
                 ...defaultPromotion,
                 ...draftPromotion,
-                image: draftPromotion.image || draftPromotion.url || defaultPromotion.image,
+                image: draftPromotion.image || draftPromotion.bannerUrl || draftPromotion.url || defaultPromotion.image,
                 title: draftPromotion.campaignTitle || draftPromotion.title || defaultPromotion.title,
-                subtitle: draftPromotion.subtitle || draftPromotion.gift || defaultPromotion.subtitle,
+                subtitle: draftPromotion.description || draftPromotion.subtitle || draftPromotion.gift || defaultPromotion.subtitle,
                 purchaseDate: parsedDraft.purchaseDate || defaultPromotion.purchaseDate,
                 imei: parsedDraft.imei || defaultPromotion.imei,
             };
@@ -136,7 +137,7 @@ export default function Claim() {
         } catch {
             setClaimAccessExpired(true);
         }
-    }, [router]);
+    }, [routeSlug]);
 
     useEffect(() => {
         if (!isClaimReady) return undefined;
@@ -281,15 +282,18 @@ export default function Claim() {
                         <h2>Your Promotion</h2>
                         <div className={style.promotionCard}>
                             <div className={style.promotionMedia}>
-                                <Image
-                                    src={selectedPromotion.image}
-                                    alt={selectedPromotion.title}
-                                    width={260}
-                                    height={260}
-                                    quality={100}
-                                    className={style.promotionImage}
-                                    priority
-                                />
+                                {selectedPromotion.image && (
+                                    <Image
+                                        src={selectedPromotion.image}
+                                        alt={selectedPromotion.title}
+                                        width={260}
+                                        height={260}
+                                        quality={100}
+                                        unoptimized={selectedPromotion.image.startsWith("http")}
+                                        className={style.promotionImage}
+                                        priority
+                                    />
+                                )}
                                 <button type="button" className={style.detailsButton} onClick={handleModalOpen}>
                                     View Details
                                     <FaAngleRight />
@@ -377,7 +381,7 @@ export default function Claim() {
                     </div>
                 </form>
             </main>
-            {modalShow && <DetailsModal setModalShow={setModalShow} />}
+            {modalShow && <DetailsModal promotion={selectedPromotion} setModalShow={setModalShow} />}
         </>
     );
 }

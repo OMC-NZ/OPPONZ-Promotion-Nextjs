@@ -93,6 +93,14 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         }).format(date);
     };
 
+    const formatApiPurchaseDate = (date) => {
+        if (!date) return '';
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     const isSubmitValid = () => {
         const cleanedIMEI = imeiInput.replace(/\s+/g, '');
         let isValid = true;
@@ -162,13 +170,21 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setSearchErrorMessage('');
 
         try {
-            await verifyRecaptcha("redeem_search");
+            const recaptcha = await verifyRecaptcha("redeem_search");
             const result = await verifyPromotionEligibility({
                 imei: imeiInput,
-                purchaseDate: formatPurchaseDate(selectedDate),
+                purchaseDate: formatApiPurchaseDate(selectedDate),
+                recaptchaToken: recaptcha.token,
+                recaptchaAction: recaptcha.action,
             });
 
-            setMatchedPromotion(result.promotion);
+            setMatchedPromotion(result.promotion ? {
+                ...result.promotion,
+                verification: {
+                    eligible: result.eligible,
+                    requestId: result.requestId,
+                },
+            } : null);
             setSearchStatus(result.eligible ? 'success' : 'empty');
         } catch (error) {
             setMatchedPromotion(null);
@@ -183,6 +199,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         sessionStorage.setItem('oppoClaimDraft', JSON.stringify({
             imei: imeiInput.replace(/\s+/g, ''),
             purchaseDate: purchaseDateLabel,
+            purchaseDateValue: formatApiPurchaseDate(selectedDate),
             promotion: matchedPromotion,
         }));
     };
@@ -199,6 +216,9 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     const purchaseDateLabel = formatPurchaseDate(selectedDate);
     const isSearching = searchStatus === 'searching';
     const showSearchOverlay = searchStatus === 'success' || searchStatus === 'empty' || searchStatus === 'error';
+    const claimHref = matchedPromotion?.slugUrl || matchedPromotion?.slug
+        ? `/claim/${encodeURIComponent(matchedPromotion.slugUrl || matchedPromotion.slug)}`
+        : '/claim';
 
     return (
         <>
@@ -293,23 +313,25 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                             width={300}
                                             height={300}
                                             quality={100}
+                                            unoptimized={matchedPromotion.url?.startsWith('http')}
                                             className={style.promotionResultImage}
                                         />
                                         <div className={style.promotionResultInfo}>
                                             <h3>{matchedPromotion.campaignTitle || matchedPromotion.title}</h3>
-                                            <p>{matchedPromotion.subtitle}</p>
                                             <dl>
                                                 <div>
                                                     <dt>Gift:</dt>
                                                     <dd>{matchedPromotion.gift || matchedPromotion.subtitle}</dd>
                                                 </div>
-                                                <div>
-                                                    <dt>Valid:</dt>
-                                                    <dd>{matchedPromotion.validFrom} - {matchedPromotion.validTo}</dd>
-                                                </div>
+                                                {matchedPromotion.validFrom && matchedPromotion.validTo && (
+                                                    <div>
+                                                        <dt>Valid:</dt>
+                                                        <dd>{matchedPromotion.validFrom} - {matchedPromotion.validTo}</dd>
+                                                    </div>
+                                                )}
                                             </dl>
                                             <div className={style.resultActions}>
-                                                <Link href="/claim" onClick={handleClaimNow}>Claim Now</Link>
+                                                <Link href={claimHref} onClick={handleClaimNow}>Claim Now</Link>
                                             </div>
                                         </div>
                                     </div>

@@ -1,7 +1,7 @@
 "use client";
 import style from "./modal.module.css";
 
-export default function DetailsModal({ setModalShow }) {
+export default function DetailsModal({ promotion, setModalShow }) {
     const handleModalClose = () => {
         setModalShow(false);
         document.body.style.overflowY = 'auto';
@@ -11,15 +11,10 @@ export default function DetailsModal({ setModalShow }) {
             <div className={style.modal_overlay}>
                 <div className={style.modal_content}>
                     <div className={style.modal_title}>
-                        <p>OPPO Enco Air3 Pro for OPPO A98</p>
+                        <p>{promotion.title}</p>
                     </div>
                     <div className={style.modal_text}>
-                        <p>Prize: one (1) x OPPO Enco Air3 Pro White</p>
-                        <p>This offer applies to during the period commencing:</p>
-                        <ul>
-                            <li>Harvey Norman/Heathcote/JB HIFI/Mighty Ape/Noel Leeming/PB Tech/Smith City - From 3rd July 2024 to 31st July 2024.</li>
-                            <li>OneNZ - From 1st July 2024 to 31st July 2024.</li>
-                        </ul>
+                        <p>{promotion.description || promotion.gift || promotion.subtitle}</p>
                     </div>
                     <div className={style.modal_close}>
                         <button className={style.close_button} onClick={handleModalClose}>Close</button>

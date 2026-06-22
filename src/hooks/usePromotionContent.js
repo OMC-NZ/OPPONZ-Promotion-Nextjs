@@ -29,7 +29,7 @@ export default function usePromotionContent() {
 
             if (!isActive) return;
 
-            const monthlyPromotions = promotionsResult.status === "fulfilled"
+            const currentPromotions = promotionsResult.status === "fulfilled"
                 ? promotionsResult.value.items
                 : [];
             const currentEvents = eventsResult.status === "fulfilled"
@@ -38,7 +38,7 @@ export default function usePromotionContent() {
 
             setContent({
                 monthly: {
-                    items: monthlyPromotions,
+                    items: currentPromotions,
                     loading: false,
                     error: promotionsResult.status === "rejected" ? promotionsResult.reason : null,
                 },
