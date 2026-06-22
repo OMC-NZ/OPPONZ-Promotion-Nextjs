@@ -22,49 +22,13 @@ export default function usePromotionContent() {
         let isActive = true;
 
         const loadPromotionContent = async () => {
-<<<<<<< HEAD
-            try {
-                const {
-                    monthlyPromotions = [],
-                    currentEvents = [],
-                } = await fetchHomePromotionContent();
-=======
             const [promotionsResult, eventsResult] = await Promise.allSettled([
                 fetchCurrentPromotions(),
                 fetchCurrentEvents(),
             ]);
->>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
 
-                if (!isActive) return;
+            if (!isActive) return;
 
-<<<<<<< HEAD
-                setContent({
-                    monthly: {
-                        items: monthlyPromotions,
-                        loading: false,
-                    },
-                    currentEvents: {
-                        items: currentEvents,
-                        loading: false,
-                    },
-                });
-            } catch (error) {
-                console.warn("Failed to load promotion content:", error.message);
-
-                if (!isActive) return;
-
-                setContent({
-                    monthly: {
-                        items: [],
-                        loading: false,
-                    },
-                    currentEvents: {
-                        items: [],
-                        loading: false,
-                    },
-                });
-            }
-=======
             const monthlyPromotions = promotionsResult.status === "fulfilled"
                 ? promotionsResult.value.items
                 : [];
@@ -84,7 +48,6 @@ export default function usePromotionContent() {
                     error: eventsResult.status === "rejected" ? eventsResult.reason : null,
                 },
             });
->>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
         };
 
         loadPromotionContent();

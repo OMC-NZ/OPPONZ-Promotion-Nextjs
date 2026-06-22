@@ -138,8 +138,8 @@ export default function MonthlyPromotions() {
         setSelectedPromotion(promotion);
     };
 
-    const handleImageLoad = (promotionUrl) => {
-        setLoadedImages((prev) => ({ ...prev, [promotionUrl]: true }));
+    const handleImageLoad = (promotionId) => {
+        setLoadedImages((prev) => ({ ...prev, [promotionId]: true }));
     };
 
     const closeMonthlyModal = () => {
@@ -228,7 +228,7 @@ export default function MonthlyPromotions() {
                                     <div className={style.mostthree}>
                                         {pagePromotions.map((promotion) => (
                                             <div
-                                                key={promotion.url}
+                                                key={promotion.id}
                                                 className={`${style.promoCard} ${getCardSizeClass(imgsPerPage)} ${style.imgBorder} ${style.imgSize}`}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
@@ -243,33 +243,22 @@ export default function MonthlyPromotions() {
                                                     }
                                                 }}
                                             >
-                                                {!loadedImages[promotion.url] && (
+                                                {!loadedImages[promotion.id] && (
                                                     <div className={style.imageLoading}>
                                                         <span className={style.loadingSpinner} />
                                                     </div>
                                                 )}
 
                                                 <Image
-<<<<<<< HEAD
-                                                    src={promotion.banner}
-=======
                                                     src={promotion.imageUrl}
->>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
                                                     alt={promotion.title}
                                                     width={620}
                                                     height={420}
                                                     quality={100}
-<<<<<<< HEAD
-                                                    unoptimized
-                                                    className={`${style.promoImage} ${loadedImages[promotion.url] ? style.imageLoaded : style.imagePending}`}
-                                                    onLoad={() => handleImageLoad(promotion.url)}
-                                                    onError={() => handleImageLoad(promotion.url)}
-=======
                                                     unoptimized={promotion.imageUrl?.startsWith("http")}
                                                     className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
                                                     onLoad={() => handleImageLoad(promotion.id)}
                                                     onError={() => handleImageLoad(promotion.id)}
->>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
                                                     priority
                                                 />
 

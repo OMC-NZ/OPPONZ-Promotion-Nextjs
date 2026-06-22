@@ -151,8 +151,8 @@ export default function CurrentEvents() {
                         <div className={eventStyle.carouselPage} key={pageIndex}>
                             <div className={eventStyle.mostthree}>
                                 {pageEvents.map((event, index) => {
-                                    const eventId = event.slug_url;
-                                    const eventHref = `/events/${event.slug_url}`;
+                                    const eventId = event.id;
+                                    const eventHref = event.claimUrl;
 
                                     return (
                                         <div
@@ -183,8 +183,8 @@ export default function CurrentEvents() {
                                             )}
 
                                             <Image
-                                                src={event.banner_url}
-                                                alt={event.name || `Current Event ${index + 1}`}
+                                                src={event.imageUrl}
+                                                alt={event.title || `Current Event ${index + 1}`}
                                                 width={620}
                                                 height={420}
                                                 quality={100}

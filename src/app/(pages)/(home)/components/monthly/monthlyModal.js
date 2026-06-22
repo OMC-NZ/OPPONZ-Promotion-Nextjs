@@ -45,9 +45,6 @@ export default function MonthlyModal({ promotion, onClose }) {
                 </button>
 
                 <h3 className={style.modalTitle}>{promotion.title}</h3>
-<<<<<<< HEAD
-                <p className={style.modalSubtitle}>{promotion.gifts}</p>
-=======
                 <p className={style.modalSubtitle}>{promotion.subtitle}</p>
 
                 {promotion.channels?.length > 0 && (
@@ -61,7 +58,6 @@ export default function MonthlyModal({ promotion, onClose }) {
                         ))}
                     </div>
                 )}
->>>>>>> 5eb32891f151cb34e88ae7acece4b2f93f24991d
 
                 <div className={style.modalActions}>
                     <button type="button" className={style.btn} onClick={onClose}>
