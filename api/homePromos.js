@@ -1,14 +1,11 @@
-const API_BASE_URL = process.env.API_PREFIX || '';
 const DEFAULT_TIMEOUT = 10000; // ms
-
-import { monthlyPromotions } from "@data/monthlyPromotions";
-import { currentEvents } from "@data/currentEvents";
+const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX;
 
 export const fetchHomePromos = async (
     endpoint,
     { method = 'GET', headers = {}, body = null, timeout = DEFAULT_TIMEOUT, ...fetchOptions } = {}
 ) => {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = endpoint;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -70,7 +67,7 @@ export const fetchHomePromos = async (
             timeoutErr.code = 'ETIMEDOUT';
             throw timeoutErr;
         }
-        console.error('fetchHomePromos error:', err);
+        console.warn('fetchHomePromos warning:', err.message);
         throw err;
     } finally {
         clearTimeout(timeoutId);
@@ -78,24 +75,17 @@ export const fetchHomePromos = async (
 };
 
 export const fetchHomePromotionContent = async () => {
-    // Mock API response shape. Replace this with real endpoints when ready.
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    if (!API_PREFIX) {
+        throw new Error('NEXT_PUBLIC_API_PREFIX is not configured.');
+    }
+
+    const [promotionResponse, eventResponse] = await Promise.all([
+        fetchHomePromos(`${API_PREFIX}/api/promotions/current`),
+        fetchHomePromos(`${API_PREFIX}/api/events/current`),
+    ]);
 
     return {
-        monthlyPromotions,
-        currentEvents: currentEvents.map((event) => ({
-            id: event.slug,
-            title: event.title,
-            imageUrl: event.url,
-            bannerUrl: event.bannerUrl || event.url,
-            url: event.url,
-            slug: event.slug,
-            claimUrl: event.claimUrl,
-            href: event.claimUrl,
-            termsUrl: event.termsUrl,
-            termsTitle: event.termsTitle,
-            termsSummary: event.termsSummary,
-            formConfig: event.formConfig,
-        })),
+        monthlyPromotions: promotionResponse.data,
+        currentEvents: eventResponse.data,
     };
 };

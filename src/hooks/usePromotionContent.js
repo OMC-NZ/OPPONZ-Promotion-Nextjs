@@ -21,20 +21,40 @@ export default function usePromotionContent() {
         let isActive = true;
 
         const loadPromotionContent = async () => {
-            const { monthlyPromotions, currentEvents } = await fetchHomePromotionContent();
+            try {
+                const {
+                    monthlyPromotions = [],
+                    currentEvents = [],
+                } = await fetchHomePromotionContent();
 
-            if (!isActive) return;
+                if (!isActive) return;
 
-            setContent({
-                monthly: {
-                    items: monthlyPromotions,
-                    loading: false,
-                },
-                currentEvents: {
-                    items: currentEvents,
-                    loading: false,
-                },
-            });
+                setContent({
+                    monthly: {
+                        items: monthlyPromotions,
+                        loading: false,
+                    },
+                    currentEvents: {
+                        items: currentEvents,
+                        loading: false,
+                    },
+                });
+            } catch (error) {
+                console.warn("Failed to load promotion content:", error.message);
+
+                if (!isActive) return;
+
+                setContent({
+                    monthly: {
+                        items: [],
+                        loading: false,
+                    },
+                    currentEvents: {
+                        items: [],
+                        loading: false,
+                    },
+                });
+            }
         };
 
         loadPromotionContent();

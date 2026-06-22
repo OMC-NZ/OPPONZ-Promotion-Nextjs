@@ -38,6 +38,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     const [popperStatus, setPopperStatus] = useState('bottom');
     const [searchStatus, setSearchStatus] = useState('idle');
     const [matchedPromotion, setMatchedPromotion] = useState(null);
+    const [searchErrorMessage, setSearchErrorMessage] = useState('');
     const size = useWindowSize();
     const verifyRecaptcha = useRecaptchaAction();
     const { imeiError, setIMEIError, errorIMEIMsg, validateIMEI } = useIMEIValidation();
@@ -56,6 +57,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setIMEICorrect(false);
         setSearchStatus('idle');
         setMatchedPromotion(null);
+        setSearchErrorMessage('');
         document.body.style.overflowY = '';
     };
 
@@ -66,6 +68,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setDateError(false);
         setIMEICorrect(false);
         setMatchedPromotion(null);
+        setSearchErrorMessage('');
         setSearchStatus('idle');
     };
 
@@ -156,6 +159,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     const handleSearchPromotion = async () => {
         setSearchStatus('searching');
         setMatchedPromotion(null);
+        setSearchErrorMessage('');
 
         try {
             await verifyRecaptcha("redeem_search");
@@ -166,9 +170,10 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
             setMatchedPromotion(result.promotion);
             setSearchStatus(result.eligible ? 'success' : 'empty');
-        } catch {
+        } catch (error) {
             setMatchedPromotion(null);
-            setSearchStatus('empty');
+            setSearchErrorMessage(error?.message || 'Security verification failed. Please try again.');
+            setSearchStatus('error');
         }
     };
 
@@ -193,72 +198,76 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
     const purchaseDateLabel = formatPurchaseDate(selectedDate);
     const isSearching = searchStatus === 'searching';
-    const showSearchOverlay = searchStatus === 'success' || searchStatus === 'empty';
+    const showSearchOverlay = searchStatus === 'success' || searchStatus === 'empty' || searchStatus === 'error';
 
     return (
         <>
             <div className={style.modalOverlay}>
-                <div className={`${style.modal} ${showSearchOverlay ? style.modalResult : ''}`}>
+                <div className={`${style.modal} ${showSearchOverlay ? style.modalResult : ''} ${searchStatus === 'error' ? style.modalErrorResult : ''}`}>
                     <button className={style.closeButton} onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>
                         &times;
                     </button>
-                    <p className={`${style.modalTitle}`}>Find Your Promotion</p>
-                    <div className={`${style.conForm}`}>
-                        <div className={`${style.conInput}`}>
-                            <label>What is your phone&apos;s IMEI-1?</label>
-                            <div className={`${style.search} ${imeiError ? style.search_red : style.search_normal}`}>
-                                <div className={`${style.search_box}`}>
-                                    <span className={`${style.conIcon} ${style.conPiIcon}`}>
-                                        <PiQuestionBold onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => hovered ? setHovered(false) : setHovered(true)} />
-                                        <i className={`${style.tipText} ${hovered ? style.visible : ''}`}>
-                                            Ways to find the IMEI-1: <br />
-                                            1. Dial *#06# on the keypad to retrieve.<br />
-                                            2. Check the bottom of product packing box.<br />
-                                            3. Go to [Settings] &gt; [About Phone] &gt; [Status] &gt; [IMEI-1].
-                                        </i>
-                                    </span>
-                                    <input type="type" placeholder="Input an IMEI-1" value={imeiInput} onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} disabled={isSearching} required />
-                                    {imeiCorrect && <p className={`${style.validatetick}`}><GiCheckMark /></p>}
-                                    {imeiError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
+                    {!showSearchOverlay && (
+                        <>
+                            <p className={`${style.modalTitle}`}>Find Your Promotion</p>
+                            <div className={`${style.conForm}`}>
+                                <div className={`${style.conInput}`}>
+                                    <label>What is your phone&apos;s IMEI-1?</label>
+                                    <div className={`${style.search} ${imeiError ? style.search_red : style.search_normal}`}>
+                                        <div className={`${style.search_box}`}>
+                                            <span className={`${style.conIcon} ${style.conPiIcon}`}>
+                                                <PiQuestionBold onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={() => hovered ? setHovered(false) : setHovered(true)} />
+                                                <i className={`${style.tipText} ${hovered ? style.visible : ''}`}>
+                                                    Ways to find the IMEI-1: <br />
+                                                    1. Dial *#06# on the keypad to retrieve.<br />
+                                                    2. Check the bottom of product packing box.<br />
+                                                    3. Go to [Settings] &gt; [About Phone] &gt; [Status] &gt; [IMEI-1].
+                                                </i>
+                                            </span>
+                                            <input type="type" placeholder="Input an IMEI-1" value={imeiInput} onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} disabled={isSearching} required />
+                                            {imeiCorrect && <p className={`${style.validatetick}`}><GiCheckMark /></p>}
+                                            {imeiError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
+                                        </div>
+                                    </div>
+                                    {imeiError && <p className={`${style.validateError}`}>{errorIMEIMsg}</p>}
+                                </div>
+                                <div className={`${style.conInput}`}>
+                                    <label>When did you purchase the device?</label>
+                                    <div className={`${style.search} ${dateError ? style.search_red : style.search_normal}`}>
+                                        <div className={`${style.search_box}`}>
+                                            <span className={`${style.conIcon}`}>
+                                                <FiCalendar />
+                                            </span>
+                                            <DatePicker
+                                                wrapperClassName={`${style.datepicker}`}
+                                                selected={selectedDate}
+                                                onChange={handleDateChange}
+                                                dateFormat="yyyy-MM-dd"
+                                                placeholderText="Select a Date"
+                                                maxDate={maxDate}
+                                                popperPlacement={popperStatus}
+                                                customInput={<ReadOnlyDateInput />}
+                                                disabled={isSearching}
+                                                required
+                                            />
+                                            {dateError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
+                                        </div>
+                                    </div>
+                                    {dateError && <p className={`${style.validateError}`}>{errorDateMsg}</p>}
                                 </div>
                             </div>
-                            {imeiError && <p className={`${style.validateError}`}>{errorIMEIMsg}</p>}
-                        </div>
-                        <div className={`${style.conInput}`}>
-                            <label>When did you purchase the device?</label>
-                            <div className={`${style.search} ${dateError ? style.search_red : style.search_normal}`}>
-                                <div className={`${style.search_box}`}>
-                                    <span className={`${style.conIcon}`}>
-                                        <FiCalendar />
-                                    </span>
-                                    <DatePicker
-                                        wrapperClassName={`${style.datepicker}`}
-                                        selected={selectedDate}
-                                        onChange={handleDateChange}
-                                        dateFormat="yyyy-MM-dd"
-                                        placeholderText="Select a Date"
-                                        maxDate={maxDate}
-                                        popperPlacement={popperStatus}
-                                        customInput={<ReadOnlyDateInput />}
-                                        disabled={isSearching}
-                                        required
-                                    />
-                                    {dateError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
-                                </div>
+                            <div className={`${style.conBtn}`}>
+                                <button onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>Close</button>
+                                <button onClick={submitValidate} disabled={isSearching}>
+                                    {isSearching && <span className={style.buttonSpinner} />}
+                                    {isSearching ? 'Searching' : 'Search'}
+                                </button>
                             </div>
-                            {dateError && <p className={`${style.validateError}`}>{errorDateMsg}</p>}
-                        </div>
-                    </div>
-                    <div className={`${style.conBtn}`}>
-                        <button onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>Close</button>
-                        <button onClick={submitValidate} disabled={isSearching}>
-                            {isSearching && <span className={style.buttonSpinner} />}
-                            {isSearching ? 'Searching' : 'Search'}
-                        </button>
-                    </div>
+                        </>
+                    )}
 
                     {showSearchOverlay && (
-                        <div className={style.searchOverlay}>
+                        <div className={`${style.searchOverlay} ${searchStatus === 'error' ? style.searchOverlayError : ''}`}>
                             {searchStatus === 'searching' && (
                                 <div className={style.searchingPanel}>
                                     <span className={style.searchingSpinner} />
@@ -344,6 +353,26 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
                                     <div className={style.emptyActions}>
                                         <button type="button" onClick={resetSearchInputs}>Back</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {searchStatus === 'error' && (
+                                <div className={`${style.resultPanel} ${style.resultPanelIn} ${style.errorResultPanel}`}>
+                                    <p className={style.resultTitle}>Find Your Promotion</p>
+
+                                    <div className={style.errorResultContent}>
+                                        <div className={style.noPromotionCard}>
+                                            <div className={style.noPromotionIcon}>
+                                                <LuSearch />
+                                            </div>
+                                            <h3>Security verification failed</h3>
+                                            <p>{searchErrorMessage}</p>
+                                        </div>
+
+                                        <div className={style.emptyActions}>
+                                            <button type="button" onClick={resetSearchInputs}>Back</button>
+                                        </div>
                                     </div>
                                 </div>
                             )}

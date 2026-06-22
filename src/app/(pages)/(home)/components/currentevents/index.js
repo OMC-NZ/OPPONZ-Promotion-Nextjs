@@ -151,8 +151,8 @@ export default function CurrentEvents() {
                         <div className={eventStyle.carouselPage} key={pageIndex}>
                             <div className={eventStyle.mostthree}>
                                 {pageEvents.map((event, index) => {
-                                    const eventId = event.id || `${pageIndex}-${index}-${event.url}`;
-                                    const eventHref = event.claimUrl || event.href || event.link || `/events/${event.slug || eventId}`;
+                                    const eventId = event.slug_url;
+                                    const eventHref = `/events/${event.slug_url}`;
 
                                     return (
                                         <div
@@ -183,11 +183,12 @@ export default function CurrentEvents() {
                                             )}
 
                                             <Image
-                                                src={event.url}
-                                                alt={event.title || `Current Event ${index + 1}`}
+                                                src={event.banner_url}
+                                                alt={event.name || `Current Event ${index + 1}`}
                                                 width={620}
                                                 height={420}
                                                 quality={100}
+                                                unoptimized
                                                 className={`${eventStyle.promoImage} ${loadedImages[eventId] ? eventStyle.imageLoaded : eventStyle.imagePending}`}
                                                 onLoad={() => handleImageLoad(eventId)}
                                                 onError={() => handleImageLoad(eventId)}

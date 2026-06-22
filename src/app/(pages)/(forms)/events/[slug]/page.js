@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
-import { currentEvents, defaultEventFormConfig } from "@data/currentEvents";
+import { defaultEventFormConfig } from "@data/currentEvents";
+import usePromotionContent from "@hooks/usePromotionContent";
 import style from "./style.module.css";
 
-const getEventConfig = (event) => event.formConfig || defaultEventFormConfig;
+const getEventConfig = (event) => event?.formConfig || defaultEventFormConfig;
 
 const getAllFields = (formConfig) => (
     formConfig.sections.flatMap((section) => (
@@ -25,10 +26,11 @@ const buildInitialForm = (formConfig) => (
 export default function EventClaimPage() {
     const router = useRouter();
     const { slug } = useParams();
-    const event = currentEvents.find((item) => item.slug === slug) || currentEvents[0];
+    const { currentEvents } = usePromotionContent();
+    const event = currentEvents.items.find((item) => item.slug_url === slug);
     const formConfig = useMemo(() => getEventConfig(event), [event]);
     const fields = useMemo(() => getAllFields(formConfig), [formConfig]);
-    const eventBanner = event.bannerUrl || event.imageUrl || event.url;
+    const eventBanner = event?.banner_url;
     const [form, setForm] = useState(() => buildInitialForm(formConfig));
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
@@ -82,15 +84,35 @@ export default function EventClaimPage() {
         if (!validate()) return;
 
         // TODO: Replace this with the event-specific submission endpoint.
-        console.log("Event claim submitted", { event: event.slug, form });
+        console.log("Event claim submitted", { event: event.slug_url, form });
     };
+
+    if (currentEvents.loading) {
+        return (
+            <main className={style.eventPage}>
+                <section className={style.heroTitle}>
+                    <h1>Loading Event</h1>
+                </section>
+            </main>
+        );
+    }
+
+    if (!event) {
+        return (
+            <main className={style.eventPage}>
+                <section className={style.heroTitle}>
+                    <h1>Event Not Found</h1>
+                </section>
+            </main>
+        );
+    }
 
     return (
         <>
-            <title>{event.title} | OPPO NZ Promotions</title>
+            <title>{event.name} | OPPO NZ Promotions</title>
             <main className={style.eventPage}>
                 <section className={style.heroTitle}>
-                    <h1>{formConfig.pageTitle || event.title}</h1>
+                    <h1>{formConfig.pageTitle || event.name}</h1>
                     <p>{formConfig.pageSubtitle || "Complete your details to submit your event claim."}</p>
                 </section>
 
@@ -100,16 +122,17 @@ export default function EventClaimPage() {
                             <div className={style.selectedEventMedia}>
                                 <Image
                                     src={eventBanner}
-                                    alt={event.title}
+                                    alt={event.name}
                                     width={520}
                                     height={310}
                                     quality={100}
+                                    unoptimized
                                     priority
                                 />
                             </div>
                             <div className={style.selectedEventDivider} />
                             <div className={style.selectedEventInfo}>
-                                <h2>{event.title}</h2>
+                                <h2>{event.name}</h2>
                                 <p>
                                     {formConfig.selectedEventNote || "Please make sure you are claiming the correct event."} Review the{" "}
                                     <button type="button" onClick={() => setTermsVisible(true)}>
@@ -193,8 +216,12 @@ function EventTermsModal({ event, onClose }) {
                 <button type="button" className={style.termsClose} onClick={onClose} aria-label="Close event terms">
                     &times;
                 </button>
-                <h2 id="event-terms-title">{event.termsTitle || `${event.title} Terms and Conditions`}</h2>
-                <p>{event.termsSummary || "Claims are subject to eligibility, verification, and availability."}</p>
+                <h2 id="event-terms-title">{event.name} Terms and Conditions</h2>
+                <p>
+                    <a href={event.terms_url} target="_blank" rel="noopener noreferrer">
+                        View Terms and Conditions
+                    </a>
+                </p>
                 <div className={style.termsActions}>
                     <button type="button" onClick={onClose}>Close</button>
                 </div>

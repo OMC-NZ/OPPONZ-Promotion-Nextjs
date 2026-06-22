@@ -36,6 +36,14 @@
   justify-content: flex-start;
 }
 
+.modalErrorResult {
+  height: auto;
+  min-height: 0;
+  max-height: calc(100dvh - 7rem);
+  overflow-y: auto;
+  justify-content: flex-start;
+}
+
 .closeButton {
   position: absolute;
   top: 1rem;
@@ -434,6 +442,13 @@
   background: #fff;
 }
 
+.searchOverlayError {
+  position: static;
+  inset: auto;
+  overflow: visible;
+  border-radius: 0;
+}
+
 .searchingPanel {
   display: flex;
   flex-direction: column;
@@ -465,6 +480,30 @@
 
 .resultPanelIn {
   animation: slideResultIn 0.34s cubic-bezier(0.48, 0.04, 0.52, 0.96);
+}
+
+.errorResultPanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.errorResultContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 12px;
+}
+
+.errorResultContent .noPromotionCard,
+.errorResultContent .emptyActions {
+  width: 100%;
+}
+
+.errorResultContent .noPromotionCard {
+  min-height: 0;
+  padding: 28px 20px;
 }
 
 .resultTitle {
@@ -649,6 +688,15 @@
   background: #f7f7f7;
 }
 
+.noPromotionIcon svg:only-child {
+  position: static;
+  right: auto;
+  bottom: auto;
+  width: 42px;
+  height: 42px;
+  background: transparent;
+}
+
 .noPromotionCard h3 {
   margin: 0 0 14px;
   font-size: 28px;
@@ -690,6 +738,7 @@
 
 .emptyActions {
   justify-content: center;
+  margin-top: 20px;
 }
 
 @keyframes modalSpin {
@@ -741,6 +790,11 @@
   .modalResult {
     height: auto;
   }
+
+  .modalErrorResult {
+    min-height: 0;
+    max-height: calc(100dvh - 7rem);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -750,6 +804,11 @@
 
   .modalResult {
     min-height: min(560px, calc(100dvh - 10rem));
+    max-height: calc(100dvh - 10rem);
+  }
+
+  .modalErrorResult {
+    min-height: 0;
     max-height: calc(100dvh - 10rem);
   }
 
@@ -766,6 +825,11 @@
 
   .modalResult {
     min-height: min(560px, calc(100dvh - 12rem));
+    max-height: calc(100dvh - 12rem);
+  }
+
+  .modalErrorResult {
+    min-height: 0;
     max-height: calc(100dvh - 12rem);
   }
 
@@ -873,9 +937,24 @@
     overflow: hidden;
   }
 
+  .modalErrorResult {
+    min-height: 0;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+  }
+
   .resultPanel {
     padding: 32px 18px 24px;
     min-height: auto;
+  }
+
+  .errorResultContent {
+    justify-content: center;
+    padding: 18px 0 10px;
+  }
+
+  .errorResultContent .noPromotionCard {
+    padding: 24px 16px;
   }
 
   .resultTitle {
@@ -932,6 +1011,11 @@
   .trackResult .modalTitle {
     margin-bottom: 12px;
     font-size: 21px;
+  }
+
+  .errorResultContent {
+    justify-content: center;
+    padding: 14px 0 8px;
   }
 
   .trackClaimId {

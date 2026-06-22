@@ -38,8 +38,7 @@ export default function MonthlyModal({ promotion, onClose }) {
                 </button>
 
                 <h3 className={style.modalTitle}>{promotion.title}</h3>
-                <p className={style.modalSubtitle}>{promotion.subtitle}</p>
-                <p className={style.modalDescription}>{promotion.description}</p>
+                <p className={style.modalSubtitle}>{promotion.gifts}</p>
 
                 <div className={style.modalActions}>
                     <button type="button" className={style.btn} onClick={onClose}>
