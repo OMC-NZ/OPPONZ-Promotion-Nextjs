@@ -41,7 +41,7 @@ export const defaultEventFormConfig = {
                 {
                     layout: 'twoGrid',
                     fields: [
-                        { id: 'addressLine1', type: 'text', label: 'Address Line 1', required: true, placeholder: 'Enter your street address' },
+                        { id: 'addressLine', type: 'text', label: 'Type and Select Delivery Address *', required: true, placeholder: 'Enter your street address' },
                         { id: 'companyName', type: 'text', label: 'Company Name (Optional)', placeholder: 'Enter company name' },
                     ],
                 },

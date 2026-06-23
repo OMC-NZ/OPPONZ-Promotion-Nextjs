@@ -11,6 +11,9 @@ export default function ClaimField({
     helpText,
     value,
     onChange,
+    onFocus,
+    disabled = false,
+    placeholder,
 }) {
     const inputValue = value ?? validation?.value ?? "";
 
@@ -29,9 +32,12 @@ export default function ClaimField({
             data-type={type}
             inputMode={inputMode}
             onChange={handleChange}
+            onFocus={onFocus}
             onBlur={validation?.handleBlur}
             value={inputValue}
             className={validation?.error ? style.inputError : ""}
+            disabled={disabled}
+            placeholder={placeholder}
         />
     );
 

@@ -39,6 +39,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     const [searchStatus, setSearchStatus] = useState('idle');
     const [matchedPromotion, setMatchedPromotion] = useState(null);
     const [searchErrorMessage, setSearchErrorMessage] = useState('');
+    const [isClaiming, setIsClaiming] = useState(false);
     const size = useWindowSize();
     const verifyRecaptcha = useRecaptchaAction();
     const { imeiError, setIMEIError, errorIMEIMsg, validateIMEI } = useIMEIValidation();
@@ -58,6 +59,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setSearchStatus('idle');
         setMatchedPromotion(null);
         setSearchErrorMessage('');
+        setIsClaiming(false);
         document.body.style.overflowY = '';
     };
 
@@ -70,9 +72,11 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         setMatchedPromotion(null);
         setSearchErrorMessage('');
         setSearchStatus('idle');
+        setIsClaiming(false);
     };
 
     const handleOpenTrack = () => {
+        if (isClaiming) return;
         onClose();
         resetForm();
         onOpenTrack?.();
@@ -154,7 +158,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     };
 
     const submitValidate = () => {
-        if (searchStatus === 'searching') return;
+        if (searchStatus === 'searching' || isClaiming) return;
 
         validateIMEI(imeiInput, 'submit');
         validateDate(selectedDate);
@@ -194,14 +198,29 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
     };
 
     const handleClaimNow = () => {
-        if (!matchedPromotion) return;
+        if (!matchedPromotion || isClaiming) return false;
 
-        sessionStorage.setItem('oppoClaimDraft', JSON.stringify({
-            imei: imeiInput.replace(/\s+/g, ''),
-            purchaseDate: purchaseDateLabel,
-            purchaseDateValue: formatApiPurchaseDate(selectedDate),
-            promotion: matchedPromotion,
-        }));
+        try {
+            sessionStorage.setItem('oppoClaimDraft', JSON.stringify({
+                imei: imeiInput.replace(/\s+/g, ''),
+                purchaseDate: purchaseDateLabel,
+                purchaseDateValue: formatApiPurchaseDate(selectedDate),
+                promotion: matchedPromotion,
+            }));
+            setIsClaiming(true);
+            return true;
+        } catch (error) {
+            setMatchedPromotion(null);
+            setSearchErrorMessage(error?.message || 'Unable to prepare your claim. Please try again.');
+            setSearchStatus('error');
+            return false;
+        }
+    };
+
+    const handleClaimNowClick = (event) => {
+        if (!handleClaimNow()) {
+            event.preventDefault();
+        }
     };
 
 
@@ -215,6 +234,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
     const purchaseDateLabel = formatPurchaseDate(selectedDate);
     const isSearching = searchStatus === 'searching';
+    const isBusy = isSearching || isClaiming;
     const showSearchOverlay = searchStatus === 'success' || searchStatus === 'empty' || searchStatus === 'error';
     const claimHref = matchedPromotion?.slugUrl || matchedPromotion?.slug
         ? `/claim/${encodeURIComponent(matchedPromotion.slugUrl || matchedPromotion.slug)}`
@@ -224,7 +244,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
         <>
             <div className={style.modalOverlay}>
                 <div className={`${style.modal} ${showSearchOverlay ? style.modalResult : ''} ${searchStatus === 'error' ? style.modalErrorResult : ''}`}>
-                    <button className={style.closeButton} onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>
+                    <button className={style.closeButton} onClick={() => { onClose(); resetForm(); }} disabled={isBusy}>
                         &times;
                     </button>
                     {!showSearchOverlay && (
@@ -244,7 +264,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                                     3. Go to [Settings] &gt; [About Phone] &gt; [Status] &gt; [IMEI-1].
                                                 </i>
                                             </span>
-                                            <input type="type" placeholder="Input an IMEI-1" value={imeiInput} onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} disabled={isSearching} required />
+                                            <input type="type" placeholder="Input an IMEI-1" value={imeiInput} onChange={handleIMEIInputChange} onBlur={handleIMEIBlur} disabled={isBusy} required />
                                             {imeiCorrect && <p className={`${style.validatetick}`}><GiCheckMark /></p>}
                                             {imeiError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
                                         </div>
@@ -267,7 +287,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                                 maxDate={maxDate}
                                                 popperPlacement={popperStatus}
                                                 customInput={<ReadOnlyDateInput />}
-                                                disabled={isSearching}
+                                                disabled={isBusy}
                                                 required
                                             />
                                             {dateError && <p style={{ color: 'red' }}><GiCrossMark /></p>}
@@ -277,8 +297,8 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                 </div>
                             </div>
                             <div className={`${style.conBtn}`}>
-                                <button onClick={() => { onClose(); resetForm(); }} disabled={isSearching}>Close</button>
-                                <button onClick={submitValidate} disabled={isSearching}>
+                                <button onClick={() => { onClose(); resetForm(); }} disabled={isBusy}>Close</button>
+                                <button onClick={submitValidate} disabled={isBusy}>
                                     {isSearching && <span className={style.buttonSpinner} />}
                                     {isSearching ? 'Searching' : 'Search'}
                                 </button>
@@ -337,12 +357,19 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                                 )}
                                             </dl>
                                             <div className={style.resultActions}>
-                                                <Link href={claimHref} onClick={handleClaimNow}>Claim Now</Link>
+                                                <Link
+                                                    href={claimHref}
+                                                    onClick={handleClaimNowClick}
+                                                    aria-disabled={isClaiming}
+                                                >
+                                                    {isClaiming && <span className={style.buttonSpinner} />}
+                                                    {isClaiming ? 'Opening Claim' : 'Claim Now'}
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button type="button" className={style.backButton} onClick={resetSearchInputs}>
+                                    <button type="button" className={style.backButton} onClick={resetSearchInputs} disabled={isBusy}>
                                         Back
                                     </button>
                                 </div>
@@ -374,13 +401,13 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
 
                                     <p className={style.trackHint}>
                                         If you already submitted a claim, please use{' '}
-                                        <button type="button" onClick={handleOpenTrack}>
+                                        <button type="button" onClick={handleOpenTrack} disabled={isBusy}>
                                             Track My Claim.
                                         </button>
                                     </p>
 
                                     <div className={style.emptyActions}>
-                                        <button type="button" onClick={resetSearchInputs}>Back</button>
+                                        <button type="button" onClick={resetSearchInputs} disabled={isBusy}>Back</button>
                                     </div>
                                 </div>
                             )}
@@ -399,7 +426,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                         </div>
 
                                         <div className={style.emptyActions}>
-                                            <button type="button" onClick={resetSearchInputs}>Back</button>
+                                            <button type="button" onClick={resetSearchInputs} disabled={isBusy}>Back</button>
                                         </div>
                                     </div>
                                 </div>
