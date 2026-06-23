@@ -527,7 +527,7 @@
   align-items: center;
   gap: 12px;
   min-height: 54px;
-  margin-bottom: 22px;
+  margin-bottom: 36px;
   padding: 9px 18px;
   border: 1px solid #cfcfcf;
   border-radius: 14px;
@@ -599,13 +599,18 @@
 
 .promotionResultInfo dl div {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 16px;
+  row-gap: 4px;
 }
 
 .promotionResultInfo dt,
 .promotionResultInfo dd {
   margin: 0;
+}
+
+.promotionResultInfo dt {
+  white-space: nowrap;
 }
 
 .resultActions,

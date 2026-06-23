@@ -36,6 +36,8 @@ const buildGiftItems = (gifts, promotionId) => {
 };
 
 const normalizePromotion = (promotion) => {
+    const channelName = promotion.channel?.name || "";
+    const channelPeriod = promotion.channel?.period || "";
     const gifts = Array.isArray(promotion.gifts)
         ? promotion.gifts.map((gift) => ({
             ...gift,
@@ -53,6 +55,9 @@ const normalizePromotion = (promotion) => {
         campaignTitle: promotion.title || "Eligible Promotion",
         subtitle: promotion.description || "",
         description: promotion.description || "",
+        channelName,
+        promotionPeriodLabel: channelName ? `${channelName} Period:` : "Promotion Period:",
+        promotionPeriod: channelPeriod || promotion.date || "",
         gift: promotion.description || "",
         gifts,
         giftItems: buildGiftItems(gifts, promotion.promotion_id),

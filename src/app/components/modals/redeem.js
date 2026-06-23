@@ -319,6 +319,12 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                         <div className={style.promotionResultInfo}>
                                             <h3>{matchedPromotion.campaignTitle || matchedPromotion.title}</h3>
                                             <dl>
+                                                {matchedPromotion.promotionPeriod && (
+                                                    <div>
+                                                        <dt>{matchedPromotion.promotionPeriodLabel || "Promotion Period:"}</dt>
+                                                        <dd>{matchedPromotion.promotionPeriod}</dd>
+                                                    </div>
+                                                )}
                                                 <div>
                                                     <dt>Gift:</dt>
                                                     <dd>{matchedPromotion.gift || matchedPromotion.subtitle}</dd>

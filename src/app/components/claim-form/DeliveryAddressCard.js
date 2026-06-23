@@ -9,7 +9,7 @@ export default function DeliveryAddressCard({ fields }) {
         <FormSectionCard title="Delivery Address">
             <div className={style.singleColumnGrid}>
                 <ClaimField
-                    label="Address Line 1 *"
+                    label="Address Line *"
                     {...address}
                     helpText="New Zealand delivery addresses only."
                 />

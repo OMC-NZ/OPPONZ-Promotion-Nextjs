@@ -23,6 +23,8 @@ const defaultPromotion = {
     title: "",
     subtitle: "",
     giftItems: [],
+    promotionPeriodLabel: "",
+    promotionPeriod: "",
     purchaseDate: "",
     imei: "",
 };
@@ -40,6 +42,17 @@ const getPromotionGiftItems = (promotion) => {
 const getInitialGiftOptions = (giftItems) => (
     Object.fromEntries(giftItems.map((giftItem) => [giftItem.id, giftItem.options[0]?.id]))
 );
+
+const normalizeSlug = (value) => {
+    const slug = Array.isArray(value) ? value.join("/") : value;
+    if (!slug) return "";
+
+    try {
+        return decodeURIComponent(slug).trim().replace(/^\/+|\/+$/g, "").toLowerCase();
+    } catch {
+        return String(slug).trim().replace(/^\/+|\/+$/g, "").toLowerCase();
+    }
+};
 
 export default function Claim() {
     const router = useRouter();
@@ -108,14 +121,12 @@ export default function Claim() {
             return undefined;
         }
 
-        sessionStorage.removeItem("oppoClaimDraft");
-
         try {
             const parsedDraft = JSON.parse(claimDraft);
             const draftPromotion = parsedDraft.promotion || {};
             const promotionSlug = draftPromotion.slugUrl || draftPromotion.slug || "";
 
-            if (routeSlug && promotionSlug !== routeSlug) {
+            if (normalizeSlug(routeSlug) && normalizeSlug(promotionSlug) !== normalizeSlug(routeSlug)) {
                 setClaimAccessExpired(true);
                 return undefined;
             }
@@ -126,6 +137,8 @@ export default function Claim() {
                 image: draftPromotion.image || draftPromotion.bannerUrl || draftPromotion.url || defaultPromotion.image,
                 title: draftPromotion.campaignTitle || draftPromotion.title || defaultPromotion.title,
                 subtitle: draftPromotion.description || draftPromotion.subtitle || draftPromotion.gift || defaultPromotion.subtitle,
+                promotionPeriodLabel: draftPromotion.promotionPeriodLabel || defaultPromotion.promotionPeriodLabel,
+                promotionPeriod: draftPromotion.promotionPeriod || draftPromotion.channel?.period || draftPromotion.date || defaultPromotion.promotionPeriod,
                 purchaseDate: parsedDraft.purchaseDate || defaultPromotion.purchaseDate,
                 imei: parsedDraft.imei || defaultPromotion.imei,
             };
@@ -134,6 +147,7 @@ export default function Claim() {
             setSelectedPromotion(nextPromotion);
             setSelectedGiftOptions(getInitialGiftOptions(nextGiftItems));
             setIsClaimReady(true);
+            sessionStorage.removeItem("oppoClaimDraft");
         } catch {
             setClaimAccessExpired(true);
         }
@@ -303,6 +317,12 @@ export default function Claim() {
                                 <h3>{selectedPromotion.title}</h3>
                                 <p>{selectedPromotion.subtitle}</p>
                                 <dl>
+                                    {selectedPromotion.promotionPeriod && (
+                                        <div>
+                                            <dt>{selectedPromotion.promotionPeriodLabel || "Promotion Period:"}</dt>
+                                            <dd>{selectedPromotion.promotionPeriod}</dd>
+                                        </div>
+                                    )}
                                     <div>
                                         <dt>Purchase Date:</dt>
                                         <dd>{selectedPromotion.purchaseDate}</dd>
