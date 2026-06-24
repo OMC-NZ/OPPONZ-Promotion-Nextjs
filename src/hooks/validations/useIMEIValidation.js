@@ -14,8 +14,6 @@ export default function useIMEIValidation() {
         } else if (!/^86\d{13}$/.test(cleanedValue)) {
             setIMEIError(true);
             setErrorIMEIMsg('Incorrect IMEI-1');
-        } else {
-            console.log(status === 'input' ? 'Go Next Step A' : 'Go Next Step B');
         }
     };
 

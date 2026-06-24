@@ -18,7 +18,7 @@ export default function ClaimField({
     const inputValue = value ?? validation?.value ?? "";
 
     const handleChange = (event) => {
-        if (type === "phone") {
+        if (type === "phone" || type === "postcode") {
             event.target.value = event.target.value.replace(/\D/g, "");
         }
 
@@ -45,7 +45,6 @@ export default function ClaimField({
         <div className={style.fieldGroup} ref={fieldRef}>
             <label className={style.fieldLabel}>
                 <span>{label}</span>
-                {validation?.error && <span className={style.inlineFieldError}>{validation.error}</span>}
                 {helpText && (
                     <span className={style.helpWrap}>
                         <button type="button" className={style.helpButton} aria-label={`${label} help`}>
@@ -54,6 +53,7 @@ export default function ClaimField({
                         <span className={style.helpText}>{helpText}</span>
                     </span>
                 )}
+                {validation?.error && <span className={style.inlineFieldError}>{validation.error}</span>}
             </label>
             {prefix ? (
                 <div className={`${style.prefixedInput} ${validation?.error ? style.inputError : ""}`}>

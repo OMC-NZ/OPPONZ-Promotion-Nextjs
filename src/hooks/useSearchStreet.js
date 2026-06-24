@@ -1,41 +1,65 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-const useSearchStreet = (req) => {
+const normalizeAddressResults = (result) => (
+  Array.isArray(result.addresses)
+    ? result.addresses.map((address, index) => ({
+      id: `${address.DPID || 'address'}-${index}`,
+      dpid: address.DPID,
+      fullAddress: address.FullAddress || '',
+    })).filter((address) => address.fullAddress)
+    : []
+);
+
+const useSearchStreet = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const url = 'https://api.nzpost.co.nz/addresschecker/1.0/suggest?q=' + req + '&max=50';
-    const token = 'eyJhbGciOiJIUzI1NiIsImtpZCI6IlRFU1QiLCJwaS5hdG0iOiIxIn0.eyJzY29wZSI6W10sImF1dGhvcml6YXRpb25fZGV0YWlscyI6W10sImNsaWVudF9pZCI6ImNiMmU0OTE1MGNhMDQ3ZTZhMjdiZDY2ZWMyNDZiMWJmIiwiZXhwIjoxNzIyMzkxMTUwfQ.nX81RQno5LbalV9ySJdozqVqBABtHVYtx0mO8DhRdwo';
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(url, {
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${token}`,
-            'client_id': process.env.NZPOST_CLIENT_ID
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const result = await response.json();
-        setData(result.addresses);
-      } catch (error) {
-        setError(error);
-      }
-    };
+  const search = async (req) => {
+    const query = req.trim();
 
-    if (token) {
-      fetchData();
+    if (loading || query.length < 2) {
+      setData([]);
+      setError(null);
+      setLoading(false);
+      return { addresses: [], error: null };
     }
-  }, [req]);
 
-  return { data, error };
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/backend/nzpost/address/search?q=${encodeURIComponent(query)}`, {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error('Unable to search addresses');
+      }
+
+      const result = await response.json();
+      const addresses = normalizeAddressResults(result);
+
+      setData(addresses);
+      return { addresses, error: null };
+    } catch (error) {
+      setError(error);
+      setData([]);
+      return { addresses: [], error };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clear = () => {
+    setData([]);
+    setError(null);
+  };
+
+  return { data, loading, error, search, clear };
 };
 
 export default useSearchStreet;

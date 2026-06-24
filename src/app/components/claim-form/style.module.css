@@ -144,6 +144,61 @@
   position: relative;
 }
 
+.addressSearchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 14px;
+}
+
+.addressSearchInputWrap {
+  position: relative;
+  min-width: 0;
+}
+
+.addressSearchButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 126px;
+  height: 46px;
+  padding: 0 20px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease, opacity 0.22s ease;
+}
+
+.addressSearchButton:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+}
+
+.addressSearchButton:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.addressSearchSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: addressSpin 0.75s linear infinite;
+}
+
+@keyframes addressSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .addressSuggestions {
   position: absolute;
   top: calc(100% + 8px);
@@ -317,6 +372,14 @@
 @media (max-width: 767px) {
   .formSection {
     padding: 22px;
+  }
+
+  .addressSearchRow {
+    grid-template-columns: 1fr;
+  }
+
+  .addressSearchButton {
+    width: 100%;
   }
 
   .twoColumnGrid,

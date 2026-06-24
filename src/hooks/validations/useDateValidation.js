@@ -16,8 +16,6 @@ export default function useDateValidation() {
             if (today.getTime() - givenDate.getTime() > 31536000000) {
                 setDateError(true);
                 setErrorDateMsg('The legal redemption has already ended');
-            } else {
-                console.log("下一步就是等链接后端的时候再说了");
             }
         }
     }
