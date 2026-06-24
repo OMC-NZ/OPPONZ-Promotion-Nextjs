@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import useClaimValidation from "@hooks/validations/useClaimValidation";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import useSearchStreet from "@hooks/useSearchStreet";
 import useWindowSize from "@hooks/useWindowSize";
 
@@ -64,9 +65,13 @@ const getAddressDetailFromResponse = (result) => {
     return null;
 };
 
-const fetchAddressDetail = async (dpid) => {
+const fetchAddressDetail = async (dpid, recaptcha) => {
     const response = await fetch(`/api/backend/nzpost/address/autocomplete?dpid=${encodeURIComponent(dpid)}`, {
-        headers: { Accept: "application/json" },
+        headers: {
+            Accept: "application/json",
+            ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
+            ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
+        },
         cache: "no-store",
     });
 
@@ -101,6 +106,7 @@ export default function useDeliveryAddressSection() {
     const city = useClaimValidation("city");
     const postcode = useClaimValidation("postcode");
     const size = useWindowSize();
+    const verifyRecaptcha = useRecaptchaAction();
 
     const searchRef = useRef(null);
     const addressRef = useRef(null);
@@ -208,7 +214,8 @@ export default function useDeliveryAddressSection() {
         addressDetailRequestRef.current = requestId;
 
         try {
-            const detail = await fetchAddressDetail(nextDpid);
+            const recaptcha = await verifyRecaptcha("address_autocomplete");
+            const detail = await fetchAddressDetail(nextDpid, recaptcha);
 
             if (addressDetailRequestRef.current !== requestId) return;
 

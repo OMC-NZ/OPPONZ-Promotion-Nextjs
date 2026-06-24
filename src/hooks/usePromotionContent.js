@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCurrentEvents } from "@api/events";
 import { fetchCurrentPromotions } from "@api/promotions";
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 
 const initialContent = {
     monthly: {
@@ -17,14 +18,19 @@ const initialContent = {
 
 export default function usePromotionContent() {
     const [content, setContent] = useState(initialContent);
+    const verifyRecaptcha = useRecaptchaAction();
 
     useEffect(() => {
         let isActive = true;
 
         const loadPromotionContent = async () => {
+            const [promotionsRecaptcha, eventsRecaptcha] = await Promise.all([
+                verifyRecaptcha("promotions_current"),
+                verifyRecaptcha("events_current"),
+            ]);
             const [promotionsResult, eventsResult] = await Promise.allSettled([
-                fetchCurrentPromotions(),
-                fetchCurrentEvents(),
+                fetchCurrentPromotions({ recaptcha: promotionsRecaptcha }),
+                fetchCurrentEvents({ recaptcha: eventsRecaptcha }),
             ]);
 
             if (!isActive) return;
@@ -55,7 +61,7 @@ export default function usePromotionContent() {
         return () => {
             isActive = false;
         };
-    }, []);
+    }, [verifyRecaptcha]);
 
     return content;
 }

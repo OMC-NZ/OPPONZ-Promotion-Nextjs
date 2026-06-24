@@ -42,7 +42,8 @@ export default function EventClaimPage() {
         let isActive = true;
         setIsEventLoading(true);
 
-        fetchCurrentEvents()
+        verifyRecaptcha("events_current")
+            .then((recaptcha) => fetchCurrentEvents({ recaptcha }))
             .then(({ items }) => {
                 const selectedEvent = items.find((item) => item.slug === slug);
                 if (isActive && selectedEvent) setEvent(selectedEvent);
@@ -55,7 +56,7 @@ export default function EventClaimPage() {
         return () => {
             isActive = false;
         };
-    }, [slug]);
+    }, [slug, verifyRecaptcha]);
 
     useEffect(() => {
         setForm(buildInitialForm(formConfig));

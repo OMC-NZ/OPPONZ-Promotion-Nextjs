@@ -6,6 +6,16 @@ const BACKEND_API_URL = (
     || "http://localhost:3000"
 ).replace(/\/$/, "");
 
+const getRecaptchaHeaders = (request) => {
+    const token = request.headers.get("x-recaptcha-token");
+    const action = request.headers.get("x-recaptcha-action");
+
+    return {
+        ...(token ? { "x-recaptcha-token": token } : {}),
+        ...(action ? { "x-recaptcha-action": action } : {}),
+    };
+};
+
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q") || "";
@@ -16,7 +26,10 @@ export async function GET(request) {
 
     try {
         const response = await fetch(`${BACKEND_API_URL}/api/nzpost/address/search?q=${encodeURIComponent(query)}`, {
-            headers: { Accept: "application/json" },
+            headers: {
+                Accept: "application/json",
+                ...getRecaptchaHeaders(request),
+            },
             cache: "no-store",
         });
         const body = await response.text();

@@ -22,10 +22,16 @@ export const normalizeCurrentPromotions = (response) => {
 };
 
 export const fetchCurrentPromotions = async (options = {}) => {
+    const { recaptcha, headers, ...fetchOptions } = options;
     const response = await fetchHomePromos(CURRENT_PROMOTIONS_ENDPOINT, {
         method: "GET",
         baseUrl: "",
-        ...options,
+        headers: {
+            ...headers,
+            ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
+            ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
+        },
+        ...fetchOptions,
     });
 
     return {

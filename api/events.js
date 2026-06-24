@@ -29,10 +29,16 @@ export const normalizeCurrentEvents = (response) => {
 };
 
 export const fetchCurrentEvents = async (options = {}) => {
+    const { recaptcha, headers, ...fetchOptions } = options;
     const response = await fetchHomePromos(CURRENT_EVENTS_ENDPOINT, {
         method: "GET",
         baseUrl: "",
-        ...options,
+        headers: {
+            ...headers,
+            ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
+            ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
+        },
+        ...fetchOptions,
     });
 
     return {

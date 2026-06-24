@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import useRecaptchaAction from "@hooks/useRecaptchaAction";
 
 const normalizeAddressResults = (result) => (
   Array.isArray(result.addresses)
@@ -16,6 +17,7 @@ const useSearchStreet = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const verifyRecaptcha = useRecaptchaAction();
 
   const search = async (req) => {
     const query = req.trim();
@@ -31,8 +33,13 @@ const useSearchStreet = () => {
     setError(null);
 
     try {
+      const recaptcha = await verifyRecaptcha("address_search");
       const response = await fetch(`/api/backend/nzpost/address/search?q=${encodeURIComponent(query)}`, {
-        headers: { Accept: 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
+          ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
+        },
         cache: 'no-store',
       });
 
