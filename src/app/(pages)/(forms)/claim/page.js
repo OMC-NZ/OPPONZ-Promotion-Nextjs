@@ -27,6 +27,7 @@ const defaultPromotion = {
     promotionPeriod: "",
     purchaseDate: "",
     imei: "",
+    termsUrl: "/terms",
 };
 
 const getPromotionGiftItems = (promotion) => {
@@ -53,6 +54,21 @@ const normalizeSlug = (value) => {
         return String(slug).trim().replace(/^\/+|\/+$/g, "").toLowerCase();
     }
 };
+
+function TermsLink({ href, children }) {
+    const termsHref = href || "/terms";
+    const isExternalTerms = /^https?:\/\//i.test(termsHref);
+
+    if (isExternalTerms) {
+        return (
+            <a href={termsHref} target="_blank" rel="noopener noreferrer">
+                {children}
+            </a>
+        );
+    }
+
+    return <Link href={termsHref}>{children}</Link>;
+}
 
 export default function Claim() {
     const router = useRouter();
@@ -141,6 +157,7 @@ export default function Claim() {
                 promotionPeriod: draftPromotion.promotionPeriod || draftPromotion.channel?.period || draftPromotion.date || defaultPromotion.promotionPeriod,
                 purchaseDate: parsedDraft.purchaseDate || defaultPromotion.purchaseDate,
                 imei: parsedDraft.imei || defaultPromotion.imei,
+                termsUrl: draftPromotion.terms_url || defaultPromotion.termsUrl,
             };
 
             const nextGiftItems = getPromotionGiftItems(nextPromotion);
@@ -380,7 +397,7 @@ export default function Claim() {
                                 }}
                             />
                             <span>
-                                I agree to the <Link href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions of Promotions</Link> *
+                                I agree to the <TermsLink href={selectedPromotion.termsUrl}>Terms and Conditions of Promotions</TermsLink> *
                             </span>
                         </label>
                         {termsError && <p className={style.inlineFieldError}>Required</p>}

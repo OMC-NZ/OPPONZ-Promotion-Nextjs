@@ -36,6 +36,24 @@
   list-style-position: inside;
 }
 
+.periodText {
+  margin-top: 1rem;
+}
+
+.periodText span {
+  display: block;
+}
+
+.termsText {
+  margin-top: 1rem;
+}
+
+.termsText a {
+  color: #005bd3;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .modal_close {
   display: flex;
   justify-content: center;

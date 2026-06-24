@@ -222,6 +222,7 @@
   display: grid;
   gap: 4px;
   width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   border: 0;
   border-bottom: 1px solid #eeeeee;
@@ -237,13 +238,23 @@
 }
 
 .addressSuggestionItem span {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   font-size: 17px;
+  line-height: 1.35;
   font-weight: 650;
 }
 
 .addressSuggestionItem small {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   color: #666;
   font-size: 15px;
+  line-height: 1.35;
 }
 
 .addressSuggestionPager {

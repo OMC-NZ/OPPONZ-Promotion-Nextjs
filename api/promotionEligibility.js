@@ -65,6 +65,7 @@ const normalizePromotion = (promotion) => {
         bannerUrl: promotion.banner_url || "",
         slug: promotion.slug_url || "",
         slugUrl: promotion.slug_url || "",
+        termsUrl: promotion.terms_url || "/terms",
     };
 };
 
