@@ -647,6 +647,11 @@
   font-size: 17px;
 }
 
+.reviewBottomBar .submitError {
+  color: #c70000;
+  font-weight: 700;
+}
+
 .reviewBottomBar div {
   display: flex;
   gap: 24px;
@@ -666,6 +671,72 @@
 
 .reviewBottomBar .primaryButton:hover {
   background: #222;
+}
+
+.claimSuccessOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.claimSuccessModal {
+  width: min(100%, 520px);
+  padding: 34px 32px;
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+}
+
+.claimSuccessModal h2 {
+  margin: 0 0 12px;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.claimSuccessModal p {
+  margin: 0 0 22px;
+  color: #555;
+  font-size: 18px;
+}
+
+.claimSuccessModal dl {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 28px;
+  text-align: left;
+}
+
+.claimSuccessModal dl div {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.claimSuccessModal dt,
+.claimSuccessModal dd {
+  margin: 0;
+}
+
+.claimSuccessModal dt {
+  color: #555;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.claimSuccessModal dd {
+  overflow-wrap: anywhere;
+  font-size: 19px;
+  font-weight: 750;
 }
 
 @media (max-width: 767px) {

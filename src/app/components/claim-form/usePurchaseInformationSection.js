@@ -29,6 +29,9 @@ export default function usePurchaseInformationSection() {
     };
 
     const getReviewData = () => ({
+        invoiceNumber: invoice.value,
+        receiptFileName: getFileName(proofOfPurchase.value),
+        screenshotFileName: getFileName(imeiScreenshot.value),
         documents: [
             {
                 label: "IMEI Screenshot",

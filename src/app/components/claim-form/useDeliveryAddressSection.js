@@ -247,6 +247,11 @@ export default function useDeliveryAddressSection() {
 
     const getReviewData = () => ({
         deliveryAddressDpid: selectedAddressDpid,
+        street: street.value,
+        suburb: suburb.value,
+        city: city.value,
+        postcode: postcode.value,
+        instructions: "",
         addressLines: [
             companyName ? `Company Name: ${companyName}` : "",
             street.value,

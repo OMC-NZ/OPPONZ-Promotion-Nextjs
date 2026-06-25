@@ -30,7 +30,10 @@ export default function useYourDetailsSection() {
     };
 
     const getReviewData = () => ({
+        firstName: firstName.value,
+        lastName: lastName.value,
         fullName: `${firstName.value} ${lastName.value}`.trim(),
+        contact: mobile.value,
         mobileNumber: mobile.value ? `+64 ${mobile.value}` : "",
         email: email.value,
     });

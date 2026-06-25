@@ -8,6 +8,7 @@ import { FiFileText, FiGift, FiMail, FiMapPin, FiPhone, FiUser } from "react-ico
 import { FaAngleRight } from "react-icons/fa";
 import style from "./style.module.css";
 import DetailsModal from "./modal/index";
+import { submitClaim } from "@api/claims";
 import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import {
     DeliveryAddressCard,
@@ -26,6 +27,7 @@ const defaultPromotion = {
     promotionPeriodLabel: "",
     promotionPeriod: "",
     purchaseDate: "",
+    purchaseDateValue: "",
     imei: "",
     termsUrl: "/terms",
 };
@@ -70,6 +72,26 @@ function TermsLink({ href, children }) {
     return <Link href={termsHref}>{children}</Link>;
 }
 
+const buildClaimPayload = (data, recaptcha) => ({
+    promotion_id: data.promotion.promotionId || data.promotion.promotion_id || data.promotion.id,
+    imei: data.verifiedImei,
+    purchase_date: data.promotion.purchaseDateValue || data.verifiedPurchaseDate,
+    receipt_url: data.receiptFileName,
+    screenshot_url: data.screenshotFileName,
+    first_name: data.firstName,
+    last_name: data.lastName,
+    email: data.email,
+    contact: data.contact,
+    street: data.street,
+    suburb: data.suburb,
+    city: data.city,
+    postcode: data.postcode,
+    instructions: data.instructions || "",
+    gift_alias: data.selectedGifts?.[0]?.alias || data.selectedGifts?.[0]?.label || data.selectedGifts?.[0]?.name || "",
+    ...(recaptcha?.token ? { recaptcha_token: recaptcha.token } : {}),
+    ...(recaptcha?.action ? { recaptcha_action: recaptcha.action } : {}),
+});
+
 export default function Claim() {
     const router = useRouter();
     const { slug: routeSlug } = useParams();
@@ -79,6 +101,8 @@ export default function Claim() {
     const [modalShow, setModalShow] = useState(false);
     const [isReviewing, setIsReviewing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+    const [submitResult, setSubmitResult] = useState(null);
     const [previewDocument, setPreviewDocument] = useState(null);
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
     const [termsError, setTermsError] = useState(false);
@@ -156,6 +180,7 @@ export default function Claim() {
                 promotionPeriodLabel: draftPromotion.promotionPeriodLabel || defaultPromotion.promotionPeriodLabel,
                 promotionPeriod: draftPromotion.promotionPeriod || draftPromotion.channel?.period || draftPromotion.date || defaultPromotion.promotionPeriod,
                 purchaseDate: parsedDraft.purchaseDate || defaultPromotion.purchaseDate,
+                purchaseDateValue: parsedDraft.purchaseDateValue || defaultPromotion.purchaseDateValue,
                 imei: parsedDraft.imei || defaultPromotion.imei,
                 termsUrl: draftPromotion.terms_url || defaultPromotion.termsUrl,
             };
@@ -245,14 +270,17 @@ export default function Claim() {
         if (isSubmitting) return;
 
         setIsSubmitting(true);
+        setSubmitError("");
 
         try {
-            await verifyRecaptcha("claim_submit");
-            // TODO: Replace this with the claim submission API call.
-            console.log("Claim confirmed");
+            const recaptcha = await verifyRecaptcha("claim_submit");
+            const response = await submitClaim(buildClaimPayload(reviewData, recaptcha));
+            setSubmitResult(response);
         } catch (error) {
-            setIsSubmitting(false);
+            setSubmitError(error?.message || "Unable to submit claim. Please try again.");
             console.error(error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -286,12 +314,19 @@ export default function Claim() {
                     onBack={handleBackToEdit}
                     onConfirm={handleConfirmSubmit}
                     isSubmitting={isSubmitting}
+                    submitError={submitError}
                     onPreviewDocument={setPreviewDocument}
                 />
                 {previewDocument && (
                     <DocumentPreviewModal
                         document={previewDocument}
                         onClose={() => setPreviewDocument(null)}
+                    />
+                )}
+                {submitResult && (
+                    <ClaimSuccessModal
+                        result={submitResult}
+                        onBackHome={() => router.replace("/")}
                     />
                 )}
             </>
@@ -423,7 +458,7 @@ export default function Claim() {
     );
 }
 
-function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, onPreviewDocument }) {
+function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, submitError, onPreviewDocument }) {
     return (
         <main className={style.reviewPage}>
             <section className={style.reviewHero}>
@@ -492,6 +527,7 @@ function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, onPreviewDocum
 
             <div className={style.reviewBottomBar}>
                 <p>Please confirm your gift, email and delivery address carefully.</p>
+                {submitError && <p className={style.submitError}>{submitError}</p>}
                 <div>
                     <button type="button" className={style.secondaryButton} onClick={onBack}>
                         Back to Edit
@@ -502,6 +538,39 @@ function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, onPreviewDocum
                 </div>
             </div>
         </main>
+    );
+}
+
+function ClaimSuccessModal({ result, onBackHome }) {
+    const isSuccess = Boolean(result?.success);
+    const claim = result?.data || {};
+
+    return (
+        <div className={style.claimSuccessOverlay} role="dialog" aria-modal="true" aria-labelledby="claim-success-title">
+            <section className={style.claimSuccessModal}>
+                <h2 id="claim-success-title">{isSuccess ? "Claim Submitted" : "Submission Failed"}</h2>
+                <p>
+                    {isSuccess
+                        ? "Your claim has been received successfully."
+                        : result?.message || "Submission failed. Please check your details and submit again."}
+                </p>
+                {isSuccess && (
+                    <dl>
+                        <div>
+                            <dt>Claim ID</dt>
+                            <dd>{claim.claim_id}</dd>
+                        </div>
+                        <div>
+                            <dt>Gift</dt>
+                            <dd>{claim.gift}</dd>
+                        </div>
+                    </dl>
+                )}
+                <button type="button" className={style.primaryButton} onClick={onBackHome}>
+                    Back to Home
+                </button>
+            </section>
+        </div>
     );
 }
 
