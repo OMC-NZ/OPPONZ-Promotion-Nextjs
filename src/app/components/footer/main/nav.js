@@ -7,10 +7,29 @@ import style from "./footer_main.module.css";
 import LoadingModal from "@app/components/public/loadingModal";
 import usePromotionContent from "@hooks/usePromotionContent";
 
+const emptyPromotionContent = {
+  monthly: { items: [], loading: false },
+  currentEvents: { items: [], loading: false },
+};
+
 export default function FooterNav() {
-  const router = useRouter();
   const pathname = usePathname();
-  const { monthly, currentEvents } = usePromotionContent();
+
+  if (pathname === "/terms") {
+    return <FooterNavContent pathname={pathname} {...emptyPromotionContent} />;
+  }
+
+  return <FooterNavWithPromotionContent pathname={pathname} />;
+}
+
+function FooterNavWithPromotionContent({ pathname }) {
+  const promotionContent = usePromotionContent();
+
+  return <FooterNavContent pathname={pathname} {...promotionContent} />;
+}
+
+function FooterNavContent({ pathname, monthly, currentEvents }) {
+  const router = useRouter();
   const [scrollTo, setScrollTo] = useState(null);
   const [loading, setLoading] = useState(false);
   const showMonthlyPromotions = monthly.loading || monthly.items.length > 0;

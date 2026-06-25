@@ -7,10 +7,29 @@ import style from "./sidebar.module.css";
 import LoadingModal from "@app/components/public/loadingModal";
 import usePromotionContent from "@hooks/usePromotionContent";
 
+const emptyPromotionContent = {
+    monthly: { items: [], loading: false },
+    currentEvents: { items: [], loading: false },
+};
+
 export default function Sidebar() {
-    const router = useRouter();
     const pathname = usePathname();
-    const { monthly, currentEvents } = usePromotionContent();
+
+    if (pathname === "/terms") {
+        return <SidebarContent pathname={pathname} {...emptyPromotionContent} />;
+    }
+
+    return <SidebarWithPromotionContent pathname={pathname} />;
+}
+
+function SidebarWithPromotionContent({ pathname }) {
+    const promotionContent = usePromotionContent();
+
+    return <SidebarContent pathname={pathname} {...promotionContent} />;
+}
+
+function SidebarContent({ pathname, monthly, currentEvents }) {
+    const router = useRouter();
     const [scrollTo, setScrollTo] = useState(null);
     const [isRotate, setIsRotate] = useState(false);
     const [isMenu, setIsMenu] = useState(false);

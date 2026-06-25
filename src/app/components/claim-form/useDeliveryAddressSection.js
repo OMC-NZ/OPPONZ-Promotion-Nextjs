@@ -37,8 +37,10 @@ const formatDeliveryAddressLine = (detail) => {
         detail.BoxBagNumber,
         detail.UnitType,
         detail.UnitValue,
+        detail.Floor,
     ]);
-    const unitLineWithComma = displayValue(detail.UnitValue) && unitLine ? `${unitLine},` : unitLine;
+    const shouldSeparateStreet = Boolean(displayValue(detail.UnitValue) || displayValue(detail.Floor));
+    const unitLineWithComma = shouldSeparateStreet && unitLine ? `${unitLine},` : unitLine;
     const streetNumber = joinExisting([detail.StreetNumber, detail.StreetAlpha]).replace(/\s+/g, "");
     const streetLine = joinExisting([
         streetNumber,

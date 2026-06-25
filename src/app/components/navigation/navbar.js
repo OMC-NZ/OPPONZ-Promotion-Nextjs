@@ -7,10 +7,29 @@ import style from "./navbar.module.css";
 import LoadingModal from "@app/components/public/loadingModal";
 import usePromotionContent from "@hooks/usePromotionContent";
 
+const emptyPromotionContent = {
+    monthly: { items: [], loading: false },
+    currentEvents: { items: [], loading: false },
+};
+
 export default function Navbar() {
-    const router = useRouter();
     const pathname = usePathname();
-    const { monthly, currentEvents } = usePromotionContent();
+
+    if (pathname === "/terms") {
+        return <NavbarContent pathname={pathname} {...emptyPromotionContent} />;
+    }
+
+    return <NavbarWithPromotionContent pathname={pathname} />;
+}
+
+function NavbarWithPromotionContent({ pathname }) {
+    const promotionContent = usePromotionContent();
+
+    return <NavbarContent pathname={pathname} {...promotionContent} />;
+}
+
+function NavbarContent({ pathname, monthly, currentEvents }) {
+    const router = useRouter();
     const [scrollTo, setScrollTo] = useState(null);
     const [loading, setLoading] = useState(false);
     const showMonthlyPromotions = monthly.loading || monthly.items.length > 0;

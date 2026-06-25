@@ -23,11 +23,13 @@ export default function RootLayout({ children }) {
         )}
       </head>
       <body suppressHydrationWarning={true}>
-        <Navigation />
-        <main className="oc_wrapper">
-          <Providers>{children}</Providers>
-        </main>
-        <Footer />
+        <Providers>
+          <Navigation />
+          <main className="oc_wrapper">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

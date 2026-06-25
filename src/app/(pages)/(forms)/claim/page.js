@@ -69,7 +69,11 @@ function TermsLink({ href, children }) {
         );
     }
 
-    return <Link href={termsHref}>{children}</Link>;
+    return (
+        <Link href={termsHref} target="_blank" rel="noopener noreferrer">
+            {children}
+        </Link>
+    );
 }
 
 const buildClaimPayload = (data, recaptcha) => ({
