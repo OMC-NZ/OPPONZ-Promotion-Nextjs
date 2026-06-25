@@ -22,12 +22,19 @@ export default function usePromotionContent() {
 
     useEffect(() => {
         let isActive = true;
+        let retryTimer = null;
 
         const loadPromotionContent = async () => {
             const [promotionsRecaptcha, eventsRecaptcha] = await Promise.all([
                 verifyRecaptcha("promotions_current"),
                 verifyRecaptcha("events_current"),
             ]);
+
+            if (promotionsRecaptcha?.unavailable || eventsRecaptcha?.unavailable) {
+                retryTimer = window.setTimeout(loadPromotionContent, 1000);
+                return;
+            }
+
             const [promotionsResult, eventsResult] = await Promise.allSettled([
                 fetchCurrentPromotions({ recaptcha: promotionsRecaptcha }),
                 fetchCurrentEvents({ recaptcha: eventsRecaptcha }),
@@ -60,6 +67,9 @@ export default function usePromotionContent() {
 
         return () => {
             isActive = false;
+            if (retryTimer) {
+                window.clearTimeout(retryTimer);
+            }
         };
     }, [verifyRecaptcha]);
 
