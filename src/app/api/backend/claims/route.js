@@ -6,6 +6,16 @@ const BACKEND_API_URL = (
     || "http://localhost:3000"
 ).replace(/\/$/, "");
 
+const getRecaptchaHeaders = (request) => {
+    const token = request.headers.get("x-recaptcha-token");
+    const action = request.headers.get("x-recaptcha-action");
+
+    return {
+        ...(token ? { "x-recaptcha-token": token } : {}),
+        ...(action ? { "x-recaptcha-action": action } : {}),
+    };
+};
+
 export async function POST(request) {
     try {
         const body = await request.text();
@@ -14,6 +24,7 @@ export async function POST(request) {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
+                ...getRecaptchaHeaders(request),
             },
             body,
             cache: "no-store",

@@ -76,7 +76,7 @@ function TermsLink({ href, children }) {
     );
 }
 
-const buildClaimPayload = (data, recaptcha) => ({
+const buildClaimPayload = (data) => ({
     promotion_id: data.promotion.promotionId || data.promotion.promotion_id || data.promotion.id,
     imei: data.verifiedImei,
     purchase_date: data.promotion.purchaseDateValue || data.verifiedPurchaseDate,
@@ -92,8 +92,6 @@ const buildClaimPayload = (data, recaptcha) => ({
     postcode: data.postcode,
     instructions: data.instructions || "",
     gift_alias: data.selectedGifts?.[0]?.alias || data.selectedGifts?.[0]?.label || data.selectedGifts?.[0]?.name || "",
-    ...(recaptcha?.token ? { recaptcha_token: recaptcha.token } : {}),
-    ...(recaptcha?.action ? { recaptcha_action: recaptcha.action } : {}),
 });
 
 export default function Claim() {
@@ -224,12 +222,12 @@ export default function Claim() {
     }, [isClaimReady, router]);
 
     useEffect(() => {
-        document.body.style.overflowY = modalShow ? "hidden" : "";
+        document.body.style.overflowY = modalShow || submitResult ? "hidden" : "";
 
         return () => {
             document.body.style.overflowY = "";
         };
-    }, [modalShow]);
+    }, [modalShow, submitResult]);
 
     useEffect(() => {
         if (!claimAccessExpired) return;
@@ -245,6 +243,11 @@ export default function Claim() {
     const handleBackToEdit = () => {
         setIsReviewing(false);
         window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleCancelSubmitResult = () => {
+        setSubmitResult(null);
+        setSubmitError("");
     };
 
     const validateFields = () => {
@@ -278,7 +281,12 @@ export default function Claim() {
 
         try {
             const recaptcha = await verifyRecaptcha("claim_submit");
-            const response = await submitClaim(buildClaimPayload(reviewData, recaptcha));
+
+            if (!recaptcha?.token) {
+                throw new Error("Security verification failed. Please try again.");
+            }
+
+            const response = await submitClaim(buildClaimPayload(reviewData), recaptcha);
             setSubmitResult(response);
         } catch (error) {
             setSubmitError(error?.message || "Unable to submit claim. Please try again.");
@@ -331,6 +339,7 @@ export default function Claim() {
                     <ClaimSuccessModal
                         result={submitResult}
                         onBackHome={() => router.replace("/")}
+                        onCancel={handleCancelSubmitResult}
                     />
                 )}
             </>
@@ -545,33 +554,43 @@ function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, submitError, o
     );
 }
 
-function ClaimSuccessModal({ result, onBackHome }) {
+function ClaimSuccessModal({ result, onBackHome, onCancel }) {
     const isSuccess = Boolean(result?.success);
     const claim = result?.data || {};
+    const claimId = claim.claim_id || claim.claimId || "";
+    const giftName = claim.gift_name || claim.giftName || claim.gift || "";
 
     return (
         <div className={style.claimSuccessOverlay} role="dialog" aria-modal="true" aria-labelledby="claim-success-title">
             <section className={style.claimSuccessModal}>
-                <h2 id="claim-success-title">{isSuccess ? "Claim Submitted" : "Submission Failed"}</h2>
-                <p>
-                    {isSuccess
-                        ? "Your claim has been received successfully."
-                        : result?.message || "Submission failed. Please check your details and submit again."}
-                </p>
-                {isSuccess && (
-                    <dl>
-                        <div>
-                            <dt>Claim ID</dt>
-                            <dd>{claim.claim_id}</dd>
-                        </div>
-                        <div>
-                            <dt>Gift</dt>
-                            <dd>{claim.gift}</dd>
-                        </div>
-                    </dl>
+                <h2 id="claim-success-title" className={isSuccess ? style.claimSuccessTitle : ""}>
+                    {isSuccess ? "Claim submitted successfully" : "Submission Failed"}
+                </h2>
+                {isSuccess ? (
+                    <div className={style.claimSuccessMessage}>
+                        <p>Thank you. We have received your claim.</p>
+                        <dl>
+                            <div>
+                                <dt>Claim ID:</dt>
+                                <dd>{claimId}</dd>
+                            </div>
+                            <div>
+                                <dt>Selected gift:</dt>
+                                <dd>{giftName}</dd>
+                            </div>
+                        </dl>
+                        <p>Your claim is now pending review. Please refer to the confirmation email for additional information.</p>
+                        <p>If you do not receive the confirmation email shortly, please check your spam or junk folder.</p>
+                        <p>
+                            For any questions, please contact us via email:{" "}
+                            <a href="mailto:service@oppomobile.nz">service@oppomobile.nz</a>.
+                        </p>
+                    </div>
+                ) : (
+                    <p>{result?.message || "Submission failed. Please check your details and submit again."}</p>
                 )}
-                <button type="button" className={style.primaryButton} onClick={onBackHome}>
-                    Back to Home
+                <button type="button" className={style.primaryButton} onClick={isSuccess ? onBackHome : onCancel}>
+                    {isSuccess ? "Back to Home" : "Cancel"}
                 </button>
             </section>
         </div>

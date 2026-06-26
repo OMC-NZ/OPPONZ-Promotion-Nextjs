@@ -34,12 +34,12 @@ export default function useClaimValidation(type) {
                     error = "Invalid Information";
                 }
             } else if (type === "suburb") {
-                const alphanumericRegex = /^[A-Za-zĀāĒēĪīŌōŪū ]+$/;
+                const alphanumericRegex = /^[A-Za-z0-9ĀāĒēĪīŌōŪū'\- ]+$/;
                 if (!alphanumericRegex.test(value)) {
                     error = "Invalid Information";
                 }
             } else if (type === "city") {
-                const alphanumericRegex = /^[A-Za-z0-9ĀāĒēĪīŌōŪū ]+$/;
+                const alphanumericRegex = /^[A-Za-z0-9ĀāĒēĪīŌōŪū'\- ]+$/;
                 if (!alphanumericRegex.test(value)) {
                     error = "Invalid Information";
                 }
