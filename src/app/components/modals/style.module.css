@@ -224,7 +224,17 @@
 
 .modal_track {
   max-width: 600px;
-  height: 24rem;
+  height: auto;
+  min-height: 30rem;
+  max-height: calc(100dvh - 7rem);
+  overflow-y: auto;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.modal.modal_track {
+  height: auto;
+  min-height: 0;
 }
 
 .trackResultModal {
@@ -348,7 +358,7 @@
 .trackResultActions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 14px;
   margin-top: 6px;
   flex-wrap: wrap;
@@ -372,6 +382,14 @@
   text-decoration: none;
   font-variation-settings: "wght" 650;
   transition: all 0.24s cubic-bezier(0.48, 0.04, 0.52, 0.96);
+}
+
+.trackResultActions button:hover,
+.trackResultActions button:focus-visible,
+.trackResultActions a:hover,
+.trackResultActions a:focus-visible {
+  background: #111;
+  color: #fff;
 }
 
 .trackTextButton {

@@ -13,9 +13,9 @@ export default function useClaimIDValidation() {
             return false;
         }
 
-        if (!/^(?=.*[0-9])(?=.*[A-Za-z])(?=.*-)[A-Za-z0-9-]+$/.test(cleanedValue)) {
+        if (!/^OPNZPROCLM-\d{6}-.+/i.test(cleanedValue)) {
             setClaimIDError(true);
-            setErrorClaimIDMsg('Incorrect Claim ID');
+            setErrorClaimIDMsg('Incorrect Claim Reference');
             return false;
         }
 

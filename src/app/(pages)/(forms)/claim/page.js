@@ -571,7 +571,7 @@ function ClaimSuccessModal({ result, onBackHome, onCancel }) {
                         <p>Thank you. We have received your claim.</p>
                         <dl>
                             <div>
-                                <dt>Claim ID:</dt>
+                                <dt>Claim Reference:</dt>
                                 <dd>{claimId}</dd>
                             </div>
                             <div>
