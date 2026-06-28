@@ -8,28 +8,17 @@ export const defaultEventFormConfig = {
             title: 'Your Details',
             rows: [
                 {
-                    layout: 'threeGrid',
+                    layout: 'twoGrid',
                     fields: [
                         { id: 'firstName', type: 'text', label: 'First Name', required: true, placeholder: 'Enter your first name', validation: 'name' },
                         { id: 'lastName', type: 'text', label: 'Last Name', required: true, placeholder: 'Enter your last name', validation: 'name' },
-                        { id: 'email', type: 'text', label: 'Email Address', required: true, placeholder: 'Enter your email address', inputMode: 'email', validation: 'email' },
                     ],
                 },
                 {
-                    layout: 'detailsSecondRow',
+                    layout: 'twoGrid',
                     fields: [
+                        { id: 'email', type: 'text', label: 'Email Address', required: true, placeholder: 'Enter your email address', inputMode: 'email', validation: 'email' },
                         { id: 'mobile', type: 'phone', label: 'Mobile Number', required: true, placeholder: 'Enter mobile number', countryCode: '+61', validation: 'phone' },
-                        {
-                            id: 'preferredContact',
-                            type: 'radio',
-                            label: 'Preferred Contact Method',
-                            required: true,
-                            defaultValue: 'email',
-                            options: [
-                                { label: 'Email', value: 'email' },
-                                { label: 'Phone', value: 'phone' },
-                            ],
-                        },
                     ],
                 },
             ],
@@ -37,29 +26,7 @@ export const defaultEventFormConfig = {
         {
             id: 'deliveryAddress',
             title: 'Delivery Address',
-            rows: [
-                {
-                    layout: 'twoGrid',
-                    fields: [
-                        { id: 'addressLine', type: 'text', label: 'Type and Select Delivery Address *', required: true, placeholder: 'Enter your street address' },
-                        { id: 'companyName', type: 'text', label: 'Company Name (Optional)', placeholder: 'Enter company name' },
-                    ],
-                },
-                {
-                    layout: 'threeGrid',
-                    fields: [
-                        { id: 'suburb', type: 'text', label: 'Suburb', required: true, placeholder: 'Enter suburb' },
-                        { id: 'city', type: 'text', label: 'City', required: true, placeholder: 'Enter city' },
-                        { id: 'postcode', type: 'text', label: 'Postcode', required: true, placeholder: 'Enter postcode', inputMode: 'numeric', validation: 'postcode' },
-                    ],
-                },
-                {
-                    layout: 'oneGrid',
-                    fields: [
-                        { id: 'deliveryInstructions', type: 'textarea', label: 'Delivery Instructions (Optional)', placeholder: 'e.g. Leave at front door, near the mailbox, etc.', maxLength: 200 },
-                    ],
-                },
-            ],
+            rows: [],
         },
         {
             id: 'eventDetails',
@@ -67,18 +34,11 @@ export const defaultEventFormConfig = {
             note: 'The information you provide above will be used to assess your eligibility for this event.',
             rows: [
                 {
-                    layout: 'fourGrid',
+                    layout: 'threeGrid',
                     fields: [
                         { id: 'phoneModel', type: 'select', label: 'Phone Model', required: true, placeholder: 'Select phone model', options: ['OPPO Reno10 5G', 'OPPO A98 5G', 'OPPO Find X5', 'OPPO A78 5G'] },
-                        { id: 'variant', type: 'select', label: 'Colour / Variant', required: true, placeholder: 'Select colour / variant', options: ['Black', 'White', 'Blue', 'Green'] },
                         { id: 'purchaseDate', type: 'date', label: 'Purchase Date', required: true, placeholder: 'DD/MM/YYYY' },
                         { id: 'purchaseLocation', type: 'select', label: 'Purchase Location', required: true, placeholder: 'Select purchase location', options: ['Noel Leeming', 'JB Hi-Fi', 'PB Tech', 'Harvey Norman', 'One NZ', 'Other'] },
-                    ],
-                },
-                {
-                    layout: 'oneGrid',
-                    fields: [
-                        { id: 'referralSource', type: 'select', label: 'How did you hear about this event?', required: true, placeholder: 'Select an option', options: ['OPPO website', 'Retail store', 'Social media', 'Email', 'Friend or family', 'Other'] },
                     ],
                 },
             ],

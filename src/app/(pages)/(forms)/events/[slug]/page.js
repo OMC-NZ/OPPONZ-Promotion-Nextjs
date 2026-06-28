@@ -5,6 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
 import { fetchCurrentEvents } from "@api/events";
+import {
+    DeliveryAddressCard,
+    useDeliveryAddressSection,
+} from "@app/components/claim-form";
 import { defaultEventFormConfig } from "@data/currentEvents";
 import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import style from "./style.module.css";
@@ -37,6 +41,7 @@ export default function EventClaimPage() {
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const deliveryAddressSection = useDeliveryAddressSection();
 
     useEffect(() => {
         let isActive = true;
@@ -100,7 +105,8 @@ export default function EventClaimPage() {
         });
 
         setErrors(nextErrors);
-        return Object.keys(nextErrors).length === 0;
+        const deliveryAddressResult = deliveryAddressSection.validate();
+        return Object.keys(nextErrors).length === 0 && deliveryAddressResult.isValid;
     };
 
     const handleSubmit = async () => {
@@ -112,7 +118,11 @@ export default function EventClaimPage() {
         try {
             await verifyRecaptcha("event_claim_submit");
             // TODO: Replace this with the event-specific submission endpoint.
-            console.log("Event claim submitted", { event: event.slug, form });
+            console.log("Event claim submitted", {
+                event: event.slug,
+                form,
+                deliveryAddress: deliveryAddressSection.getReviewData(),
+            });
         } catch (error) {
             console.error(error);
         } finally {
@@ -178,23 +188,27 @@ export default function EventClaimPage() {
                     )}
 
                     {formConfig.sections.map((section) => (
-                        <FormSection title={section.title} sectionId={section.id} key={section.id}>
-                            {section.rows.map((row, rowIndex) => (
-                                <div className={style[row.layout] || style.oneGrid} key={`${section.id}-${rowIndex}`}>
-                                    {row.fields.map((field) => (
-                                        <DynamicField
-                                            key={field.id}
-                                            field={field}
-                                            value={form[field.id]}
-                                            error={errors[field.id]}
-                                            onChange={(value) => setField(field.id, value)}
-                                            onShowTerms={() => setTermsVisible(true)}
-                                        />
-                                    ))}
-                                </div>
-                            ))}
-                            {section.note && <p className={style.infoNote}><FiInfo />{section.note}</p>}
-                        </FormSection>
+                        section.id === "deliveryAddress" ? (
+                            <DeliveryAddressCard fields={deliveryAddressSection.fields} key={section.id} />
+                        ) : (
+                            <FormSection title={section.title} sectionId={section.id} key={section.id}>
+                                {section.rows.map((row, rowIndex) => (
+                                    <div className={style[row.layout] || style.oneGrid} key={`${section.id}-${rowIndex}`}>
+                                        {row.fields.map((field) => (
+                                            <DynamicField
+                                                key={field.id}
+                                                field={field}
+                                                value={form[field.id]}
+                                                error={errors[field.id]}
+                                                onChange={(value) => setField(field.id, value)}
+                                                onShowTerms={() => setTermsVisible(true)}
+                                            />
+                                        ))}
+                                    </div>
+                                ))}
+                                {section.note && <p className={style.infoNote}><FiInfo />{section.note}</p>}
+                            </FormSection>
+                        )
                     ))}
 
                     <div className={style.actions}>

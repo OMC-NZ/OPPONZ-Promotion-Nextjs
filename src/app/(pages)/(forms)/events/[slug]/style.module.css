@@ -102,9 +102,9 @@
 }
 
 .formSection h2 {
-  margin: 0 0 18px;
-  font-size: 22px;
-  line-height: 1.25;
+  margin: 0 0 20px;
+  font-size: 24px;
+  line-height: calc(1.2em + 4px);
   font-weight: 700;
 }
 
@@ -139,6 +139,10 @@
   margin-top: 22px;
 }
 
+.yourDetails .twoGrid + .twoGrid {
+  margin-top: 10px;
+}
+
 .deliveryAddress .threeGrid,
 .deliveryAddress .oneGrid,
 .eventDetails .oneGrid {
@@ -152,7 +156,7 @@
 .fieldGroup {
   position: relative;
   display: grid;
-  gap: 9px;
+  gap: 12px;
 }
 
 .fieldLabel {
@@ -161,7 +165,7 @@
   gap: 8px;
   min-height: 20px;
   color: #111;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -176,7 +180,7 @@
 .checkboxRow strong,
 .uploadBox strong {
   color: #c70000;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -189,18 +193,18 @@
   border-radius: 5px;
   background: #fff;
   color: #111;
-  font-size: 15px;
+  font-size: 19px;
   outline: none;
 }
 
 .fieldGroup input,
 .fieldGroup select {
-  height: 42px;
+  height: 46px;
   padding: 0 12px;
 }
 
 .fieldGroup textarea {
-  min-height: 62px;
+  min-height: 74px;
   padding: 12px;
   resize: vertical;
 }
@@ -256,7 +260,7 @@
 .phoneInput {
   display: grid;
   grid-template-columns: 90px minmax(0, 1fr);
-  height: 42px;
+  height: 46px;
   border: 1px solid #cfcfcf;
   border-radius: 5px;
   overflow: hidden;
@@ -270,7 +274,7 @@
   border: 0;
   border-right: 1px solid #cfcfcf;
   background: #fff;
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 700;
 }
 
@@ -292,7 +296,7 @@
 .radioGroup legend {
   width: 100%;
   margin-bottom: 14px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -300,7 +304,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .radioGroup input {
@@ -323,7 +327,7 @@
   gap: 10px;
   margin: 18px 0 0;
   color: #777;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .uploadBox {
@@ -357,7 +361,7 @@
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -371,14 +375,14 @@
   margin: 0;
   white-space: pre-line;
   overflow-wrap: anywhere;
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.45;
 }
 
 .uploadBox small {
   margin-top: 14px;
   color: #555;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .uploadBox input {
@@ -391,7 +395,7 @@
   gap: 10px;
   margin-top: 10px;
   color: #111;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .checkboxRow:first-of-type {
