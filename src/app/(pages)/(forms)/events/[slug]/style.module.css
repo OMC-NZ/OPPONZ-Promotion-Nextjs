@@ -47,6 +47,10 @@
   padding: 18px 30px;
 }
 
+.selectedEventCardNoMedia {
+  grid-template-columns: 1fr;
+}
+
 .selectedEventMedia {
   min-width: 0;
 }

@@ -4,16 +4,196 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
-import { fetchCurrentEvents } from "@api/events";
+import { fetchCurrentEvents, fetchEventForm } from "@api/events";
 import {
     DeliveryAddressCard,
     useDeliveryAddressSection,
 } from "@app/components/claim-form";
-import { defaultEventFormConfig } from "@data/currentEvents";
 import useRecaptchaAction from "@hooks/useRecaptchaAction";
 import style from "./style.module.css";
 
-const getEventConfig = (event) => event?.formConfig || defaultEventFormConfig;
+const PERSONAL_FIELD_KEYS = new Set([
+    "first_name",
+    "firstName",
+    "last_name",
+    "lastName",
+    "email",
+    "email_address",
+    "mobile",
+    "mobile_number",
+    "phone",
+    "contact",
+]);
+
+const isEnabledFlag = (value) => value === 1 || value === "1" || value === true;
+
+const fixedYourDetailsSection = {
+    id: "yourDetails",
+    title: "Your Details",
+    rows: [
+        {
+            layout: "twoGrid",
+            fields: [
+                { id: "first_name", type: "text", label: "First Name", required: true, placeholder: "Enter your first name", validation: "name" },
+                { id: "last_name", type: "text", label: "Last Name", required: true, placeholder: "Enter your last name", validation: "name" },
+            ],
+        },
+        {
+            layout: "twoGrid",
+            fields: [
+                { id: "email", type: "text", label: "Email Address", required: true, placeholder: "Enter your email address", inputMode: "email", validation: "email" },
+                { id: "contact", type: "phone", label: "Mobile Number", required: true, placeholder: "Enter mobile number", countryCode: "+64", validation: "phone" },
+            ],
+        },
+    ],
+};
+
+const fixedImeiSection = {
+    id: "imeiVerification",
+    title: "IMEI Verification",
+    note: "IMEI verification will be connected later.",
+    rows: [
+        {
+            layout: "oneGrid",
+            fields: [
+                { id: "imei", type: "text", label: "IMEI-1", required: true, placeholder: "Enter IMEI-1", inputMode: "numeric" },
+            ],
+        },
+    ],
+};
+
+const toCamelCase = (value) => (
+    String(value || "")
+        .replace(/[_\s-]+(.)?/g, (_, next) => (next ? next.toUpperCase() : ""))
+);
+
+const normalizeOptions = (options = []) => (
+    options.map((option) => {
+        if (typeof option === "string") return { label: option, value: option };
+        return {
+            label: option.label || option.option_label || option.name || option.value || "",
+            value: option.value || option.option_value || option.id || option.label || option.name || "",
+        };
+    }).filter((option) => option.label && option.value)
+);
+
+const normalizeFieldType = (type, options) => {
+    const fieldType = String(type || "text").toLowerCase();
+    if (fieldType === "file") return "upload";
+    if (fieldType === "dropdown") return "select";
+    if (fieldType === "checkbox_group") return "checkbox";
+    if (fieldType === "radio_group") return "radio";
+    if (fieldType === "text" && options?.length) return "select";
+    return fieldType;
+};
+
+const normalizeBackendField = (field) => {
+    const options = normalizeOptions(field.options || []);
+    const key = field.field_key || `field_${field.id}`;
+    const id = toCamelCase(key) || String(field.id);
+
+    return {
+        id,
+        sourceKey: key,
+        type: normalizeFieldType(field.field_type, options),
+        label: field.field_label || key,
+        placeholder: field.placeholder || "",
+        required: isEnabledFlag(field.is_required),
+        validation: field.validation || null,
+        options,
+        sortOrder: field.sort_order || 0,
+    };
+};
+
+const getLayoutForFieldCount = (count) => {
+    if (count >= 4) return "fourGrid";
+    if (count === 3) return "threeGrid";
+    if (count === 2) return "twoGrid";
+    return "oneGrid";
+};
+
+const normalizeBackendSections = (sections = []) => (
+    sections
+        .map((section) => {
+            const fields = [...(section.fields || [])]
+                .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+                .map(normalizeBackendField)
+                .filter((field) => !PERSONAL_FIELD_KEYS.has(field.sourceKey) && !PERSONAL_FIELD_KEYS.has(field.id));
+
+            return {
+                id: `section_${section.id}`,
+                title: section.section_title || "Event Details",
+                sortOrder: section.sort_order || 0,
+                rows: fields.length
+                    ? [{ layout: getLayoutForFieldCount(fields.length), fields }]
+                    : [],
+            };
+        })
+        .filter((section) => section.rows.length > 0)
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+);
+
+const normalizeUploadsSection = (uploads = []) => {
+    if (!uploads.length) return null;
+
+    return {
+        id: "uploadDocuments",
+        title: "Upload Documents",
+        rows: [
+            {
+                layout: "uploadGrid",
+                fields: uploads.map((upload) => ({
+                    id: toCamelCase(upload.upload_key || `upload_${upload.id}`),
+                    sourceKey: upload.upload_key,
+                    type: "upload",
+                    label: upload.upload_label || "Upload Document",
+                    required: true,
+                    helperText: "PDF, JPG or PNG. Max 10MB.",
+                })),
+            },
+        ],
+    };
+};
+
+const buildFormConfig = (eventFormData) => {
+    const event = eventFormData?.event || {};
+    const sections = [fixedYourDetailsSection];
+
+    if (isEnabledFlag(event.requires_imei)) {
+        sections.push(fixedImeiSection);
+    }
+
+    if (isEnabledFlag(event.requires_delivery)) {
+        sections.push({
+            id: "deliveryAddress",
+            title: "Delivery Address",
+            rows: [],
+        });
+    }
+
+    sections.push(...normalizeBackendSections(eventFormData?.sections || []));
+
+    const uploadsSection = normalizeUploadsSection(eventFormData?.uploads || []);
+    if (uploadsSection) sections.push(uploadsSection);
+
+    return {
+        pageTitle: event.name || "Claim Your Event Gift",
+        pageSubtitle: "Complete your details to submit your event claim.",
+        selectedEventNote: "Please make sure you are claiming the correct event.",
+        requiresDelivery: isEnabledFlag(event.requires_delivery),
+        event,
+        sections,
+    };
+};
+
+const emptyFormConfig = {
+    pageTitle: "Claim Your Event Gift",
+    pageSubtitle: "Complete your details to submit your event claim.",
+    selectedEventNote: "Please make sure you are claiming the correct event.",
+    requiresDelivery: false,
+    event: {},
+    sections: [],
+};
 
 const getAllFields = (formConfig) => (
     formConfig.sections.flatMap((section) => (
@@ -33,10 +213,20 @@ export default function EventClaimPage() {
     const verifyRecaptcha = useRecaptchaAction();
     const { slug } = useParams();
     const [event, setEvent] = useState(null);
+    const [eventFormData, setEventFormData] = useState(null);
     const [isEventLoading, setIsEventLoading] = useState(true);
-    const formConfig = useMemo(() => getEventConfig(event), [event]);
+    const formConfig = useMemo(() => (
+        eventFormData ? buildFormConfig(eventFormData) : emptyFormConfig
+    ), [eventFormData]);
     const fields = useMemo(() => getAllFields(formConfig), [formConfig]);
-    const eventBanner = event?.bannerUrl || event?.imageUrl || event?.url;
+    const eventBanner = (
+        event?.bannerUrl
+        || event?.imageUrl
+        || event?.url
+        || formConfig.event?.banner_url
+        || formConfig.event?.bannerUrl
+        || ""
+    );
     const [form, setForm] = useState(() => buildInitialForm(formConfig));
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
@@ -47,16 +237,37 @@ export default function EventClaimPage() {
         let isActive = true;
         setIsEventLoading(true);
 
-        verifyRecaptcha("events_current")
-            .then((recaptcha) => fetchCurrentEvents({ recaptcha }))
-            .then(({ items }) => {
-                const selectedEvent = items.find((item) => item.slug === slug);
-                if (isActive && selectedEvent) setEvent(selectedEvent);
-            })
-            .catch((error) => console.warn("Unable to load event:", error.message))
-            .finally(() => {
+        const loadEventForm = async () => {
+            try {
+                const formRecaptcha = await verifyRecaptcha("event_form");
+                const formResult = await fetchEventForm(slug, { recaptcha: formRecaptcha });
+
+                if (!isActive) return;
+
+                setEventFormData(formResult.data);
+
+                const eventsRecaptcha = await verifyRecaptcha("events_current");
+                const eventsResult = await fetchCurrentEvents({ recaptcha: eventsRecaptcha })
+                    .catch(() => ({ items: [] }));
+
+                if (!isActive) return;
+
+                const formEvent = formResult.data?.event || {};
+                const selectedEvent = eventsResult.items.find((item) => item.slug === slug);
+                setEvent(selectedEvent || {
+                    slug: formEvent.slug_url || slug,
+                    title: formEvent.name || "Event",
+                    bannerUrl: formEvent.banner_url || "",
+                    termsUrl: formEvent.terms_url || "",
+                });
+            } catch (error) {
+                console.warn("Unable to load event form:", error.message);
+            } finally {
                 if (isActive) setIsEventLoading(false);
-            });
+            }
+        };
+
+        loadEventForm();
 
         return () => {
             isActive = false;
@@ -105,7 +316,9 @@ export default function EventClaimPage() {
         });
 
         setErrors(nextErrors);
-        const deliveryAddressResult = deliveryAddressSection.validate();
+        const deliveryAddressResult = formConfig.requiresDelivery
+            ? deliveryAddressSection.validate()
+            : { isValid: true };
         return Object.keys(nextErrors).length === 0 && deliveryAddressResult.isValid;
     };
 
@@ -119,9 +332,9 @@ export default function EventClaimPage() {
             await verifyRecaptcha("event_claim_submit");
             // TODO: Replace this with the event-specific submission endpoint.
             console.log("Event claim submitted", {
-                event: event.slug,
+                event: formConfig.event?.slug_url || event.slug,
                 form,
-                deliveryAddress: deliveryAddressSection.getReviewData(),
+                deliveryAddress: formConfig.requiresDelivery ? deliveryAddressSection.getReviewData() : null,
             });
         } catch (error) {
             console.error(error);
@@ -140,7 +353,7 @@ export default function EventClaimPage() {
         );
     }
 
-    if (!event) {
+    if (!eventFormData) {
         return (
             <main className={style.eventPage}>
                 <section className={style.heroTitle}>
@@ -152,40 +365,42 @@ export default function EventClaimPage() {
 
     return (
         <>
-            <title>{event.title} | OPPO NZ Promotions</title>
+            <title>{formConfig.event?.name || event?.title} | OPPO NZ Promotions</title>
             <main className={style.eventPage}>
                 <section className={style.heroTitle}>
-                    <h1>{formConfig.pageTitle || event.title}</h1>
-                    <p>{formConfig.pageSubtitle || "Complete your details to submit your event claim."}</p>
+                    <h1>{formConfig.pageTitle}</h1>
+                    <p>{formConfig.pageSubtitle}</p>
                 </section>
 
                 <div className={style.eventForm}>
-                    {formConfig.selectedEventCard !== false && (
-                        <section className={style.selectedEventCard}>
-                            <div className={style.selectedEventMedia}>
-                                <Image
-                                    src={eventBanner}
-                                    alt={event.title}
-                                    width={520}
-                                    height={310}
-                                    quality={100}
-                                    unoptimized
-                                    priority
-                                />
-                            </div>
-                            <div className={style.selectedEventDivider} />
-                            <div className={style.selectedEventInfo}>
-                                <h2>{event.title}</h2>
-                                <p>
-                                    {formConfig.selectedEventNote || "Please make sure you are claiming the correct event."} Review the{" "}
-                                    <button type="button" onClick={() => setTermsVisible(true)}>
-                                        Terms and Conditions
-                                    </button>
-                                    .
-                                </p>
-                            </div>
-                        </section>
-                    )}
+                    <section className={`${style.selectedEventCard} ${!eventBanner ? style.selectedEventCardNoMedia : ""}`}>
+                        {eventBanner && (
+                            <>
+                                <div className={style.selectedEventMedia}>
+                                    <Image
+                                        src={eventBanner}
+                                        alt={formConfig.event?.name || event?.title || "Event"}
+                                        width={520}
+                                        height={310}
+                                        quality={100}
+                                        unoptimized
+                                        priority
+                                    />
+                                </div>
+                                <div className={style.selectedEventDivider} />
+                            </>
+                        )}
+                        <div className={style.selectedEventInfo}>
+                            <h2>{formConfig.event?.name || event?.title}</h2>
+                            <p>
+                                {formConfig.selectedEventNote} Review the{" "}
+                                <button type="button" onClick={() => setTermsVisible(true)}>
+                                    Terms and Conditions
+                                </button>
+                                .
+                            </p>
+                        </div>
+                    </section>
 
                     {formConfig.sections.map((section) => (
                         section.id === "deliveryAddress" ? (
@@ -220,7 +435,7 @@ export default function EventClaimPage() {
                 </div>
             </main>
             {termsVisible && (
-                <EventTermsModal event={event} onClose={() => setTermsVisible(false)} />
+                <EventTermsModal event={formConfig.event} onClose={() => setTermsVisible(false)} />
             )}
         </>
     );
@@ -259,17 +474,21 @@ function DynamicField({ field, value, error, onChange, onShowTerms }) {
 }
 
 function EventTermsModal({ event, onClose }) {
+    const termsUrl = event?.terms_url || event?.termsUrl || "";
+
     return (
         <div className={style.termsOverlay}>
             <div className={style.termsModal} role="dialog" aria-modal="true" aria-labelledby="event-terms-title">
                 <button type="button" className={style.termsClose} onClick={onClose} aria-label="Close event terms">
                     &times;
                 </button>
-                <h2 id="event-terms-title">{event.termsTitle}</h2>
+                <h2 id="event-terms-title">{event?.name || "Event"} Terms and Conditions</h2>
                 <p>
-                    <a href={event.termsUrl} target="_blank" rel="noopener noreferrer">
-                        View Terms and Conditions
-                    </a>
+                    {termsUrl ? (
+                        <a href={termsUrl} target="_blank" rel="noopener noreferrer">
+                            View Terms and Conditions
+                        </a>
+                    ) : "Terms and Conditions will be available soon."}
                 </p>
                 <div className={style.termsActions}>
                     <button type="button" onClick={onClose}>Close</button>
@@ -337,7 +556,7 @@ function PhoneField({ field, value, error, onChange }) {
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} />
             <div className={`${style.phoneInput} ${error ? style.inputError : ""}`}>
-                <button type="button">{field.countryCode || "+61"} <FiChevronDown /></button>
+                <button type="button">{field.countryCode || "+64"} <FiChevronDown /></button>
                 <input
                     type="text"
                     value={value || ""}
@@ -370,12 +589,10 @@ function SelectField({ field, value, error, onChange }) {
             <Label label={field.label} required={field.required} error={error} />
             <div className={style.selectWrap}>
                 <select value={value || ""} onChange={(event) => onChange(event.target.value)} className={error ? style.inputError : ""}>
-                    <option value="">{field.placeholder}</option>
-                    {field.options.map((option) => {
-                        const optionValue = typeof option === "string" ? option : option.value;
-                        const optionLabel = typeof option === "string" ? option : option.label;
-                        return <option value={optionValue} key={optionValue}>{optionLabel}</option>;
-                    })}
+                    <option value="">{field.placeholder || "Select an option"}</option>
+                    {field.options.map((option) => (
+                        <option value={option.value} key={option.value}>{option.label}</option>
+                    ))}
                 </select>
                 <FiChevronDown />
             </div>

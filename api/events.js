@@ -1,7 +1,7 @@
-import { defaultEventFormConfig } from "@data/currentEvents";
 import { fetchHomePromos } from "./homePromos";
 
 const CURRENT_EVENTS_ENDPOINT = "/api/backend/events/current";
+const EVENT_FORM_ENDPOINT = (slug) => `/api/backend/events/${encodeURIComponent(slug)}/form`;
 
 export const normalizeCurrentEvents = (response) => {
     if (!response?.success || !Array.isArray(response.data)) return [];
@@ -23,7 +23,6 @@ export const normalizeCurrentEvents = (response) => {
             termsSummary: "Claims are subject to event eligibility, verification, and availability.",
             claimUrl: `/events/${encodeURIComponent(slug)}`,
             href: `/events/${encodeURIComponent(slug)}`,
-            formConfig: defaultEventFormConfig,
         };
     }).filter((event) => event.imageUrl);
 };
@@ -43,6 +42,25 @@ export const fetchCurrentEvents = async (options = {}) => {
 
     return {
         items: normalizeCurrentEvents(response),
+        requestId: response?.requestId || null,
+    };
+};
+
+export const fetchEventForm = async (slug, options = {}) => {
+    const { recaptcha, headers, ...fetchOptions } = options;
+    const response = await fetchHomePromos(EVENT_FORM_ENDPOINT(slug), {
+        method: "GET",
+        baseUrl: "",
+        headers: {
+            ...headers,
+            ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
+            ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
+        },
+        ...fetchOptions,
+    });
+
+    return {
+        data: response?.data || null,
         requestId: response?.requestId || null,
     };
 };
