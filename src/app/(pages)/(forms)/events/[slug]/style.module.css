@@ -282,6 +282,53 @@
   padding: 0 12px;
 }
 
+.textInputWrap {
+  position: relative;
+}
+
+.verifiableInputWrap input {
+  padding-right: 42px;
+}
+
+.fieldValidIcon,
+.fieldInvalidIcon,
+.fieldSpinner {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+}
+
+.fieldValidIcon {
+  color: #077307;
+}
+
+.fieldInvalidIcon {
+  color: #c70000;
+}
+
+.fieldSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d8d8d8;
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: fieldSpin 0.8s linear infinite;
+}
+
+@keyframes fieldSpin {
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
 .fieldGroup textarea {
   min-height: 74px;
   padding: 12px;
@@ -297,6 +344,7 @@
 
 .fieldGroup input.inputError,
 .fieldGroup select.inputError,
+.fieldGroup textarea.inputError,
 .phoneInput.inputError {
   border-color: #c70000;
 }

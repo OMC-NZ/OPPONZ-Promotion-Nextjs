@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
-import { fetchCurrentEvents, fetchEventForm } from "@api/events";
+import { GiCheckMark, GiCrossMark } from "react-icons/gi";
+import { fetchCurrentEvents, fetchEventForm, verifyEventImeiChannel } from "@api/events";
 import {
     DeliveryAddressCard,
     useDeliveryAddressSection,
@@ -26,6 +27,10 @@ const PERSONAL_FIELD_KEYS = new Set([
 ]);
 
 const isEnabledFlag = (value) => value === 1 || value === "1" || value === true;
+const isImeiField = (field) => (
+    field.validation === "imei"
+    || String(field.id || "").toLowerCase().includes("imei")
+);
 
 const fixedYourDetailsSection = {
     id: "yourDetails",
@@ -62,6 +67,7 @@ const fixedImeiSection = {
                     required: true,
                     placeholder: "Enter IMEI-1",
                     inputMode: "numeric",
+                    validation: "imei",
                     helpText: "You can obtain your IMEI number by going to Settings > About Phone > Status",
                 },
             ],
@@ -258,6 +264,33 @@ const validatePattern = (field, value) => {
     }
 };
 
+const validateUploadFile = (file) => {
+    if (!file) return "";
+
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = new Set([
+        "application/pdf",
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+    ]);
+
+    if (!allowedTypes.has(file.type)) {
+        return "File type must be PDF, JPG, JPEG, or PNG";
+    }
+
+    if (file.size > maxSize) {
+        return "File size must be 10MB or less";
+    }
+
+    return "";
+};
+
+const getEventSlug = (formConfig, event, routeSlug) => {
+    const eventData = formConfig.event || {};
+    return eventData.slug_url || eventData.slug || event?.slug || routeSlug || "";
+};
+
 export default function EventClaimPage() {
     const router = useRouter();
     const verifyRecaptcha = useRecaptchaAction();
@@ -280,6 +313,11 @@ export default function EventClaimPage() {
     const eventTermsUrl = formConfig.event?.terms_url || "";
     const [form, setForm] = useState(() => buildInitialForm(formConfig));
     const [errors, setErrors] = useState({});
+    const [eventImeiVerification, setEventImeiVerification] = useState({
+        value: "",
+        status: "idle",
+        message: "",
+    });
     const [termsVisible, setTermsVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const deliveryAddressSection = useDeliveryAddressSection();
@@ -328,6 +366,7 @@ export default function EventClaimPage() {
     useEffect(() => {
         setForm(buildInitialForm(formConfig));
         setErrors({});
+        setEventImeiVerification({ value: "", status: "idle", message: "" });
     }, [formConfig, slug]);
 
     useEffect(() => {
@@ -343,6 +382,59 @@ export default function EventClaimPage() {
     const setField = (field, value) => {
         setForm((current) => ({ ...current, [field]: value }));
         setErrors((current) => ({ ...current, [field]: "" }));
+        const fieldConfig = fields.find((item) => item.id === field);
+        if (fieldConfig && isImeiField(fieldConfig)) {
+            setEventImeiVerification({ value: "", status: "idle", message: "" });
+        }
+    };
+
+    const verifyEventImeiOnBlur = async (field, value) => {
+        if (!isImeiField(field)) return;
+
+        const cleanedImei = String(value || "").replace(/\s+/g, "");
+        if (!cleanedImei) return;
+
+        if (!/^86\d{13}$/.test(cleanedImei)) {
+            setEventImeiVerification({ value: cleanedImei, status: "invalid", message: "Incorrect IMEI-1" });
+            setErrors((current) => ({ ...current, [field.id]: "Incorrect IMEI-1" }));
+            return;
+        }
+
+        setEventImeiVerification({ value: cleanedImei, status: "checking", message: "" });
+        setErrors((current) => ({ ...current, [field.id]: "" }));
+
+        try {
+            const recaptcha = await verifyRecaptcha("event_verify_imei_channel");
+            const result = await verifyEventImeiChannel({
+                imei: cleanedImei,
+                slug: getEventSlug(formConfig, event, slug),
+                recaptchaToken: recaptcha.token,
+                recaptchaAction: recaptcha.action,
+            });
+
+            setEventImeiVerification({
+                value: cleanedImei,
+                status: result.verified ? "valid" : "invalid",
+                message: result.verified ? "" : result.message || "Incorrect IMEI-1",
+            });
+
+            if (!result.verified) {
+                setErrors((current) => ({
+                    ...current,
+                    [field.id]: result.message || "Incorrect IMEI-1",
+                }));
+            }
+        } catch (error) {
+            setEventImeiVerification({
+                value: cleanedImei,
+                status: "invalid",
+                message: error?.message || "Unable to verify IMEI-1",
+            });
+            setErrors((current) => ({
+                ...current,
+                [field.id]: error?.message || "Unable to verify IMEI-1",
+            }));
+        }
     };
 
     const validate = () => {
@@ -359,15 +451,41 @@ export default function EventClaimPage() {
             }
 
             if (field.validation === "email" && form[field.id] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form[field.id])) {
-                nextErrors[field.id] = "Invalid email";
+                nextErrors[field.id] = "Invalid Email";
+            }
+
+            if (field.validation === "name" && form[field.id] && !/^[A-Za-z ]+$/.test(form[field.id])) {
+                nextErrors[field.id] = "Invalid Information";
             }
 
             if (field.validation === "phone" && form[field.id] && !/^\d+$/.test(form[field.id])) {
-                nextErrors[field.id] = "Invalid number";
+                nextErrors[field.id] = "Invalid Phone Number";
             }
 
             if (field.validation === "postcode" && form[field.id] && !/^\d{4}$/.test(form[field.id])) {
-                nextErrors[field.id] = "Invalid postcode";
+                nextErrors[field.id] = "Invalid Information";
+            }
+
+            const cleanedImei = isImeiField(field)
+                ? String(form[field.id] || "").replace(/\s+/g, "")
+                : "";
+            if (isImeiField(field) && form[field.id] && !/^86\d{13}$/.test(cleanedImei)) {
+                nextErrors[field.id] = "IMEI must be 15 digits and start with 86";
+            }
+
+            if (isImeiField(field) && form[field.id] && /^86\d{13}$/.test(cleanedImei)) {
+                if (eventImeiVerification.value !== cleanedImei || eventImeiVerification.status !== "valid") {
+                    nextErrors[field.id] = eventImeiVerification.status === "checking"
+                        ? "Verifying IMEI-1"
+                        : eventImeiVerification.message || "Please verify IMEI-1";
+                }
+            }
+
+            if (field.type === "upload") {
+                const fileError = validateUploadFile(form[field.id]);
+                if (fileError) {
+                    nextErrors[field.id] = fileError;
+                }
             }
         });
 
@@ -475,9 +593,11 @@ export default function EventClaimPage() {
                                             <DynamicField
                                                 key={field.id}
                                                 field={field}
-                                                value={form[field.id]}
+                                            value={form[field.id]}
                                             error={errors[field.id]}
                                             onChange={(value) => setField(field.id, value)}
+                                            onBlur={() => verifyEventImeiOnBlur(field, form[field.id])}
+                                            imeiVerification={isImeiField(field) ? eventImeiVerification : null}
                                             onShowTerms={() => setTermsVisible(true)}
                                             termsUrl={eventTermsUrl}
                                         />
@@ -504,7 +624,7 @@ export default function EventClaimPage() {
     );
 }
 
-function DynamicField({ field, value, error, onChange, onShowTerms, termsUrl }) {
+function DynamicField({ field, value, error, onChange, onBlur, imeiVerification, onShowTerms, termsUrl }) {
     if (field.type === "phone") {
         return <PhoneField field={field} value={value} error={error} onChange={onChange} />;
     }
@@ -533,7 +653,7 @@ function DynamicField({ field, value, error, onChange, onShowTerms, termsUrl }) 
         return <CheckboxField field={field} checked={value} error={error} onChange={onChange} onShowTerms={onShowTerms} termsUrl={termsUrl} />;
     }
 
-    return <TextField field={field} value={value} error={error} onChange={onChange} />;
+    return <TextField field={field} value={value} error={error} onChange={onChange} onBlur={onBlur} imeiVerification={imeiVerification} />;
 }
 
 function EventTermsModal({ event, onClose }) {
@@ -587,18 +707,24 @@ function Label({ label, required, error, helpText }) {
     );
 }
 
-function TextField({ field, value, error, onChange }) {
+function TextField({ field, value, error, onChange, onBlur, imeiVerification }) {
     return (
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} helpText={field.helpText} />
-            <input
-                type="text"
-                value={value || ""}
-                inputMode={field.inputMode}
-                onChange={(event) => onChange(event.target.value)}
-                placeholder={field.placeholder}
-                className={error ? style.inputError : ""}
-            />
+            <div className={`${style.textInputWrap} ${imeiVerification ? style.verifiableInputWrap : ""}`}>
+                <input
+                    type="text"
+                    value={value || ""}
+                    inputMode={field.inputMode}
+                    onChange={(event) => onChange(event.target.value)}
+                    onBlur={onBlur}
+                    placeholder={field.placeholder}
+                    className={error ? style.inputError : ""}
+                />
+                {imeiVerification?.status === "checking" && <span className={style.fieldSpinner} />}
+                {imeiVerification?.status === "valid" && <span className={style.fieldValidIcon}><GiCheckMark /></span>}
+                {imeiVerification?.status === "invalid" && <span className={style.fieldInvalidIcon}><GiCrossMark /></span>}
+            </div>
         </div>
     );
 }

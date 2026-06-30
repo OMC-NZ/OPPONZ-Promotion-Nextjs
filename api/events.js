@@ -2,6 +2,7 @@ import { fetchHomePromos } from "./homePromos";
 
 const CURRENT_EVENTS_ENDPOINT = "/api/backend/events/current";
 const EVENT_FORM_ENDPOINT = (slug) => `/api/backend/events/${encodeURIComponent(slug)}/form`;
+const VERIFY_EVENT_IMEI_ENDPOINT = "/api/backend/events/verify-imei-channel";
 
 export const normalizeCurrentEvents = (response) => {
     if (!response?.success || !Array.isArray(response.data)) return [];
@@ -61,6 +62,44 @@ export const fetchEventForm = async (slug, options = {}) => {
 
     return {
         data: response?.data || null,
+        requestId: response?.requestId || null,
+    };
+};
+
+export const verifyEventImeiChannel = async ({
+    imei,
+    slug,
+    recaptchaToken,
+    recaptchaAction,
+}) => {
+    const body = {
+        imei: imei.replace(/\s+/g, ""),
+        slug_url: slug,
+        ...(recaptchaToken ? { recaptcha_token: recaptchaToken } : {}),
+        ...(recaptchaAction ? { recaptcha_action: recaptchaAction } : {}),
+    };
+
+    const response = await fetchHomePromos(VERIFY_EVENT_IMEI_ENDPOINT, {
+        method: "POST",
+        baseUrl: "",
+        body,
+    });
+
+    if (!response?.success) {
+        throw new Error(response?.message || "Unable to verify IMEI-1.");
+    }
+
+    const verified = (
+        response.data === true
+        || response.data?.verified === true
+        || response.data?.eligible === true
+        || response.verified === true
+        || response.eligible === true
+    );
+
+    return {
+        verified,
+        message: response?.message || null,
         requestId: response?.requestId || null,
     };
 };
