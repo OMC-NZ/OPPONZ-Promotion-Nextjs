@@ -23,6 +23,24 @@
   font-size: 18px;
 }
 
+.loadingEventPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+.loadingEventState {
+  text-align: center;
+}
+
+.loadingEventState h1 {
+  margin: 0;
+  font-size: 42px;
+  line-height: 1.16;
+  font-weight: 700;
+}
+
 .eventForm {
   display: grid;
   gap: 16px;
@@ -89,7 +107,8 @@
   font-size: 16px;
 }
 
-.selectedEventInfo p button {
+.selectedEventInfo p button,
+.selectedEventInfo p a {
   display: inline;
   padding: 0;
   border: 0;
@@ -154,7 +173,7 @@
 }
 
 .uploadGrid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
 }
 
 .fieldGroup {
@@ -168,6 +187,8 @@
   align-items: center;
   gap: 8px;
   min-height: 20px;
+  width: fit-content;
+  max-width: 100%;
   color: #111;
   font-size: 18px;
   font-weight: 600;
@@ -186,6 +207,60 @@
   color: #c70000;
   font-size: 14px;
   font-weight: 600;
+}
+
+.fieldHelpWrap {
+  position: relative;
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.fieldHelpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #555;
+  cursor: help;
+}
+
+.fieldHelpButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.fieldHelpText {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 4;
+  width: max-content;
+  max-width: 280px;
+  padding: 8px 10px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 400;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.fieldHelpButton:hover + .fieldHelpText,
+.fieldHelpButton:focus-visible + .fieldHelpText {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 .fieldGroup input,
@@ -334,6 +409,11 @@
   font-size: 16px;
 }
 
+.uploadFieldGroup {
+  display: grid;
+  gap: 12px;
+}
+
 .uploadBox {
   display: flex;
   flex-direction: column;
@@ -359,20 +439,10 @@
   border-color: #c70000;
 }
 
-.uploadBox > span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 18px;
-  font-weight: 600;
-}
-
 .uploadBox svg {
   width: 28px;
   height: 28px;
-  margin: 18px 0 10px;
+  margin: 0 0 10px;
 }
 
 .uploadBox p {
@@ -410,6 +480,11 @@
   width: 18px;
   height: 18px;
   accent-color: #111;
+}
+
+.checkboxRequired {
+  color: #c70000;
+  font-weight: 700;
 }
 
 .checkboxRow a,
@@ -560,6 +635,10 @@
   }
 
   .heroTitle h1 {
+    font-size: 32px;
+  }
+
+  .loadingEventState h1 {
     font-size: 32px;
   }
 

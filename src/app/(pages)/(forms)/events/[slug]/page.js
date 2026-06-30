@@ -51,12 +51,32 @@ const fixedYourDetailsSection = {
 const fixedImeiSection = {
     id: "imeiVerification",
     title: "IMEI Verification",
-    note: "IMEI verification will be connected later.",
     rows: [
         {
             layout: "oneGrid",
             fields: [
-                { id: "imei", type: "text", label: "IMEI-1", required: true, placeholder: "Enter IMEI-1", inputMode: "numeric" },
+                {
+                    id: "imei",
+                    type: "text",
+                    label: "IMEI-1",
+                    required: true,
+                    placeholder: "Enter IMEI-1",
+                    inputMode: "numeric",
+                    helpText: "You can obtain your IMEI number by going to Settings > About Phone > Status",
+                },
+            ],
+        },
+    ],
+};
+
+const fixedPreferencesSection = {
+    id: "preferences",
+    title: "Preferences & Declaration",
+    rows: [
+        {
+            layout: "oneGrid",
+            fields: [
+                { id: "termsAccepted", type: "checkbox", label: "By entering this claim, you accept and agree to all Terms and Conditions.", termsLink: true, required: true },
             ],
         },
     ],
@@ -65,6 +85,17 @@ const fixedImeiSection = {
 const toCamelCase = (value) => (
     String(value || "")
         .replace(/[_\s-]+(.)?/g, (_, next) => (next ? next.toUpperCase() : ""))
+);
+
+const toTitleCase = (value) => (
+    String(value || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .split(" ")
+        .map((word) => (
+            word ? `${word.charAt(0).toUpperCase()}${word.slice(1)}` : word
+        ))
+        .join(" ")
 );
 
 const normalizeOptions = (options = []) => (
@@ -96,7 +127,7 @@ const normalizeBackendField = (field) => {
         id,
         sourceKey: key,
         type: normalizeFieldType(field.field_type, options),
-        label: field.field_label || key,
+        label: toTitleCase(field.field_label || key),
         placeholder: field.placeholder || "",
         required: isEnabledFlag(field.is_required),
         validation: field.validation || null,
@@ -114,6 +145,10 @@ const getLayoutForFieldCount = (count) => {
 
 const normalizeBackendSections = (sections = []) => (
     sections
+        .filter((section) => {
+            const title = String(section.section_title || "").trim().toLowerCase();
+            return title !== "preferences" && title !== "preferences & declaration";
+        })
         .map((section) => {
             const fields = [...(section.fields || [])]
                 .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
@@ -122,7 +157,7 @@ const normalizeBackendSections = (sections = []) => (
 
             return {
                 id: `section_${section.id}`,
-                title: section.section_title || "Event Details",
+                title: toTitleCase(section.section_title || "Event Details"),
                 sortOrder: section.sort_order || 0,
                 rows: fields.length
                     ? [{ layout: getLayoutForFieldCount(fields.length), fields }]
@@ -176,6 +211,8 @@ const buildFormConfig = (eventFormData) => {
     const uploadsSection = normalizeUploadsSection(eventFormData?.uploads || []);
     if (uploadsSection) sections.push(uploadsSection);
 
+    sections.push(fixedPreferencesSection);
+
     return {
         pageTitle: event.name || "Claim Your Event Gift",
         pageSubtitle: "Complete your details to submit your event claim.",
@@ -208,6 +245,19 @@ const buildInitialForm = (formConfig) => (
     ]))
 );
 
+const validatePattern = (field, value) => {
+    const pattern = field.validation?.pattern;
+    if (!pattern || !value) return "";
+
+    try {
+        return new RegExp(pattern).test(value)
+            ? ""
+            : field.validation?.message || "Invalid format";
+    } catch {
+        return "";
+    }
+};
+
 export default function EventClaimPage() {
     const router = useRouter();
     const verifyRecaptcha = useRecaptchaAction();
@@ -227,6 +277,7 @@ export default function EventClaimPage() {
         || formConfig.event?.bannerUrl
         || ""
     );
+    const eventTermsUrl = formConfig.event?.terms_url || "";
     const [form, setForm] = useState(() => buildInitialForm(formConfig));
     const [errors, setErrors] = useState({});
     const [termsVisible, setTermsVisible] = useState(false);
@@ -302,6 +353,11 @@ export default function EventClaimPage() {
                 nextErrors[field.id] = "Required";
             }
 
+            const patternError = validatePattern(field, form[field.id]);
+            if (patternError) {
+                nextErrors[field.id] = patternError;
+            }
+
             if (field.validation === "email" && form[field.id] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form[field.id])) {
                 nextErrors[field.id] = "Invalid email";
             }
@@ -345,8 +401,8 @@ export default function EventClaimPage() {
 
     if (isEventLoading) {
         return (
-            <main className={style.eventPage}>
-                <section className={style.heroTitle}>
+            <main className={`${style.eventPage} ${style.loadingEventPage}`}>
+                <section className={style.loadingEventState}>
                     <h1>Loading Event</h1>
                 </section>
             </main>
@@ -394,9 +450,15 @@ export default function EventClaimPage() {
                             <h2>{formConfig.event?.name || event?.title}</h2>
                             <p>
                                 {formConfig.selectedEventNote} Review the{" "}
-                                <button type="button" onClick={() => setTermsVisible(true)}>
-                                    Terms and Conditions
-                                </button>
+                                {eventTermsUrl ? (
+                                    <a href={eventTermsUrl} target="_blank" rel="noopener noreferrer">
+                                        Terms and Conditions
+                                    </a>
+                                ) : (
+                                    <button type="button" onClick={() => setTermsVisible(true)}>
+                                        Terms and Conditions
+                                    </button>
+                                )}
                                 .
                             </p>
                         </div>
@@ -414,10 +476,11 @@ export default function EventClaimPage() {
                                                 key={field.id}
                                                 field={field}
                                                 value={form[field.id]}
-                                                error={errors[field.id]}
-                                                onChange={(value) => setField(field.id, value)}
-                                                onShowTerms={() => setTermsVisible(true)}
-                                            />
+                                            error={errors[field.id]}
+                                            onChange={(value) => setField(field.id, value)}
+                                            onShowTerms={() => setTermsVisible(true)}
+                                            termsUrl={eventTermsUrl}
+                                        />
                                         ))}
                                     </div>
                                 ))}
@@ -441,7 +504,7 @@ export default function EventClaimPage() {
     );
 }
 
-function DynamicField({ field, value, error, onChange, onShowTerms }) {
+function DynamicField({ field, value, error, onChange, onShowTerms, termsUrl }) {
     if (field.type === "phone") {
         return <PhoneField field={field} value={value} error={error} onChange={onChange} />;
     }
@@ -467,7 +530,7 @@ function DynamicField({ field, value, error, onChange, onShowTerms }) {
     }
 
     if (field.type === "checkbox") {
-        return <CheckboxField field={field} checked={value} error={error} onChange={onChange} onShowTerms={onShowTerms} />;
+        return <CheckboxField field={field} checked={value} error={error} onChange={onChange} onShowTerms={onShowTerms} termsUrl={termsUrl} />;
     }
 
     return <TextField field={field} value={value} error={error} onChange={onChange} />;
@@ -507,10 +570,18 @@ function FormSection({ title, sectionId, children }) {
     );
 }
 
-function Label({ label, required, error }) {
+function Label({ label, required, error, helpText }) {
     return (
         <label className={style.fieldLabel}>
             <span>{label} {required && <b>*</b>}</span>
+            {helpText && (
+                <span className={style.fieldHelpWrap}>
+                    <button type="button" className={style.fieldHelpButton} aria-label={`${label} information`}>
+                        <FiInfo />
+                    </button>
+                    <span className={style.fieldHelpText}>{helpText}</span>
+                </span>
+            )}
             {error && <strong>{error}</strong>}
         </label>
     );
@@ -519,7 +590,7 @@ function Label({ label, required, error }) {
 function TextField({ field, value, error, onChange }) {
     return (
         <div className={style.fieldGroup}>
-            <Label label={field.label} required={field.required} error={error} />
+            <Label label={field.label} required={field.required} error={error} helpText={field.helpText} />
             <input
                 type="text"
                 value={value || ""}
@@ -624,51 +695,57 @@ function UploadField({ field, file, error, onFile }) {
     };
 
     return (
-        <label
-            className={`${style.uploadBox} ${isDragging ? style.uploadDragging : ""} ${error ? style.uploadError : ""}`}
-            onDragEnter={(event) => {
-                event.preventDefault();
-                setIsDragging(true);
-            }}
-            onDragOver={(event) => event.preventDefault()}
-            onDragLeave={(event) => {
-                event.preventDefault();
-                setIsDragging(false);
-            }}
-            onDrop={(event) => {
-                event.preventDefault();
-                setIsDragging(false);
-                handleFiles(event.dataTransfer.files);
-            }}
-        >
-            <span>
-                {field.label} {field.required && <b>*</b>}
-                {error && <strong>{error}</strong>}
-            </span>
-            <FiUploadCloud />
-            <p>{file ? file.name : "Drag and drop file here\nor click to browse"}</p>
-            <small>{field.helperText || "PDF, JPG or PNG. Max 10MB."}</small>
-            <input type="file" accept={field.accept || ".pdf,.jpg,.jpeg,.png"} onChange={(event) => handleFiles(event.target.files)} />
-        </label>
+        <div className={style.uploadFieldGroup}>
+            <Label label={field.label} required={field.required} error={error} />
+            <label
+                className={`${style.uploadBox} ${isDragging ? style.uploadDragging : ""} ${error ? style.uploadError : ""}`}
+                onDragEnter={(event) => {
+                    event.preventDefault();
+                    setIsDragging(true);
+                }}
+                onDragOver={(event) => event.preventDefault()}
+                onDragLeave={(event) => {
+                    event.preventDefault();
+                    setIsDragging(false);
+                }}
+                onDrop={(event) => {
+                    event.preventDefault();
+                    setIsDragging(false);
+                    handleFiles(event.dataTransfer.files);
+                }}
+            >
+                <FiUploadCloud />
+                <p>{file ? file.name : "Drag and drop file here\nor click to browse"}</p>
+                <small>{field.helperText || "PDF, JPG or PNG. Max 10MB."}</small>
+                <input type="file" accept={field.accept || ".pdf,.jpg,.jpeg,.png"} onChange={(event) => handleFiles(event.target.files)} />
+            </label>
+        </div>
     );
 }
 
-function CheckboxField({ field, checked, error, onChange, onShowTerms }) {
+function CheckboxField({ field, checked, error, onChange, onShowTerms, termsUrl }) {
     const parts = field.termsLink ? field.label.split("Terms and Conditions") : [field.label];
 
     return (
         <label className={style.checkboxRow}>
             <input type="checkbox" checked={Boolean(checked)} onChange={(event) => onChange(event.target.checked)} />
+            {field.required && <b className={style.checkboxRequired}>*</b>}
             <span>
                 {field.termsLink ? (
                     <>
                         {parts[0]}
-                        <button type="button" className={style.inlineTermsButton} onClick={(event) => {
-                            event.preventDefault();
-                            onShowTerms();
-                        }}>
-                            Terms and Conditions
-                        </button>
+                        {termsUrl ? (
+                            <a href={termsUrl} target="_blank" rel="noopener noreferrer">
+                                Terms and Conditions
+                            </a>
+                        ) : (
+                            <button type="button" className={style.inlineTermsButton} onClick={(event) => {
+                                event.preventDefault();
+                                onShowTerms();
+                            }}>
+                                Terms and Conditions
+                            </button>
+                        )}
                         {parts[1]}
                     </>
                 ) : field.label}
