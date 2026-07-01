@@ -8,7 +8,31 @@ export default function useClaimValidation(type) {
     const validate = (value) => {
         let error = "";
 
-        if (!value) {
+        if (type === "file") {
+            const file = value?.[0];
+            const maxImageSize = 5 * 1024 * 1024; // 5MB
+            const maxPdfSize = 10 * 1024 * 1024; // 10MB
+            const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf", ".heic", ".heif"];
+            const imageExtensions = [".jpg", ".jpeg", ".png", ".heic", ".heif"];
+            const allowedImageTypes = ["image/jpeg", "image/jpg", "image/png", "image/heic", "image/heif"];
+            const allowedPdfType = "application/pdf";
+            const fileName = file?.name?.toLowerCase() || "";
+            const extension = allowedExtensions.find((item) => fileName.endsWith(item));
+            const hasValidType = file
+                && (allowedImageTypes.includes(file.type) || file.type === allowedPdfType || Boolean(extension));
+            const isImageFile = allowedImageTypes.includes(file?.type) || imageExtensions.includes(extension);
+            const isPdfFile = file?.type === allowedPdfType || extension === ".pdf";
+
+            if (!file) {
+                error = "Required";
+            } else if (!hasValidType) {
+                error = "File type must be JPG, JPEG, PNG, PDF, HEIC, or HEIF";
+            } else if (isImageFile && file.size > maxImageSize) {
+                error = "Image file size must be 5MB or less";
+            } else if (isPdfFile && file.size > maxPdfSize) {
+                error = "PDF file size must be 10MB or less";
+            }
+        } else if (!value) {
             error = "Required";
         } else {
             if (type === "name") {
@@ -52,21 +76,6 @@ export default function useClaimValidation(type) {
                 const alphanumericRegex = /^[a-zA-Z0-9]+$/;
                 if (!alphanumericRegex.test(value)) {
                     error = "Invalid Information";
-                }
-            } else if (type === "file") {
-                const file = value[0];
-                const maxImageSize = 5 * 1024 * 1024; // 5MB
-                const maxPdfSize = 10 * 1024 * 1024; // 10MB
-                const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-                const allowedPdfType = 'application/pdf';
-                if (file) {
-                    if (!allowedImageTypes.includes(file.type) && file.type !== allowedPdfType) {
-                        error = "File type must be in JPEG, JPG, PNG, or PDF format";
-                    } else if (allowedImageTypes.includes(file.type) && file.size > maxImageSize) {
-                        error = "Image file size must be 5MB or less";
-                    } else if (file.type === allowedPdfType && file.size > maxPdfSize) {
-                        error = "PDF file size must be 10MB or less";
-                    }
                 }
             }
         }

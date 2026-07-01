@@ -18,12 +18,11 @@ const getRecaptchaHeaders = (request) => {
 
 export async function POST(request) {
     try {
-        const body = await request.text();
+        const body = await request.formData();
         const response = await fetch(`${BACKEND_API_URL}/api/claims`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json",
                 ...getRecaptchaHeaders(request),
             },
             body,

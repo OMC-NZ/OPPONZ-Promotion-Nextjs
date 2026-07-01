@@ -189,7 +189,7 @@ const normalizeUploadsSection = (uploads = []) => {
                     type: "upload",
                     label: upload.upload_label || "Upload Document",
                     required: true,
-                    helperText: "PDF, JPG or PNG. Max 10MB.",
+                    helperText: "JPG, JPEG, PNG, PDF, HEIC or HEIF. Max 10MB.",
                 })),
             },
         ],
@@ -268,15 +268,20 @@ const validateUploadFile = (file) => {
     if (!file) return "";
 
     const maxSize = 10 * 1024 * 1024;
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf", ".heic", ".heif"];
     const allowedTypes = new Set([
         "application/pdf",
         "image/jpeg",
         "image/jpg",
         "image/png",
+        "image/heic",
+        "image/heif",
     ]);
+    const fileName = file.name?.toLowerCase() || "";
+    const hasValidExtension = allowedExtensions.some((extension) => fileName.endsWith(extension));
 
-    if (!allowedTypes.has(file.type)) {
-        return "File type must be PDF, JPG, JPEG, or PNG";
+    if (!allowedTypes.has(file.type) && !hasValidExtension) {
+        return "File type must be JPG, JPEG, PNG, PDF, HEIC, or HEIF";
     }
 
     if (file.size > maxSize) {
@@ -842,8 +847,8 @@ function UploadField({ field, file, error, onFile }) {
             >
                 <FiUploadCloud />
                 <p>{file ? file.name : "Drag and drop file here\nor click to browse"}</p>
-                <small>{field.helperText || "PDF, JPG or PNG. Max 10MB."}</small>
-                <input type="file" accept={field.accept || ".pdf,.jpg,.jpeg,.png"} onChange={(event) => handleFiles(event.target.files)} />
+                <small>{field.helperText || "JPG, JPEG, PNG, PDF, HEIC or HEIF. Max 10MB."}</small>
+                <input type="file" accept={field.accept || ".jpg,.jpeg,.png,.pdf,.heic,.heif"} onChange={(event) => handleFiles(event.target.files)} />
             </label>
         </div>
     );

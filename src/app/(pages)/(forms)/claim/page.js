@@ -76,23 +76,37 @@ function TermsLink({ href, children }) {
     );
 }
 
-const buildClaimPayload = (data) => ({
-    promotion_id: data.promotion.promotionId || data.promotion.promotion_id || data.promotion.id,
-    imei: data.verifiedImei,
-    purchase_date: data.promotion.purchaseDateValue || data.verifiedPurchaseDate,
-    receipt_url: data.receiptFileName,
-    screenshot_url: data.screenshotFileName,
-    first_name: data.firstName,
-    last_name: data.lastName,
-    email: data.email,
-    contact: data.contact,
-    street: data.street,
-    suburb: data.suburb,
-    city: data.city,
-    postcode: data.postcode,
-    instructions: data.instructions || "",
-    gift_alias: data.selectedGifts?.[0]?.alias || data.selectedGifts?.[0]?.label || data.selectedGifts?.[0]?.name || "",
-});
+const appendClaimField = (formData, key, value) => {
+    formData.append(key, value == null ? "" : String(value));
+};
+
+const buildClaimPayload = (data) => {
+    const formData = new FormData();
+    const imeiScreenshotFile = data.documents?.find((document) => document.label === "IMEI Screenshot")?.file;
+    const proofOfPurchaseFile = data.documents?.find((document) => document.label === "Proof of Purchase")?.file;
+
+    appendClaimField(formData, "promotion_id", data.promotion.promotionId || data.promotion.promotion_id || data.promotion.id);
+    appendClaimField(formData, "imei", data.verifiedImei);
+    appendClaimField(formData, "purchase_date", data.promotion.purchaseDateValue || data.verifiedPurchaseDate);
+    if (proofOfPurchaseFile) {
+        formData.append("receipt_url", proofOfPurchaseFile, proofOfPurchaseFile.name);
+    }
+    if (imeiScreenshotFile) {
+        formData.append("screenshot_url", imeiScreenshotFile, imeiScreenshotFile.name);
+    }
+    appendClaimField(formData, "first_name", data.firstName);
+    appendClaimField(formData, "last_name", data.lastName);
+    appendClaimField(formData, "email", data.email);
+    appendClaimField(formData, "contact", data.contact);
+    appendClaimField(formData, "street", data.street);
+    appendClaimField(formData, "suburb", data.suburb);
+    appendClaimField(formData, "city", data.city);
+    appendClaimField(formData, "postcode", data.postcode);
+    appendClaimField(formData, "instructions", data.instructions || "");
+    appendClaimField(formData, "gift_alias", data.selectedGifts?.[0]?.alias || data.selectedGifts?.[0]?.label || data.selectedGifts?.[0]?.name || "");
+
+    return formData;
+};
 
 export default function Claim() {
     const router = useRouter();

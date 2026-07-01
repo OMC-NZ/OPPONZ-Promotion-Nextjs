@@ -153,11 +153,13 @@ export default function CurrentEvents() {
                                 {pageEvents.map((event, index) => {
                                     const eventId = event.id;
                                     const eventHref = event.claimUrl;
+                                    const isCurrentEventLoading = navigatingEventId === eventId;
+                                    const isEventNavigationLocked = Boolean(navigatingEventId);
 
                                     return (
                                         <div
                                             key={eventId}
-                                            className={`${eventStyle.promoCard} ${eventStyle.eventCard} ${navigatingEventId ? eventStyle.eventCardNavigating : ""} ${imgsPerPage === 3
+                                            className={`${eventStyle.promoCard} ${eventStyle.eventCard} ${isEventNavigationLocked ? eventStyle.eventCardNavigating : ""} ${isCurrentEventLoading ? eventStyle.eventCardLoading : ""} ${isEventNavigationLocked && !isCurrentEventLoading ? eventStyle.eventCardDisabled : ""} ${imgsPerPage === 3
                                                 ? eventStyle.cpimg_th
                                                 : imgsPerPage === 2
                                                     ? eventStyle.cpimg_t
@@ -198,8 +200,9 @@ export default function CurrentEvents() {
                                             <div className={eventStyle.eventOverlay}>
                                                 <Link
                                                     href={eventHref}
-                                                    className={`${eventStyle.eventClaimButton} ${navigatingEventId === eventId ? eventStyle.eventClaimButtonLoading : ""}`}
-                                                    aria-disabled={Boolean(navigatingEventId)}
+                                                    className={`${eventStyle.eventClaimButton} ${isCurrentEventLoading ? eventStyle.eventClaimButtonLoading : ""}`}
+                                                    aria-disabled={isEventNavigationLocked}
+                                                    tabIndex={isEventNavigationLocked && !isCurrentEventLoading ? -1 : 0}
                                                     onPointerDown={(e) => e.stopPropagation()}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -215,9 +218,9 @@ export default function CurrentEvents() {
                                                             lineHeight: 1,
                                                         }}
                                                     >
-                                                        {navigatingEventId === eventId && <span className={eventStyle.buttonSpinner} />}
-                                                        <span>{navigatingEventId === eventId ? "Loading" : "Claim Now"}</span>
-                                                        {navigatingEventId !== eventId && <FaAngleRight style={{ display: "unset" }} />}
+                                                        {isCurrentEventLoading && <span className={eventStyle.buttonSpinner} />}
+                                                        <span>{isCurrentEventLoading ? "Loading" : "Claim Now"}</span>
+                                                        {!isCurrentEventLoading && <FaAngleRight style={{ display: "unset" }} />}
                                                     </span>
                                                 </Link>
                                             </div>
