@@ -366,22 +366,6 @@ const buildEventClaimPayload = ({
     return formData;
 };
 
-const logEventClaimPayload = (formData) => {
-    const payloadPreview = {};
-
-    formData.forEach((value, key) => {
-        payloadPreview[key] = value instanceof File
-            ? {
-                fileName: value.name,
-                fileType: value.type,
-                fileSize: value.size,
-            }
-            : value;
-    });
-
-    console.log("Event claim submit payload", payloadPreview);
-};
-
 export default function EventClaimPage() {
     const router = useRouter();
     const verifyRecaptcha = useRecaptchaAction();
@@ -411,6 +395,7 @@ export default function EventClaimPage() {
     });
     const [termsVisible, setTermsVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitResult, setSubmitResult] = useState(null);
     const deliveryAddressSection = useDeliveryAddressSection();
 
     useEffect(() => {
@@ -609,16 +594,23 @@ export default function EventClaimPage() {
                 recaptcha,
                 slug: eventSlug,
             });
-            logEventClaimPayload(claimPayload);
 
             const response = await submitEventClaim(eventSlug, claimPayload, recaptcha);
 
-            console.log("Event claim submitted", {
-                event: eventSlug,
-                response,
+            setSubmitResult({
+                success: Boolean(response?.success),
+                email: form.email || "",
+                message: response?.success
+                    ? ""
+                    : response?.message || "Submission failed. Please check your details and try again.",
             });
         } catch (error) {
-            console.error(error);
+            setSubmitResult({
+                success: false,
+                claimId: "",
+                email: form.email || "",
+                message: error?.message || "Submission failed. Please check your details and try again.",
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -653,7 +645,7 @@ export default function EventClaimPage() {
                     <p>{formConfig.pageSubtitle}</p>
                 </section>
 
-                <div className={style.eventForm}>
+                <div className={`${style.eventForm} ${isSubmitting ? style.eventFormSubmitting : ""}`} aria-busy={isSubmitting}>
                     <section className={`${style.selectedEventCard} ${!eventBanner ? style.selectedEventCardNoMedia : ""}`}>
                         {eventBanner && (
                             <>
@@ -707,6 +699,7 @@ export default function EventClaimPage() {
                                             imeiVerification={isImeiField(field) ? eventImeiVerification : null}
                                             onShowTerms={() => setTermsVisible(true)}
                                             termsUrl={eventTermsUrl}
+                                            disabled={isSubmitting}
                                         />
                                         ))}
                                     </div>
@@ -718,7 +711,13 @@ export default function EventClaimPage() {
 
                     <div className={style.actions}>
                         <button type="button" className={style.secondaryButton} onClick={() => router.back()} disabled={isSubmitting}>Back</button>
-                        <button type="button" className={style.primaryButton} onClick={handleSubmit} disabled={isSubmitting}>
+                        <button
+                            type="button"
+                            className={`${style.primaryButton} ${isSubmitting ? style.primaryButtonActive : ""}`}
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting && <span className={style.buttonSpinner} />}
                             {isSubmitting ? "Submitting" : "Submit Claim"}
                         </button>
                     </div>
@@ -727,40 +726,81 @@ export default function EventClaimPage() {
             {termsVisible && (
                 <EventTermsModal event={formConfig.event} onClose={() => setTermsVisible(false)} />
             )}
+            {submitResult && (
+                <EventSubmitResultModal
+                    result={submitResult}
+                    email={submitResult.email}
+                    onBackHome={() => router.push("/")}
+                    onClose={() => setSubmitResult(null)}
+                />
+            )}
         </>
     );
 }
 
-function DynamicField({ field, value, error, onChange, onBlur, imeiVerification, onShowTerms, termsUrl }) {
+function DynamicField({ field, value, error, onChange, onBlur, imeiVerification, onShowTerms, termsUrl, disabled }) {
     if (field.type === "phone") {
-        return <PhoneField field={field} value={value} error={error} onChange={onChange} />;
+        return <PhoneField field={field} value={value} error={error} onChange={onChange} disabled={disabled} />;
     }
 
     if (field.type === "radio") {
-        return <RadioGroup field={field} value={value} error={error} onChange={onChange} />;
+        return <RadioGroup field={field} value={value} error={error} onChange={onChange} disabled={disabled} />;
     }
 
     if (field.type === "select") {
-        return <SelectField field={field} value={value} error={error} onChange={onChange} />;
+        return <SelectField field={field} value={value} error={error} onChange={onChange} disabled={disabled} />;
     }
 
     if (field.type === "textarea") {
-        return <TextareaField field={field} value={value} error={error} onChange={onChange} />;
+        return <TextareaField field={field} value={value} error={error} onChange={onChange} disabled={disabled} />;
     }
 
     if (field.type === "date") {
-        return <DateField field={field} value={value} error={error} onChange={onChange} />;
+        return <DateField field={field} value={value} error={error} onChange={onChange} disabled={disabled} />;
     }
 
     if (field.type === "upload") {
-        return <UploadField field={field} file={value} error={error} onFile={onChange} />;
+        return <UploadField field={field} file={value} error={error} onFile={onChange} disabled={disabled} />;
     }
 
     if (field.type === "checkbox") {
-        return <CheckboxField field={field} checked={value} error={error} onChange={onChange} onShowTerms={onShowTerms} termsUrl={termsUrl} />;
+        return <CheckboxField field={field} checked={value} error={error} onChange={onChange} onShowTerms={onShowTerms} termsUrl={termsUrl} disabled={disabled} />;
     }
 
-    return <TextField field={field} value={value} error={error} onChange={onChange} onBlur={onBlur} imeiVerification={imeiVerification} />;
+    return <TextField field={field} value={value} error={error} onChange={onChange} onBlur={onBlur} imeiVerification={imeiVerification} disabled={disabled} />;
+}
+
+function EventSubmitResultModal({ result, email, onBackHome, onClose }) {
+    const isSuccess = result?.success;
+
+    return (
+        <div className={style.submitOverlay} role="dialog" aria-modal="true" aria-labelledby="event-submit-title">
+            <section className={style.submitModal}>
+                <h2 id="event-submit-title">
+                    {isSuccess ? "Claim Submitted Successfully" : "Submission Failed"}
+                </h2>
+                {isSuccess ? (
+                    <>
+                        <p>Your event claim has been submitted successfully.</p>
+                        <p>
+                            A confirmation email has been sent to {email || "your email address"}.
+                            Please check your inbox.
+                        </p>
+                        <p>
+                            If you have any questions, please contact{" "}
+                            <a href="mailto:service@oppomobile.nz">service@oppomobile.nz</a>.
+                        </p>
+                        <button type="button" className={style.primaryButton} onClick={onBackHome}>Back to Home</button>
+                    </>
+                ) : (
+                    <>
+                        <p>{result?.message || "Submission failed. Please check your details and try again."}</p>
+                        <button type="button" className={style.primaryButton} onClick={onClose}>Close</button>
+                    </>
+                )}
+            </section>
+        </div>
+    );
 }
 
 function EventTermsModal({ event, onClose }) {
@@ -814,7 +854,7 @@ function Label({ label, required, error, helpText }) {
     );
 }
 
-function TextField({ field, value, error, onChange, onBlur, imeiVerification }) {
+function TextField({ field, value, error, onChange, onBlur, imeiVerification, disabled }) {
     return (
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} helpText={field.helpText} />
@@ -827,6 +867,7 @@ function TextField({ field, value, error, onChange, onBlur, imeiVerification }) 
                     onBlur={onBlur}
                     placeholder={field.placeholder}
                     className={error ? style.inputError : ""}
+                    disabled={disabled}
                 />
                 {imeiVerification?.status === "checking" && <span className={style.fieldSpinner} />}
                 {imeiVerification?.status === "valid" && <span className={style.fieldValidIcon}><GiCheckMark /></span>}
@@ -836,7 +877,7 @@ function TextField({ field, value, error, onChange, onBlur, imeiVerification }) 
     );
 }
 
-function DateField({ field, value, error, onChange }) {
+function DateField({ field, value, error, onChange, disabled }) {
     return (
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} />
@@ -848,6 +889,7 @@ function DateField({ field, value, error, onChange }) {
                     onChange={(event) => onChange(event.target.value.replace(/[^\d/]/g, ""))}
                     placeholder={field.placeholder || "DD/MM/YYYY"}
                     className={error ? style.inputError : ""}
+                    disabled={disabled}
                 />
                 <FiCalendar />
             </div>
@@ -855,31 +897,32 @@ function DateField({ field, value, error, onChange }) {
     );
 }
 
-function PhoneField({ field, value, error, onChange }) {
+function PhoneField({ field, value, error, onChange, disabled }) {
     return (
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} />
             <div className={`${style.phoneInput} ${error ? style.inputError : ""}`}>
-                <button type="button">{field.countryCode || "+64"} <FiChevronDown /></button>
+                <span className={style.phonePrefix}>{field.countryCode || "+64"}</span>
                 <input
                     type="text"
                     value={value || ""}
                     inputMode="numeric"
                     onChange={(event) => onChange(event.target.value.replace(/\D/g, ""))}
                     placeholder={field.placeholder}
+                    disabled={disabled}
                 />
             </div>
         </div>
     );
 }
 
-function RadioGroup({ field, value, error, onChange }) {
+function RadioGroup({ field, value, error, onChange, disabled }) {
     return (
         <fieldset className={style.radioGroup}>
             <legend>{field.label} {field.required && <b>*</b>} {error && <strong>{error}</strong>}</legend>
             {field.options.map((option) => (
                 <label key={option.value}>
-                    <input type="radio" name={field.id} value={option.value} checked={value === option.value} onChange={() => onChange(option.value)} />
+                    <input type="radio" name={field.id} value={option.value} checked={value === option.value} onChange={() => onChange(option.value)} disabled={disabled} />
                     {option.label}
                 </label>
             ))}
@@ -887,12 +930,12 @@ function RadioGroup({ field, value, error, onChange }) {
     );
 }
 
-function SelectField({ field, value, error, onChange }) {
+function SelectField({ field, value, error, onChange, disabled }) {
     return (
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} />
             <div className={style.selectWrap}>
-                <select value={value || ""} onChange={(event) => onChange(event.target.value)} className={error ? style.inputError : ""}>
+                <select value={value || ""} onChange={(event) => onChange(event.target.value)} className={error ? style.inputError : ""} disabled={disabled}>
                     <option value="">{field.placeholder || "Select an option"}</option>
                     {field.options.map((option) => (
                         <option value={option.value} key={option.value}>{option.label}</option>
@@ -904,7 +947,7 @@ function SelectField({ field, value, error, onChange }) {
     );
 }
 
-function TextareaField({ field, value, error, onChange }) {
+function TextareaField({ field, value, error, onChange, disabled }) {
     return (
         <div className={style.fieldGroup}>
             <Label label={field.label} required={field.required} error={error} />
@@ -913,16 +956,19 @@ function TextareaField({ field, value, error, onChange }) {
                 maxLength={field.maxLength}
                 onChange={(event) => onChange(event.target.value)}
                 placeholder={field.placeholder}
+                className={error ? style.inputError : ""}
+                disabled={disabled}
             />
             {field.maxLength && <small className={style.charCount}>{(value || "").length}/{field.maxLength}</small>}
         </div>
     );
 }
 
-function UploadField({ field, file, error, onFile }) {
+function UploadField({ field, file, error, onFile, disabled }) {
     const [isDragging, setIsDragging] = useState(false);
 
     const handleFiles = (files) => {
+        if (disabled) return;
         if (!files?.[0]) return;
         onFile(files[0]);
     };
@@ -933,15 +979,21 @@ function UploadField({ field, file, error, onFile }) {
             <label
                 className={`${style.uploadBox} ${isDragging ? style.uploadDragging : ""} ${error ? style.uploadError : ""}`}
                 onDragEnter={(event) => {
+                    if (disabled) return;
                     event.preventDefault();
                     setIsDragging(true);
                 }}
-                onDragOver={(event) => event.preventDefault()}
+                onDragOver={(event) => {
+                    if (disabled) return;
+                    event.preventDefault();
+                }}
                 onDragLeave={(event) => {
+                    if (disabled) return;
                     event.preventDefault();
                     setIsDragging(false);
                 }}
                 onDrop={(event) => {
+                    if (disabled) return;
                     event.preventDefault();
                     setIsDragging(false);
                     handleFiles(event.dataTransfer.files);
@@ -950,18 +1002,18 @@ function UploadField({ field, file, error, onFile }) {
                 <FiUploadCloud />
                 <p>{file ? file.name : "Drag and drop file here\nor click to browse"}</p>
                 <small>{field.helperText || "JPG, JPEG, PNG, PDF, HEIC or HEIF. Max 10MB."}</small>
-                <input type="file" accept={field.accept || ".jpg,.jpeg,.png,.pdf,.heic,.heif"} onChange={(event) => handleFiles(event.target.files)} />
+                <input type="file" accept={field.accept || ".jpg,.jpeg,.png,.pdf,.heic,.heif"} onChange={(event) => handleFiles(event.target.files)} disabled={disabled} />
             </label>
         </div>
     );
 }
 
-function CheckboxField({ field, checked, error, onChange, onShowTerms, termsUrl }) {
+function CheckboxField({ field, checked, error, onChange, onShowTerms, termsUrl, disabled }) {
     const parts = field.termsLink ? field.label.split("Terms and Conditions") : [field.label];
 
     return (
         <label className={style.checkboxRow}>
-            <input type="checkbox" checked={Boolean(checked)} onChange={(event) => onChange(event.target.checked)} />
+            <input type="checkbox" checked={Boolean(checked)} onChange={(event) => onChange(event.target.checked)} disabled={disabled} />
             {field.required && <b className={style.checkboxRequired}>*</b>}
             <span>
                 {field.termsLink ? (

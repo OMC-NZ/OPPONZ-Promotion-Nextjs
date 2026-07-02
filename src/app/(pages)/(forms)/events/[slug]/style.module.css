@@ -42,10 +42,19 @@
 }
 
 .eventForm {
+  position: relative;
   display: grid;
   gap: 16px;
   width: min(100%, 1120px);
   margin: 0 auto;
+}
+
+.eventFormSubmitting::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: wait;
 }
 
 .formSection,
@@ -393,14 +402,14 @@
   overflow: hidden;
 }
 
-.phoneInput button {
+.phonePrefix {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   border: 0;
   border-right: 1px solid #cfcfcf;
   background: #fff;
+  color: #8a8a8a;
   font-size: 19px;
   font-weight: 700;
 }
@@ -409,6 +418,15 @@
   height: 100%;
   border: 0;
   border-radius: 0;
+}
+
+.fieldGroup input:disabled,
+.fieldGroup select:disabled,
+.fieldGroup textarea:disabled,
+.phoneInput input:disabled {
+  background: #f7f7f7;
+  color: #777;
+  cursor: not-allowed;
 }
 
 .radioGroup {
@@ -652,8 +670,8 @@
 
 .primaryButton {
   min-width: 220px;
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #111;
 }
 
 .secondaryButton:hover {
@@ -662,7 +680,78 @@
 }
 
 .primaryButton:hover {
-  background: #222;
+  background: #000;
+  color: #fff;
+}
+
+.primaryButtonActive,
+.primaryButton:disabled {
+  background: #000;
+  color: #fff;
+  cursor: wait;
+}
+
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.buttonSpinner {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.42);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: buttonSpin 0.8s linear infinite;
+}
+
+@keyframes buttonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.submitOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.submitModal {
+  width: min(100%, 520px);
+  padding: 34px 34px 30px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.submitModal h2 {
+  margin: 0 0 16px;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.submitModal p {
+  margin: 0 0 12px;
+  color: #444;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.submitModal button {
+  margin-top: 18px;
+}
+
+.submitModal a {
+  color: #0057b8;
+  text-decoration: underline;
 }
 
 @media (max-width: 1023px) {
