@@ -2,6 +2,7 @@ import { fetchHomePromos } from "./homePromos";
 
 const CURRENT_EVENTS_ENDPOINT = "/api/backend/events/current";
 const EVENT_FORM_ENDPOINT = (slug) => `/api/backend/events/${encodeURIComponent(slug)}/form`;
+const EVENT_CLAIMS_ENDPOINT = (slug) => `/api/backend/events/${encodeURIComponent(slug)}/claims`;
 const VERIFY_EVENT_IMEI_ENDPOINT = "/api/backend/events/verify-imei-channel";
 
 export const normalizeCurrentEvents = (response) => {
@@ -64,6 +65,26 @@ export const fetchEventForm = async (slug, options = {}) => {
         data: response?.data || null,
         requestId: response?.requestId || null,
     };
+};
+
+export const submitEventClaim = async (slug, claimBody, recaptcha) => {
+    try {
+        return await fetchHomePromos(EVENT_CLAIMS_ENDPOINT(slug), {
+            method: "POST",
+            baseUrl: "",
+            headers: {
+                ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
+                ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
+            },
+            body: claimBody,
+        });
+    } catch (error) {
+        if (error?.body && typeof error.body === "object") {
+            return error.body;
+        }
+
+        throw error;
+    }
 };
 
 export const verifyEventImeiChannel = async ({

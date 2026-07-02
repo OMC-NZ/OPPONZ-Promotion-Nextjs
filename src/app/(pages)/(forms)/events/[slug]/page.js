@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FiCalendar, FiChevronDown, FiUploadCloud, FiInfo } from "react-icons/fi";
 import { GiCheckMark, GiCrossMark } from "react-icons/gi";
-import { fetchCurrentEvents, fetchEventForm, verifyEventImeiChannel } from "@api/events";
+import { fetchCurrentEvents, fetchEventForm, submitEventClaim, verifyEventImeiChannel } from "@api/events";
 import {
     DeliveryAddressCard,
     useDeliveryAddressSection,
@@ -24,6 +24,14 @@ const PERSONAL_FIELD_KEYS = new Set([
     "mobile_number",
     "phone",
     "contact",
+]);
+
+const TOP_LEVEL_FIELD_KEYS = new Set([
+    "first_name",
+    "last_name",
+    "email",
+    "contact",
+    "imei",
 ]);
 
 const isEnabledFlag = (value) => value === 1 || value === "1" || value === true;
@@ -296,6 +304,84 @@ const getEventSlug = (formConfig, event, routeSlug) => {
     return eventData.slug_url || eventData.slug || event?.slug || routeSlug || "";
 };
 
+const appendFormDataValue = (formData, key, value) => {
+    formData.append(key, value == null ? "" : String(value));
+};
+
+const normalizeEventFieldValue = (field, value) => {
+    if (field.type === "checkbox") return value ? "1" : "0";
+    return value == null ? "" : value;
+};
+
+const getFieldSubmitKey = (field) => field.sourceKey || field.id;
+
+const buildEventClaimPayload = ({
+    formConfig,
+    form,
+    fields,
+    deliveryAddress,
+    recaptcha,
+    slug,
+}) => {
+    const formData = new FormData();
+    const extraData = {};
+    const eventData = formConfig.event || {};
+
+    appendFormDataValue(formData, "event_id", eventData.id || eventData.event_id || "");
+    appendFormDataValue(formData, "slug", eventData.slug_url || eventData.slug || slug || "");
+
+    fields.forEach((field) => {
+        const submitKey = getFieldSubmitKey(field);
+        const value = form[field.id];
+
+        if (field.type === "upload") {
+            if (value) {
+                formData.append(submitKey, value, value.name);
+            }
+            return;
+        }
+
+        if (TOP_LEVEL_FIELD_KEYS.has(submitKey) || TOP_LEVEL_FIELD_KEYS.has(field.id) || isImeiField(field)) {
+            const topLevelKey = isImeiField(field) ? "imei" : submitKey;
+            appendFormDataValue(formData, topLevelKey, isImeiField(field)
+                ? String(value || "").replace(/\s+/g, "")
+                : normalizeEventFieldValue(field, value));
+            return;
+        }
+
+        extraData[submitKey] = normalizeEventFieldValue(field, value);
+    });
+
+    if (formConfig.requiresDelivery) {
+        appendFormDataValue(formData, "street", deliveryAddress.street);
+        appendFormDataValue(formData, "suburb", deliveryAddress.suburb);
+        appendFormDataValue(formData, "city", deliveryAddress.city);
+        appendFormDataValue(formData, "postcode", deliveryAddress.postcode);
+    }
+
+    appendFormDataValue(formData, "recaptcha_token", recaptcha?.token || "");
+    appendFormDataValue(formData, "recaptcha_action", recaptcha?.action || "event_claim_submit");
+    formData.append("extra_data", JSON.stringify(extraData));
+
+    return formData;
+};
+
+const logEventClaimPayload = (formData) => {
+    const payloadPreview = {};
+
+    formData.forEach((value, key) => {
+        payloadPreview[key] = value instanceof File
+            ? {
+                fileName: value.name,
+                fileType: value.type,
+                fileSize: value.size,
+            }
+            : value;
+    });
+
+    console.log("Event claim submit payload", payloadPreview);
+};
+
 export default function EventClaimPage() {
     const router = useRouter();
     const verifyRecaptcha = useRecaptchaAction();
@@ -508,12 +594,28 @@ export default function EventClaimPage() {
         setIsSubmitting(true);
 
         try {
-            await verifyRecaptcha("event_claim_submit");
-            // TODO: Replace this with the event-specific submission endpoint.
-            console.log("Event claim submitted", {
-                event: formConfig.event?.slug_url || event.slug,
+            const recaptcha = await verifyRecaptcha("event_claim_submit");
+
+            if (!recaptcha?.token) {
+                throw new Error("Security verification failed. Please try again.");
+            }
+
+            const eventSlug = getEventSlug(formConfig, event, slug);
+            const claimPayload = buildEventClaimPayload({
+                formConfig,
                 form,
-                deliveryAddress: formConfig.requiresDelivery ? deliveryAddressSection.getReviewData() : null,
+                fields,
+                deliveryAddress: formConfig.requiresDelivery ? deliveryAddressSection.getReviewData() : {},
+                recaptcha,
+                slug: eventSlug,
+            });
+            logEventClaimPayload(claimPayload);
+
+            const response = await submitEventClaim(eventSlug, claimPayload, recaptcha);
+
+            console.log("Event claim submitted", {
+                event: eventSlug,
+                response,
             });
         } catch (error) {
             console.error(error);
