@@ -34,6 +34,10 @@ const TOP_LEVEL_FIELD_KEYS = new Set([
     "imei",
 ]);
 
+const NON_SUBMIT_FIELD_KEYS = new Set([
+    "termsAccepted",
+]);
+
 const isEnabledFlag = (value) => value === 1 || value === "1" || value === true;
 const isImeiField = (field) => (
     field.validation === "imei"
@@ -333,6 +337,10 @@ const buildEventClaimPayload = ({
     fields.forEach((field) => {
         const submitKey = getFieldSubmitKey(field);
         const value = form[field.id];
+
+        if (NON_SUBMIT_FIELD_KEYS.has(field.id) || NON_SUBMIT_FIELD_KEYS.has(submitKey)) {
+            return;
+        }
 
         if (field.type === "upload") {
             if (value) {

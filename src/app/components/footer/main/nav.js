@@ -93,7 +93,7 @@ function FooterNavContent({ pathname, monthly, currentEvents }) {
             </span>
           </li>
           <li className="min-w-[169px] mb-[40px]">
-            <Link href="https://oppostore.co.nz/" target="_blank" className={`${style.ft_body_2_1}`}>Shop Now</Link>
+            <Link href="https://oppostore.co.nz/" target="_blank" rel="noopener noreferrer" className={`${style.ft_body_2_1}`}>Shop Now</Link>
           </li>
         </ul>
       </nav>

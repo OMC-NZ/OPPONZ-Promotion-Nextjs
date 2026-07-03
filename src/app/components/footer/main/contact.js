@@ -59,32 +59,32 @@ export default function FooterContact({ isShow, toggleWidget }) {
                     <div className={`${style.contact_bottom}`}>
                         <ul className={`${style.social_media}`}>
                             <li name="Facebook">
-                                <Link href="https://www.facebook.com/OPPONewZealand" target="_blank" className={`${style.media_link}`}>
+                                <Link href="https://www.facebook.com/OPPONewZealand" target="_blank" rel="noopener noreferrer" className={`${style.media_link}`}>
                                     <Image src="/svg/Facebook.svg" alt="Facebook" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Twitter">
-                                <Link href="https://twitter.com/OPPONewZealand" target="_blank" className={`${style.media_link}`}>
+                                <Link href="https://twitter.com/OPPONewZealand" target="_blank" rel="noopener noreferrer" className={`${style.media_link}`}>
                                     <Image src="/svg/Twitter.svg" alt="Twitter" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Youtube">
-                                <Link href="https://www.youtube.com/channel/UC0twtNru9HeQiF1EVf31IQA" target="_blank" className={`${style.media_link}`}>
+                                <Link href="https://www.youtube.com/channel/UC0twtNru9HeQiF1EVf31IQA" target="_blank" rel="noopener noreferrer" className={`${style.media_link}`}>
                                     <Image src="/svg/YouTube.svg" alt="YouTube" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Instagram">
-                                <Link href="https://instagram.com/opponewzealand" target="_blank" className={`${style.media_link}`}>
+                                <Link href="https://instagram.com/opponewzealand" target="_blank" rel="noopener noreferrer" className={`${style.media_link}`}>
                                     <Image src="/svg/Instagram.svg" alt="Instagram" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="Threads">
-                                <Link href="https://www.threads.com/@opponewzealand" target="_blank" className={`${style.media_link}`}>
+                                <Link href="https://www.threads.com/@opponewzealand" target="_blank" rel="noopener noreferrer" className={`${style.media_link}`}>
                                     <Image src="/svg/Threads.svg" alt="Threads" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>
                             <li name="TikTok">
-                                <Link href="https://www.tiktok.com/@opponewzealand" target="_blank" className={`${style.media_link}`}>
+                                <Link href="https://www.tiktok.com/@opponewzealand" target="_blank" rel="noopener noreferrer" className={`${style.media_link}`}>
                                     <Image src="/svg/TikTok.svg" alt="TikTok" width={24} height={24} className={`${style.social_icon}`} />
                                 </Link>
                             </li>

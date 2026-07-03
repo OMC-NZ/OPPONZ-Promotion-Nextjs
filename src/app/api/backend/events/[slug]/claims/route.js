@@ -16,28 +16,11 @@ const getRecaptchaHeaders = (request) => {
     };
 };
 
-const logEventClaimFormData = (slug, formData) => {
-    const payloadPreview = {};
-
-    formData.forEach((value, key) => {
-        payloadPreview[key] = value instanceof File
-            ? {
-                fileName: value.name,
-                fileType: value.type,
-                fileSize: value.size,
-            }
-            : value;
-    });
-
-    console.log(`Event claim proxy payload (${slug})`, payloadPreview);
-};
-
 export async function POST(request, { params }) {
     const { slug } = await params;
 
     try {
         const body = await request.formData();
-        logEventClaimFormData(slug, body);
         const response = await fetch(`${BACKEND_API_URL}/api/events/${encodeURIComponent(slug)}/claims`, {
             method: "POST",
             headers: {
