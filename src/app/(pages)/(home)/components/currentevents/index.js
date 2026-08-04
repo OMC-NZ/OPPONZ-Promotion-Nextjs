@@ -134,7 +134,7 @@ export default function CurrentEvents() {
             </div>
 
             <div
-                className={eventStyle.carouselViewport}
+                className={`${eventStyle.carouselViewport} ${showPaginationDots ? eventStyle.carouselViewportDraggable : ""}`}
                 onPointerDown={handleDragStart}
                 onPointerMove={handleDragMove}
                 onPointerUp={finishDrag}

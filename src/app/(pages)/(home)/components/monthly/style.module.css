@@ -13,10 +13,14 @@
   overflow: hidden;
   touch-action: pan-y;
   user-select: none;
+  cursor: default;
+}
+
+.carouselViewportDraggable {
   cursor: grab;
 }
 
-.carouselViewport:active {
+.carouselViewportDraggable:active {
   cursor: grabbing;
 }
 
@@ -521,7 +525,7 @@
 
 @media (min-width: 768px) {
   .cpimg_o {
-    max-width: 70%;
+    max-width: 35vw;
   }
 
   .cpimg_t {
@@ -554,6 +558,10 @@
 }
 
 @media (min-width: 1024px) {
+  .cpimg_o {
+    max-width: 30vw;
+  }
+
   .cpimg_t {
     max-width: 30vw;
   }
@@ -575,6 +583,10 @@
 }
 
 @media (min-width: 1280px) {
+  .cpimg_o {
+    max-width: 400px;
+  }
+
   .cpimg_t {
     max-width: 400px;
   }

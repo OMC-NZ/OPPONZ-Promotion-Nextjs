@@ -210,7 +210,7 @@ export default function MonthlyPromotions() {
                     </div>
                 ) : (
                     <div
-                        className={style.carouselViewport}
+                        className={`${style.carouselViewport} ${showPaginationDots ? style.carouselViewportDraggable : ""}`}
                         onPointerDown={handleDragStart}
                         onPointerMove={handleDragMove}
                         onPointerUp={finishDrag}
