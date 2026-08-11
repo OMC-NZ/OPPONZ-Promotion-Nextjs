@@ -89,10 +89,12 @@ const buildClaimPayload = (data) => {
     appendClaimField(formData, "imei", data.verifiedImei);
     appendClaimField(formData, "purchase_date", data.promotion.purchaseDateValue || data.verifiedPurchaseDate);
     if (proofOfPurchaseFile) {
-        formData.append("receipt_url", proofOfPurchaseFile, proofOfPurchaseFile.name);
+        formData.append("receipt", proofOfPurchaseFile, proofOfPurchaseFile.name);
+        appendClaimField(formData, "receipt_url", proofOfPurchaseFile.name);
     }
     if (imeiScreenshotFile) {
-        formData.append("screenshot_url", imeiScreenshotFile, imeiScreenshotFile.name);
+        formData.append("screenshot", imeiScreenshotFile, imeiScreenshotFile.name);
+        appendClaimField(formData, "screenshot_url", imeiScreenshotFile.name);
     }
     appendClaimField(formData, "first_name", data.firstName);
     appendClaimField(formData, "last_name", data.lastName);
@@ -166,6 +168,16 @@ export default function Claim() {
         ...deliveryAddressSection.getReviewData(),
         ...purchaseInformationSection.getReviewData(),
     };
+
+    useEffect(() => {
+        const previousScrollRestoration = window.history.scrollRestoration;
+        window.history.scrollRestoration = "manual";
+        window.scrollTo({ top: 0, behavior: "auto" });
+
+        return () => {
+            window.history.scrollRestoration = previousScrollRestoration;
+        };
+    }, [routeSlug]);
 
     useEffect(() => {
         if (claimInitializedRef.current) return undefined;
@@ -296,7 +308,7 @@ export default function Claim() {
         try {
             const recaptcha = await verifyRecaptcha("claim_submit");
 
-            if (!recaptcha?.token) {
+            if (!recaptcha?.disabled && !recaptcha?.token) {
                 throw new Error("Security verification failed. Please try again.");
             }
 

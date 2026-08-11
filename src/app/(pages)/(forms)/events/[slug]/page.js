@@ -325,14 +325,9 @@ const buildEventClaimPayload = ({
     fields,
     deliveryAddress,
     recaptcha,
-    slug,
 }) => {
     const formData = new FormData();
     const extraData = {};
-    const eventData = formConfig.event || {};
-
-    appendFormDataValue(formData, "event_id", eventData.id || eventData.event_id || "");
-    appendFormDataValue(formData, "slug", eventData.slug_url || eventData.slug || slug || "");
 
     fields.forEach((field) => {
         const submitKey = getFieldSubmitKey(field);
@@ -589,7 +584,7 @@ export default function EventClaimPage() {
         try {
             const recaptcha = await verifyRecaptcha("event_claim_submit");
 
-            if (!recaptcha?.token) {
+            if (!recaptcha?.disabled && !recaptcha?.token) {
                 throw new Error("Security verification failed. Please try again.");
             }
 
@@ -600,7 +595,6 @@ export default function EventClaimPage() {
                 fields,
                 deliveryAddress: formConfig.requiresDelivery ? deliveryAddressSection.getReviewData() : {},
                 recaptcha,
-                slug: eventSlug,
             });
 
             const response = await submitEventClaim(eventSlug, claimPayload, recaptcha);

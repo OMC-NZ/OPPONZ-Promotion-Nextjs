@@ -14,7 +14,11 @@ export default function useRecaptchaAction() {
 
     return useCallback(async (action) => {
         if (!recaptchaSiteKey) {
-            throw new Error("reCAPTCHA site key is not configured.");
+            return {
+                success: true,
+                action,
+                disabled: true,
+            };
         }
 
         if (!executeRecaptcha) {

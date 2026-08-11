@@ -16,6 +16,8 @@ const initialContent = {
     },
 };
 
+let promotionContentRequest = null;
+
 export default function usePromotionContent() {
     const [content, setContent] = useState(initialContent);
     const verifyRecaptcha = useRecaptchaAction();
@@ -25,42 +27,64 @@ export default function usePromotionContent() {
         let retryTimer = null;
 
         const loadPromotionContent = async () => {
-            const [promotionsRecaptcha, eventsRecaptcha] = await Promise.all([
-                verifyRecaptcha("promotions_current"),
-                verifyRecaptcha("events_current"),
-            ]);
+            if (!promotionContentRequest) {
+                promotionContentRequest = (async () => {
+                    const [promotionsRecaptcha, eventsRecaptcha] = await Promise.all([
+                        verifyRecaptcha("promotions_current"),
+                        verifyRecaptcha("events_current"),
+                    ]);
 
-            if (promotionsRecaptcha?.unavailable || eventsRecaptcha?.unavailable) {
+                    if (
+                        (promotionsRecaptcha?.unavailable || eventsRecaptcha?.unavailable)
+                        && !promotionsRecaptcha?.disabled
+                        && !eventsRecaptcha?.disabled
+                    ) {
+                        promotionContentRequest = null;
+                        return { unavailable: true };
+                    }
+
+                    const [promotionsResult, eventsResult] = await Promise.allSettled([
+                        fetchCurrentPromotions({ recaptcha: promotionsRecaptcha }),
+                        fetchCurrentEvents({ recaptcha: eventsRecaptcha }),
+                    ]);
+
+                    const currentPromotions = promotionsResult.status === "fulfilled"
+                        ? promotionsResult.value.items
+                        : [];
+                    const currentEvents = eventsResult.status === "fulfilled"
+                        ? eventsResult.value.items
+                        : [];
+
+                    return {
+                        monthly: {
+                            items: currentPromotions,
+                            loading: false,
+                            error: promotionsResult.status === "rejected" ? promotionsResult.reason : null,
+                        },
+                        currentEvents: {
+                            items: currentEvents,
+                            loading: false,
+                            error: eventsResult.status === "rejected" ? eventsResult.reason : null,
+                        },
+                    };
+                })();
+            }
+
+            const currentRequest = promotionContentRequest;
+            const nextContent = await currentRequest;
+
+            if (promotionContentRequest === currentRequest) {
+                promotionContentRequest = null;
+            }
+
+            if (nextContent?.unavailable) {
                 retryTimer = window.setTimeout(loadPromotionContent, 1000);
                 return;
             }
 
-            const [promotionsResult, eventsResult] = await Promise.allSettled([
-                fetchCurrentPromotions({ recaptcha: promotionsRecaptcha }),
-                fetchCurrentEvents({ recaptcha: eventsRecaptcha }),
-            ]);
-
             if (!isActive) return;
 
-            const currentPromotions = promotionsResult.status === "fulfilled"
-                ? promotionsResult.value.items
-                : [];
-            const currentEvents = eventsResult.status === "fulfilled"
-                ? eventsResult.value.items
-                : [];
-
-            setContent({
-                monthly: {
-                    items: currentPromotions,
-                    loading: false,
-                    error: promotionsResult.status === "rejected" ? promotionsResult.reason : null,
-                },
-                currentEvents: {
-                    items: currentEvents,
-                    loading: false,
-                    error: eventsResult.status === "rejected" ? eventsResult.reason : null,
-                },
-            });
+            setContent(nextContent);
         };
 
         loadPromotionContent();

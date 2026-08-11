@@ -22,6 +22,7 @@ export default function MonthlyPromotions() {
     const [windowWidthValid, setWindowWidthValid] = useState(false);
     const [selectedPromotion, setSelectedPromotion] = useState(null);
     const [loadedImages, setLoadedImages] = useState({});
+    const [imageErrors, setImageErrors] = useState({});
     const [dragOffset, setDragOffset] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [isPageReady, setIsPageReady] = useState(false);
@@ -142,6 +143,11 @@ export default function MonthlyPromotions() {
         setLoadedImages((prev) => ({ ...prev, [promotionId]: true }));
     };
 
+    const handleImageError = (promotionId) => {
+        setLoadedImages((prev) => ({ ...prev, [promotionId]: true }));
+        setImageErrors((prev) => ({ ...prev, [promotionId]: true }));
+    };
+
     const closeMonthlyModal = () => {
         setSelectedPromotion(null);
     };
@@ -249,18 +255,24 @@ export default function MonthlyPromotions() {
                                                     </div>
                                                 )}
 
-                                                <Image
-                                                    src={promotion.imageUrl}
-                                                    alt={promotion.title}
-                                                    width={620}
-                                                    height={420}
-                                                    quality={100}
-                                                    unoptimized={promotion.imageUrl?.startsWith("http")}
-                                                    className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
-                                                    onLoad={() => handleImageLoad(promotion.id)}
-                                                    onError={() => handleImageLoad(promotion.id)}
-                                                    priority
-                                                />
+                                                {imageErrors[promotion.id] ? (
+                                                    <div className={`${style.promoImageError} ${style.imageLoaded}`}>
+                                                        <span>{promotion.title}</span>
+                                                    </div>
+                                                ) : (
+                                                    <Image
+                                                        src={promotion.imageUrl}
+                                                        alt={promotion.title}
+                                                        width={620}
+                                                        height={420}
+                                                        quality={100}
+                                                        unoptimized={promotion.imageUrl?.startsWith("http")}
+                                                        className={`${style.promoImage} ${loadedImages[promotion.id] ? style.imageLoaded : style.imagePending}`}
+                                                        onLoad={() => handleImageLoad(promotion.id)}
+                                                        onError={() => handleImageError(promotion.id)}
+                                                        priority
+                                                    />
+                                                )}
 
                                                 <div className={style.promoOverlay}>
                                                     <button
