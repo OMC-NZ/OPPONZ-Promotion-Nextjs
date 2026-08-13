@@ -6,6 +6,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V3;
 const RECAPTCHA_READY_TIMEOUT = 8000;
 const RECAPTCHA_READY_INTERVAL = 200;
+const RECAPTCHA_EXECUTE_RETRIES = 1;
 
 const wait = (ms) => new Promise((resolve) => {
     window.setTimeout(resolve, ms);
@@ -37,7 +38,25 @@ export default function useRecaptchaAction() {
         }
 
         try {
-            const token = await executeRecaptchaRef.current(action);
+            let token = "";
+            let lastError = null;
+
+            for (let attempt = 0; attempt <= RECAPTCHA_EXECUTE_RETRIES; attempt += 1) {
+                try {
+                    token = await executeRecaptchaRef.current(action);
+                    lastError = null;
+                    break;
+                } catch (error) {
+                    lastError = error;
+                    if (attempt < RECAPTCHA_EXECUTE_RETRIES) {
+                        await wait(300);
+                    }
+                }
+            }
+
+            if (lastError) {
+                throw lastError;
+            }
 
             if (!token) {
                 throw new Error("reCAPTCHA returned an empty token.");
