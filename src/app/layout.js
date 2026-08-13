@@ -8,7 +8,7 @@ const zendeskKey = process.env.NEXT_PUBLIC_ZENDESK_WEB_WIDGET;
 
 
 export default function RootLayout({ children }) {
-  return (
+  return ( 
     <html lang="en-NZ">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
