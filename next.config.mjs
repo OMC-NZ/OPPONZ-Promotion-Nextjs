@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://static.zdassets.com https://*.zendesk.com https://*.zdassets.com https://pod-15-sunco-ws.zendesk.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://static.zdassets.com https://*.zendesk.com https://*.zdassets.com https://pod-15-sunco-ws.zendesk.com",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https:",

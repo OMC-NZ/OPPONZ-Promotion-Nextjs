@@ -24,7 +24,6 @@ export default function usePromotionContent() {
 
     useEffect(() => {
         let isActive = true;
-        let retryTimer = null;
 
         const loadPromotionContent = async () => {
             if (!promotionContentRequest) {
@@ -33,15 +32,6 @@ export default function usePromotionContent() {
                         verifyRecaptcha("promotions_current"),
                         verifyRecaptcha("events_current"),
                     ]);
-
-                    if (
-                        (promotionsRecaptcha?.unavailable || eventsRecaptcha?.unavailable)
-                        && !promotionsRecaptcha?.disabled
-                        && !eventsRecaptcha?.disabled
-                    ) {
-                        promotionContentRequest = null;
-                        return { unavailable: true };
-                    }
 
                     const [promotionsResult, eventsResult] = await Promise.allSettled([
                         fetchCurrentPromotions({ recaptcha: promotionsRecaptcha }),
@@ -71,15 +61,35 @@ export default function usePromotionContent() {
             }
 
             const currentRequest = promotionContentRequest;
-            const nextContent = await currentRequest;
+            let nextContent = null;
+
+            try {
+                nextContent = await currentRequest;
+            } catch (error) {
+                if (promotionContentRequest === currentRequest) {
+                    promotionContentRequest = null;
+                }
+
+                if (!isActive) return;
+
+                console.error("Failed to load promotion content:", error);
+                setContent({
+                    monthly: {
+                        items: [],
+                        loading: false,
+                        error,
+                    },
+                    currentEvents: {
+                        items: [],
+                        loading: false,
+                        error,
+                    },
+                });
+                return;
+            }
 
             if (promotionContentRequest === currentRequest) {
                 promotionContentRequest = null;
-            }
-
-            if (nextContent?.unavailable) {
-                retryTimer = window.setTimeout(loadPromotionContent, 1000);
-                return;
             }
 
             if (!isActive) return;
@@ -91,9 +101,6 @@ export default function usePromotionContent() {
 
         return () => {
             isActive = false;
-            if (retryTimer) {
-                window.clearTimeout(retryTimer);
-            }
         };
     }, [verifyRecaptcha]);
 
