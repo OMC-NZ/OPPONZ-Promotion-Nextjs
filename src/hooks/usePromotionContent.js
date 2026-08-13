@@ -28,8 +28,10 @@ export default function usePromotionContent() {
         const loadPromotionContent = async () => {
             if (!promotionContentRequest) {
                 promotionContentRequest = (async () => {
-                    const promotionsRecaptcha = await verifyRecaptcha("promotions_current");
-                    const eventsRecaptcha = await verifyRecaptcha("events_current");
+                    const [promotionsRecaptcha, eventsRecaptcha] = await Promise.all([
+                        verifyRecaptcha("promotions_current"),
+                        verifyRecaptcha("events_current"),
+                    ]);
 
                     const [promotionsResult, eventsResult] = await Promise.allSettled([
                         fetchCurrentPromotions({ recaptcha: promotionsRecaptcha }),
