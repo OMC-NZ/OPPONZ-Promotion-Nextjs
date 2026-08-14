@@ -53,11 +53,11 @@ export default function Noname() {
                     <div className={`${style.claim_button}`}>
                         <button className={`${style.btn}`} onClick={() => toggleVisibility('redeem', true)} disabled={!isPageReady}>
                             {!isPageReady && <span className={style.buttonSpinner} />}
-                            {isPageReady ? 'Redeem My Gift' : 'Loading'}
+                            {isPageReady ? 'Redeem Now' : 'Loading'}
                         </button>
                         <button className={`${style.btn}`} onClick={() => toggleVisibility('track', true)} disabled={!isPageReady}>
                             {!isPageReady && <span className={style.buttonSpinner} />}
-                            {isPageReady ? 'Track My Claim' : 'Loading'}
+                            {isPageReady ? 'Track Claim' : 'Loading'}
                         </button>
                     </div>
                 </div>

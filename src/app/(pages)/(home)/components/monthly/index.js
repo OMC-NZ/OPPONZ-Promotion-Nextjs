@@ -315,7 +315,7 @@ export default function MonthlyPromotions() {
                             onClick={() => toggleVisibility("redeem", true)}
                         >
                             {!isPageReady && <span className={style.buttonSpinner} />}
-                            {isPageReady ? "Redeem My Gift" : "Loading"}
+                            {isPageReady ? "Redeem Now" : "Loading"}
                         </button>
                     </div>
                 )}

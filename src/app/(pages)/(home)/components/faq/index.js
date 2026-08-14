@@ -35,7 +35,7 @@ export default function FAQ() {
         },
         {
             question: "How do I track my gift?",
-            answer: "You will receive an email notification from OPPO that it has received your valid claim form with proof of purchase and IMEI number and your claim has been accepted. A tracking number will be provided in this notification and you will be able to use Track My Claim page in oppopromotions.co.nz for delivery status updates on your gift."
+            answer: "You will receive an email notification from OPPO that it has received your valid claim form with proof of purchase and IMEI number and your claim has been accepted. A tracking number will be provided in this notification and you will be able to use Track Claim page in oppopromotions.co.nz for delivery status updates on your gift."
         }
     ];
 

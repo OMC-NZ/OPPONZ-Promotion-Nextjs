@@ -402,7 +402,7 @@ export default function Redeem({ isVisible, onClose, onOpenTrack }) {
                                     <p className={style.trackHint}>
                                         If you already submitted a claim, please use{' '}
                                         <button type="button" onClick={handleOpenTrack} disabled={isBusy}>
-                                            Track My Claim.
+                                            Track Claim.
                                         </button>
                                     </p>
 

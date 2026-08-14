@@ -11,7 +11,7 @@ const steps = [
         alt: "step-1",
         title: "Enter IMEI &\nPurchase Date",
         description:
-            "Click on the \"Redeem My Gift\" button and enter your IMEI-1 and Purchase Date.",
+            "Click on the \"Redeem Now\" button and enter your IMEI-1 and Purchase Date.",
     },
     {
         icon: "/imgs/Icons-step2.png",
