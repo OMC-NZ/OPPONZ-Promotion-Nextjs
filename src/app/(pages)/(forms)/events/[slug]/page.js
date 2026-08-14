@@ -483,7 +483,7 @@ export default function EventClaimPage() {
         setErrors((current) => ({ ...current, [field.id]: "" }));
 
         try {
-            const recaptcha = await verifyRecaptcha("event_verify_imei_channel");
+            const recaptcha = await verifyRecaptcha("event_imei_channel_verify");
             const result = await verifyEventImeiChannel({
                 imei: cleanedImei,
                 slug: getEventSlug(formConfig, event, slug),
