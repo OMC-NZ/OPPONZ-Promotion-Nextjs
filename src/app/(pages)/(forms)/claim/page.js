@@ -80,7 +80,7 @@ const appendClaimField = (formData, key, value) => {
     formData.append(key, value == null ? "" : String(value));
 };
 
-const buildClaimPayload = (data) => {
+const buildClaimPayload = (data, recaptcha) => {
     const formData = new FormData();
     const imeiScreenshotFile = data.documents?.find((document) => document.label === "IMEI Screenshot")?.file;
     const proofOfPurchaseFile = data.documents?.find((document) => document.label === "Proof of Purchase")?.file;
@@ -106,6 +106,8 @@ const buildClaimPayload = (data) => {
     appendClaimField(formData, "postcode", data.postcode);
     appendClaimField(formData, "instructions", data.instructions || "");
     appendClaimField(formData, "gift_alias", data.selectedGifts?.[0]?.alias || data.selectedGifts?.[0]?.label || data.selectedGifts?.[0]?.name || "");
+    appendClaimField(formData, "recaptcha_token", recaptcha?.token || "");
+    appendClaimField(formData, "recaptcha_action", recaptcha?.action || "claim_submit");
 
     return formData;
 };
@@ -312,7 +314,7 @@ export default function Claim() {
                 throw new Error("Security verification failed. Please try again.");
             }
 
-            const response = await submitClaim(buildClaimPayload(reviewData), recaptcha);
+            const response = await submitClaim(buildClaimPayload(reviewData, recaptcha), recaptcha);
             setSubmitResult(response);
         } catch (error) {
             setSubmitError(error?.message || "Unable to submit claim. Please try again.");
