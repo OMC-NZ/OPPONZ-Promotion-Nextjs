@@ -100,11 +100,17 @@ export const verifyEventImeiChannel = async ({
         ...(recaptchaAction ? { recaptcha_action: recaptchaAction } : {}),
     };
 
-    const response = await fetchHomePromos(VERIFY_EVENT_IMEI_ENDPOINT, {
-        method: "POST",
-        baseUrl: "",
-        body,
-    });
+    let response = null;
+
+    try {
+        response = await fetchHomePromos(VERIFY_EVENT_IMEI_ENDPOINT, {
+            method: "POST",
+            baseUrl: "",
+            body,
+        });
+    } catch (error) {
+        throw new Error(error?.body?.message || error?.message || "Unable to verify IMEI-1.");
+    }
 
     if (!response?.success) {
         throw new Error(response?.message || "Unable to verify IMEI-1.");

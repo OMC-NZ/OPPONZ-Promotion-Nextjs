@@ -55,7 +55,10 @@ export const fetchHomePromos = async (
                 }
             }
 
-            const error = new Error(`HTTP ${response.status} ${response.statusText}`);
+            const responseMessage = parsed && typeof parsed === 'object'
+                ? parsed.message || parsed.error || parsed.internalMessage
+                : parsed;
+            const error = new Error(responseMessage || `HTTP ${response.status} ${response.statusText}`);
             error.status = response.status;
             error.body = parsed;
             throw error;
