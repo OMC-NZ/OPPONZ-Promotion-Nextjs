@@ -250,12 +250,12 @@ export default function Claim() {
     }, [isClaimReady, router]);
 
     useEffect(() => {
-        document.body.style.overflowY = modalShow || submitResult ? "hidden" : "";
+        document.body.style.overflowY = modalShow || submitResult || isSubmitting ? "hidden" : "";
 
         return () => {
             document.body.style.overflowY = "";
         };
-    }, [modalShow, submitResult]);
+    }, [modalShow, submitResult, isSubmitting]);
 
     useEffect(() => {
         if (!claimAccessExpired) return;
@@ -269,6 +269,8 @@ export default function Claim() {
     };
 
     const handleBackToEdit = () => {
+        if (isSubmitting) return;
+
         setIsReviewing(false);
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -357,6 +359,7 @@ export default function Claim() {
                     submitError={submitError}
                     onPreviewDocument={setPreviewDocument}
                 />
+                {isSubmitting && <ClaimSubmittingModal />}
                 {previewDocument && (
                     <DocumentPreviewModal
                         document={previewDocument}
@@ -570,7 +573,7 @@ function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, submitError, o
                 <p>Please confirm your gift, email and delivery address carefully.</p>
                 {submitError && <p className={style.submitError}>{submitError}</p>}
                 <div>
-                    <button type="button" className={style.secondaryButton} onClick={onBack}>
+                    <button type="button" className={style.secondaryButton} onClick={onBack} disabled={isSubmitting}>
                         Back to Edit
                     </button>
                     <button type="button" className={style.primaryButton} onClick={onConfirm} disabled={isSubmitting}>
@@ -579,6 +582,18 @@ function ReviewClaimPage({ data, onBack, onConfirm, isSubmitting, submitError, o
                 </div>
             </div>
         </main>
+    );
+}
+
+function ClaimSubmittingModal() {
+    return (
+        <div className={style.claimSuccessOverlay} role="dialog" aria-modal="true" aria-labelledby="claim-submitting-title">
+            <section className={`${style.claimSuccessModal} ${style.claimSubmittingModal}`}>
+                <span className={style.claimSubmittingSpinner} aria-hidden="true" />
+                <h2 id="claim-submitting-title">Submitting your claim</h2>
+                <p>Please keep this page open while we upload your documents and submit your claim.</p>
+            </section>
+        </div>
     );
 }
 
