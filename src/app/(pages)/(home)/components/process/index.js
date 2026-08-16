@@ -12,7 +12,7 @@ export default function Process() {
         <div className={style.claim_process}>
             <div className={globalStyle.itemsBlock}>
                 <h2 className={style.pro_title}>Gift with Purchase Redemption Process</h2>
-                <p className={style.pro_decs}>Follow these simple steps to redeem your gift.</p>
+                <p className={style.pro_decs}>Follow these simple steps to redeem your gift</p>
                 <div className={style.pcOnly}>
                     <PCSteps />
                 </div>
