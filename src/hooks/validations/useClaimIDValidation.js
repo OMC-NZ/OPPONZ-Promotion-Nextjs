@@ -13,7 +13,10 @@ export default function useClaimIDValidation() {
             return false;
         }
 
-        if (!/^OPNZPROCLM-\d{6}-.+/i.test(cleanedValue)) {
+        const newClaimReferencePattern = /^OPNZPROCLM-\d{6}-.+/i;
+        const legacyUuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+        if (!newClaimReferencePattern.test(cleanedValue) && !legacyUuidPattern.test(cleanedValue)) {
             setClaimIDError(true);
             setErrorClaimIDMsg('Incorrect Claim Reference');
             return false;
