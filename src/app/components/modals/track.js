@@ -195,7 +195,7 @@ export default function Track({ isVisible, onClose }) {
                             &times;
                         </button>
                         {result ? (
-                            <TrackResult result={result} onClose={closeTrack} onSearchAgain={() => setResult(null)} />
+                            <TrackResult result={result} onClose={closeTrack} onSearchAgain={resetTrack} />
                         ) : (
                             <>
                                 <p className={`${style.modalTitle}`}>Track Your Claim Process</p>
