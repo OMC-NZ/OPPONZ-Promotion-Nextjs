@@ -201,7 +201,7 @@ const normalizeUploadsSection = (uploads = []) => {
                     type: "upload",
                     label: upload.upload_label || "Upload Document",
                     required: true,
-                    helperText: "JPG, JPEG, PNG, PDF, HEIC or HEIF. Max 10MB.",
+                    helperText: "JPG, JPEG, PNG, or PDF. Max 10MB.",
                 })),
             },
         ],
@@ -280,20 +280,18 @@ const validateUploadFile = (file) => {
     if (!file) return "";
 
     const maxSize = 10 * 1024 * 1024;
-    const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf", ".heic", ".heif"];
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf"];
     const allowedTypes = new Set([
         "application/pdf",
         "image/jpeg",
         "image/jpg",
         "image/png",
-        "image/heic",
-        "image/heif",
     ]);
     const fileName = file.name?.toLowerCase() || "";
     const hasValidExtension = allowedExtensions.some((extension) => fileName.endsWith(extension));
 
     if (!allowedTypes.has(file.type) && !hasValidExtension) {
-        return "File type must be JPG, JPEG, PNG, PDF, HEIC, or HEIF";
+        return "File type must be JPG, JPEG, PNG, or PDF";
     }
 
     if (file.size > maxSize) {
@@ -1003,8 +1001,8 @@ function UploadField({ field, file, error, onFile, disabled }) {
             >
                 <FiUploadCloud />
                 <p>{file ? file.name : "Drag and drop file here\nor click to browse"}</p>
-                <small>{field.helperText || "JPG, JPEG, PNG, PDF, HEIC or HEIF. Max 10MB."}</small>
-                <input type="file" accept={field.accept || ".jpg,.jpeg,.png,.pdf,.heic,.heif"} onChange={(event) => handleFiles(event.target.files)} disabled={disabled} />
+                <small>{field.helperText || "JPG, JPEG, PNG, or PDF. Max 10MB."}</small>
+                <input type="file" accept={field.accept || ".jpg,.jpeg,.png,.pdf"} onChange={(event) => handleFiles(event.target.files)} disabled={disabled} />
             </label>
         </div>
     );

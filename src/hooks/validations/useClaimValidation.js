@@ -12,9 +12,9 @@ export default function useClaimValidation(type) {
             const file = value?.[0];
             const maxImageSize = 5 * 1024 * 1024; // 5MB
             const maxPdfSize = 10 * 1024 * 1024; // 10MB
-            const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf", ".heic", ".heif"];
-            const imageExtensions = [".jpg", ".jpeg", ".png", ".heic", ".heif"];
-            const allowedImageTypes = ["image/jpeg", "image/jpg", "image/png", "image/heic", "image/heif"];
+            const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf"];
+            const imageExtensions = [".jpg", ".jpeg", ".png"];
+            const allowedImageTypes = ["image/jpeg", "image/jpg", "image/png"];
             const allowedPdfType = "application/pdf";
             const fileName = file?.name?.toLowerCase() || "";
             const extension = allowedExtensions.find((item) => fileName.endsWith(item));
@@ -26,7 +26,7 @@ export default function useClaimValidation(type) {
             if (!file) {
                 error = "Required";
             } else if (!hasValidType) {
-                error = "File type must be JPG, JPEG, PNG, PDF, HEIC, or HEIF";
+                error = "File type must be JPG, JPEG, PNG, or PDF";
             } else if (isImageFile && file.size > maxImageSize) {
                 error = "Image file size must be 5MB or less";
             } else if (isPdfFile && file.size > maxPdfSize) {

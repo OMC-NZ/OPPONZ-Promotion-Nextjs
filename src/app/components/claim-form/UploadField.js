@@ -63,13 +63,13 @@ export default function UploadField({ label, inputId, validation, fieldRef }) {
                 ) : (
                     <>
                         <span>Drag and drop file here or <strong>browse</strong></span>
-                        <small>JPG, JPEG, PNG, HEIC or HEIF max 5MB. PDF max 10MB.</small>
+                        <small>JPG, JPEG, PNG max 5MB. PDF max 10MB.</small>
                     </>
                 )}
                 <input
                     id={inputId}
                     type="file"
-                    accept=".jpg,.jpeg,.png,.pdf,.heic,.heif"
+                    accept=".jpg,.jpeg,.png,.pdf"
                     onChange={(event) => handleFiles(event.target.files)}
                     required
                 />
