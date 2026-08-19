@@ -6,7 +6,7 @@ const csp = [
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https:",
     "connect-src 'self' https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://*.zendesk.com https://*.zdassets.com https://pod-15-sunco-ws.zendesk.com wss://pod-15-sunco-ws.zendesk.com https://*.ingest.de.sentry.io https://your-backend-domain.com",
-    "frame-src https://www.google.com https://www.recaptcha.net https://*.zendesk.com https://*.zdassets.com",
+    "frame-src 'self' blob: https://www.google.com https://www.recaptcha.net https://*.zendesk.com https://*.zdassets.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
