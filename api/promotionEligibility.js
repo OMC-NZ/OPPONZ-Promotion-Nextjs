@@ -2,14 +2,17 @@ import { fetchHomePromos } from "./homePromos";
 
 const VERIFY_ELIGIBILITY_ENDPOINT = "/api/backend/promotions/verify-imei-purchase";
 
+const isGiftVisible = (gift) => [0, 2].includes(Number(gift?.status ?? 0));
+
 const buildGiftItems = (gifts, promotionId) => {
     const groups = new Map();
 
-    gifts.forEach((gift) => {
+    gifts.filter(isGiftVisible).forEach((gift) => {
         const name = gift.name || "Gift";
         const nameKey = name.trim().toLowerCase();
         const color = gift.color || "";
         const colorKey = color.trim().toLowerCase() || "included";
+        const status = Number(gift.status ?? 0);
 
         if (!groups.has(nameKey)) {
             groups.set(nameKey, { name, options: new Map() });
@@ -21,6 +24,7 @@ const buildGiftItems = (gifts, promotionId) => {
                 label: color || "Included",
                 color,
                 alias: gift.alias || "",
+                status,
             });
         }
     });
@@ -44,6 +48,7 @@ const normalizePromotion = (promotion) => {
             name: gift.name || "Gift",
             alias: gift.alias || "",
             color: gift.color || "",
+            status: Number(gift.status ?? 0),
         }))
         : [];
 

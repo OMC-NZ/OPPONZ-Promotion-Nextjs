@@ -32,8 +32,19 @@ const defaultPromotion = {
     termsUrl: "/terms",
 };
 
+const isGiftAvailable = (gift) => Number(gift?.status ?? 0) === 0;
+const isGiftVisible = (gift) => [0, 2].includes(Number(gift?.status ?? 0));
+const isGiftOutOfStock = (gift) => Number(gift?.status ?? 0) === 2;
+
 const getPromotionGiftItems = (promotion) => {
-    if (promotion.giftItems?.length) return promotion.giftItems;
+    if (promotion.giftItems?.length) {
+        return promotion.giftItems.map((giftItem) => ({
+            ...giftItem,
+            options: giftItem.options?.filter(isGiftVisible) || [],
+        })).filter((giftItem) => giftItem.options.length > 0);
+    }
+
+    if (promotion.gifts?.length) return [];
 
     return [{
         id: "default-gift",
@@ -43,7 +54,10 @@ const getPromotionGiftItems = (promotion) => {
 };
 
 const getInitialGiftOptions = (giftItems) => (
-    Object.fromEntries(giftItems.map((giftItem) => [giftItem.id, giftItem.options[0]?.id]))
+    Object.fromEntries(giftItems.map((giftItem) => [
+        giftItem.id,
+        giftItem.options.find(isGiftAvailable)?.id,
+    ]))
 );
 
 const normalizeSlug = (value) => {
@@ -148,14 +162,18 @@ export default function Claim() {
 
     const termsRef = useRef(null);
     const selectedGifts = giftItems.map((giftItem) => {
-        const selectedOption = giftItem.options.find((option) => option.id === selectedGiftOptions[giftItem.id]);
+        const selectedOption = giftItem.options.find((option) => (
+            option.id === selectedGiftOptions[giftItem.id] && isGiftAvailable(option)
+        ));
+        if (!selectedOption) return null;
+
         return {
             name: giftItem.name,
             color: selectedOption?.color || "",
             alias: selectedOption?.alias || "",
             label: selectedOption?.label || "Included",
         };
-    });
+    }).filter(Boolean);
     const selectedGiftLabels = selectedGifts.map((gift) => (
         gift.label !== "Included" ? `${gift.name} (${gift.label})` : gift.name
     ));
@@ -434,22 +452,29 @@ export default function Claim() {
                             <p>{canSelectGift ? "Choose Your Gift *" : "Selected Gift *"}</p>
                             <div className={style.giftItems}>
                                 {giftItems.map((giftItem) => {
-                                    const itemCanSelect = giftItem.options.length > 1;
+                                    const itemCanSelect = giftItem.options.filter(isGiftAvailable).length > 1;
                                     return (
                                         <div className={style.giftItem} key={giftItem.id}>
                                             <strong>{giftItem.name}</strong>
                                             <div className={style.giftOptionButtons}>
-                                                {giftItem.options.map((option) => (
-                                                    <button
-                                                        key={option.id}
-                                                        type="button"
-                                                        className={`${style.giftOptionButton} ${selectedGiftOptions[giftItem.id] === option.id ? style.giftOptionButtonActive : ""}`}
-                                                        onClick={() => handleGiftOptionSelect(giftItem.id, option.id)}
-                                                        disabled={!itemCanSelect}
-                                                    >
-                                                        {option.label}
-                                                    </button>
-                                                ))}
+                                                {giftItem.options.map((option) => {
+                                                    const isOutOfStock = isGiftOutOfStock(option);
+                                                    const isSelected = selectedGiftOptions[giftItem.id] === option.id && isGiftAvailable(option);
+
+                                                    return (
+                                                        <button
+                                                            key={option.id}
+                                                            type="button"
+                                                            className={`${style.giftOptionButton} ${isSelected ? style.giftOptionButtonActive : ""} ${isOutOfStock ? style.giftOptionButtonOutOfStock : ""}`}
+                                                            onClick={() => handleGiftOptionSelect(giftItem.id, option.id)}
+                                                            disabled={isOutOfStock || !itemCanSelect}
+                                                            aria-label={isOutOfStock ? `${option.label} out of stock` : option.label}
+                                                            title={isOutOfStock ? "Out of stock" : undefined}
+                                                        >
+                                                            {option.label}
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                     );
