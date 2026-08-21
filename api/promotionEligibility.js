@@ -39,6 +39,13 @@ const buildGiftItems = (gifts, promotionId) => {
     }));
 };
 
+const buildGiftNamesLabel = (giftItems) => (
+    giftItems
+        .map((giftItem) => giftItem.name)
+        .filter(Boolean)
+        .join(" + ")
+);
+
 const normalizePromotion = (promotion) => {
     const channelName = promotion.channel?.name || "";
     const channelPeriod = promotion.channel?.period || "";
@@ -51,6 +58,8 @@ const normalizePromotion = (promotion) => {
             status: Number(gift.status ?? 0),
         }))
         : [];
+    const giftItems = buildGiftItems(gifts, promotion.promotion_id);
+    const giftNamesLabel = buildGiftNamesLabel(giftItems);
 
     return {
         ...promotion,
@@ -63,9 +72,9 @@ const normalizePromotion = (promotion) => {
         channelName,
         promotionPeriodLabel: channelName ? `${channelName} Period:` : "Promotion Period:",
         promotionPeriod: channelPeriod || promotion.date || "",
-        gift: promotion.description || "",
+        gift: giftNamesLabel || promotion.description || "",
         gifts,
-        giftItems: buildGiftItems(gifts, promotion.promotion_id),
+        giftItems,
         url: promotion.banner_url || "",
         bannerUrl: promotion.banner_url || "",
         slug: promotion.slug_url || "",
