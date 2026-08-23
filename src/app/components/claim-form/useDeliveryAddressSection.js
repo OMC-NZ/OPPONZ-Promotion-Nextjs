@@ -253,7 +253,7 @@ export default function useDeliveryAddressSection() {
         suburb: suburb.value,
         city: city.value,
         postcode: postcode.value,
-        instructions: "",
+        instructions: displayValue(companyName),
         addressLines: [
             companyName ? `Company Name: ${companyName}` : "",
             street.value,
