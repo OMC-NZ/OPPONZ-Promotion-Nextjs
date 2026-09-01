@@ -38,8 +38,8 @@ const trackStatusByCode = {
     },
     3: {
         status: "returned",
-        label: "Returned to Office",
-        title: "Your parcel has been returned to our office.",
+        label: "Returned",
+        title: "Your parcel has been returned to us.",
         descriptionPrefix: "Please contact ",
         contactEmail: "service@oppomobile.nz",
         descriptionSuffix: " for assistance.",
@@ -78,7 +78,7 @@ const getTrackResult = (response, normalizedClaimId) => {
     }
 
     const statusCode = Number(response.data?.status);
-    const result = trackStatusByCode[statusCode] || trackStatusByCode[5];
+    const result = trackStatusByCode[statusCode] || trackStatusByCode[6];
 
     return {
         ...result,

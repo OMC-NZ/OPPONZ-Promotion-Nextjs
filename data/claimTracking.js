@@ -19,8 +19,8 @@ export const claimTrackingRecords = {
     },
     "CLM-240021": {
         status: "returned",
-        label: "Returned to Office",
-        title: "Your parcel has been returned to our office.",
+        label: "Returned",
+        title: "Your parcel has been returned to us.",
         description: "If you need assistance, please contact support@oppo.co.nz.",
         contactEmail: "support@oppo.co.nz",
     },
