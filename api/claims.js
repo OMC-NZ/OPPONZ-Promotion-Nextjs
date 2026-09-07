@@ -1,13 +1,12 @@
 import { fetchHomePromos } from "./homePromos";
 
-const CLAIMS_ENDPOINT = "/api/backend/claims";
-const CLAIM_STATUS_ENDPOINT = "/api/backend/claims/status";
+const CLAIMS_ENDPOINT = "/api/claims";
+const CLAIM_STATUS_ENDPOINT = "/api/claims/status";
 
 export const submitClaim = async (claimBody, recaptcha) => {
     try {
         return await fetchHomePromos(CLAIMS_ENDPOINT, {
             method: "POST",
-            baseUrl: "",
             headers: {
                 ...(recaptcha?.token ? { "x-recaptcha-token": recaptcha.token } : {}),
                 ...(recaptcha?.action ? { "x-recaptcha-action": recaptcha.action } : {}),
@@ -32,7 +31,6 @@ export const fetchClaimStatus = async ({
     try {
         return await fetchHomePromos(CLAIM_STATUS_ENDPOINT, {
             method: "POST",
-            baseUrl: "",
             body: {
                 claim_id: claimId,
                 email,

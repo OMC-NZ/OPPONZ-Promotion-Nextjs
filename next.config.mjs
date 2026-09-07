@@ -5,7 +5,7 @@ const csp = [
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https:",
-    "connect-src 'self' https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://*.zendesk.com https://*.zdassets.com https://pod-15-sunco-ws.zendesk.com wss://pod-15-sunco-ws.zendesk.com https://*.ingest.de.sentry.io https://your-backend-domain.com",
+    "connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://api.oppopromotions.co.nz https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://*.zendesk.com https://*.zdassets.com https://pod-15-sunco-ws.zendesk.com wss://pod-15-sunco-ws.zendesk.com https://*.ingest.de.sentry.io",
     "frame-src 'self' blob: https://www.google.com https://www.recaptcha.net https://*.zendesk.com https://*.zdassets.com",
     "object-src 'none'",
     "base-uri 'self'",
