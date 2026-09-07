@@ -73,7 +73,7 @@ export default function useClaimValidation(type) {
                     error = "Invalid Information";
                 }
             } else if (type === "text") {
-                const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+                const alphanumericRegex = /^[a-zA-Z0-9-]+$/;
                 if (!alphanumericRegex.test(value)) {
                     error = "Invalid Information";
                 }
