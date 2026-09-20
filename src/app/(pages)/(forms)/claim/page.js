@@ -102,7 +102,7 @@ const buildClaimPayload = (data, recaptcha) => {
     appendClaimField(formData, "promotion_id", data.promotion.promotionId || data.promotion.promotion_id || data.promotion.id);
     appendClaimField(formData, "imei", data.verifiedImei);
     appendClaimField(formData, "purchase_date", data.promotion.purchaseDateValue || data.verifiedPurchaseDate);
-    appendClaimField(formData, "invoice_number", data.invoiceNumber);
+    appendClaimField(formData, "invoicenumber", data.invoiceNumber);
     if (proofOfPurchaseFile) {
         formData.append("receipt", proofOfPurchaseFile, proofOfPurchaseFile.name);
         appendClaimField(formData, "receipt_url", proofOfPurchaseFile.name);
