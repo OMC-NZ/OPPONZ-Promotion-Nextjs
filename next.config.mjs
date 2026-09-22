@@ -19,6 +19,15 @@ const nextConfig = {
     images: {
         qualities: [50, 75, 100],
     },
+    async redirects() {
+        return [
+            {
+                source: "/2degrees",
+                destination: "/events/2degrees-bonus",
+                permanent: false,
+            },
+        ];
+    },
     async headers() {
         return [
             {
