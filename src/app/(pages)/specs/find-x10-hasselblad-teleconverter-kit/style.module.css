@@ -130,7 +130,7 @@
 .featureIcon {
   width: clamp(30px, 2.1vw, 43px);
   height: clamp(30px, 2.1vw, 43px);
-  color: #111;
+  object-fit: contain;
 }
 
 .feature strong {

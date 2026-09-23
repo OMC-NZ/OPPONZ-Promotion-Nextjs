@@ -1,8 +1,6 @@
 import Image from "next/image";
 import style from "./style.module.css";
-import { FaArrowRight, FaRegHandshake } from "react-icons/fa";
-import { FiCrosshair } from "react-icons/fi";
-import { GiTheaterCurtains } from "react-icons/gi";
+import { FaArrowRight } from "react-icons/fa";
 
 export const metadata = {
   title: "Find X10 Hasselblad Teleconverter Kit | OPPO NZ Promotions",
@@ -50,17 +48,38 @@ export default function FindX10HasselbladTeleconverterKitPage() {
 
           <div className={style.features} aria-label="Key features">
             <div className={style.feature}>
-              <FaRegHandshake className={style.featureIcon} aria-hidden="true" />
+              <Image
+                className={style.featureIcon}
+                src="/imgs/events/findx10-teleconverter/co-engineered.svg"
+                alt=""
+                width={144}
+                height={102}
+                aria-hidden="true"
+              />
               <strong>Co-Engineered</strong>
               <span>OPPO x Hasselblad</span>
             </div>
             <div className={style.feature}>
-              <FiCrosshair className={style.featureIcon} aria-hidden="true" />
+              <Image
+                className={style.featureIcon}
+                src="/imgs/events/findx10-teleconverter/dual-stabilization.svg"
+                alt=""
+                width={147}
+                height={96}
+                aria-hidden="true"
+              />
               <strong>Dual Stabilization</strong>
               <span>Steadier telephoto shooting</span>
             </div>
             <div className={style.feature}>
-              <GiTheaterCurtains className={style.featureIcon} aria-hidden="true" />
+              <Image
+                className={style.featureIcon}
+                src="/imgs/events/findx10-teleconverter/stage-tuned.svg"
+                alt=""
+                width={122}
+                height={103}
+                aria-hidden="true"
+              />
               <strong>Stage-Tuned</strong>
               <span>Optimized for live performances</span>
             </div>
