@@ -204,7 +204,7 @@
 .detailImageSection {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 clamp(58px, 25vw, 275px);
+  padding: 0 clamp(58px, 25vw, 345px);
   overflow: hidden;
   background: #fff;
 }
