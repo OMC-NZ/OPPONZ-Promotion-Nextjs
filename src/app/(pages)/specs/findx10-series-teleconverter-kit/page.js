@@ -1,6 +1,6 @@
 import Image from "next/image";
 import style from "./style.module.css";
-import { FaArrowRight } from "react-icons/fa";
+import BuyNowModal from "./BuyNowModal";
 
 export const metadata = {
   title: "Find X10 Hasselblad Teleconverter Kit | OPPO NZ Promotions",
@@ -25,10 +25,7 @@ export default function FindX10HasselbladTeleconverterKitPage() {
               shooting experience.
             </p>
 
-            <a className={style.buyButton} href="#buy-now" aria-label="Buy now">
-              <span>BUY NOW</span>
-              <FaArrowRight aria-hidden="true" />
-            </a>
+            <BuyNowModal />
           </div>
 
           <Image
@@ -85,6 +82,17 @@ export default function FindX10HasselbladTeleconverterKitPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className={style.detailImageSection} aria-label="Teleconverter kit details">
+        <Image
+          className={style.detailImage}
+          src="/imgs/events/findx10-teleconverter/OPPO-Teleconverter-Landing-Page_Low-Res.jpg"
+          alt="OPPO Find X10 series teleconverter kit product details"
+          width={1920}
+          height={15035}
+          sizes="100vw"
+        />
       </section>
     </div>
   );
